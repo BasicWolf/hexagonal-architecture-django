@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Protocol, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -5,5 +7,5 @@ if TYPE_CHECKING:
 
 
 class CastArticleVoteResult(Protocol):
-    def handle_by(self, handler: 'CastArticleVoteResultHandler'):
+    def handle_by(self, handler: CastArticleVoteResultHandler):
         raise NotImplementedError()
