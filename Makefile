@@ -1,0 +1,5 @@
+PYTEST = pytest
+PYTEST_ENV = PYTHONPATH=src
+
+test:
+	$(PYTEST_ENV) $(PYTEST)

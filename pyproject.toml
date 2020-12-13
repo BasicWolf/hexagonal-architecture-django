@@ -29,3 +29,8 @@ pytest-django = "^4.1.0"
 pytest-mock = "*"
 pytest-pudb = "*"
 
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "hexarch_project.settings"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
