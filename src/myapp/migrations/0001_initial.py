@@ -17,11 +17,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('user_id', models.UUIDField()),
-                ('post_id', models.UUIDField()),
+                ('article_id', models.UUIDField()),
                 ('vote', models.IntegerField(choices=[(1, 'UP'), (2, 'DOWN')])),
             ],
             options={
-                'unique_together': {('user_id', 'post_id')},
+                'unique_together': {('user_id', 'article_id')},
+                'db_table': 'article_vote'
             },
         ),
     ]

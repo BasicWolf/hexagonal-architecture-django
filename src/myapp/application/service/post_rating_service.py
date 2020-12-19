@@ -13,8 +13,8 @@ class PostRatingService(
 ):
 
     def cast_article_vote(
-        self, user_id: UUID, post_id: UUID, vote: Vote
+        self, user_id: UUID, article_id: UUID, vote: Vote
     ) -> CastArticleVoteResult:
         return CastedArticleVote(
-            ArticleVote(user_id, post_id, vote)
+            ArticleVote(user_id, article_id, vote)
         )

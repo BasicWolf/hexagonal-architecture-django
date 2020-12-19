@@ -1,5 +1,5 @@
-from myapp.application.adapter.spi.persistence.model.article_vote import (
-    ArticleVote as ArticleVoteDbModel
+from myapp.application.adapter.spi.persistence.entity.article_vote import (
+    ArticleVoteEntity as ArticleVoteDbModel
 )
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
@@ -16,7 +16,7 @@ class ArticleVoteRepository(
         }[article_vote.vote]
 
         ArticleVoteDbModel(
-            post_id=article_vote.post_id,
+            article_id=article_vote.article_id,
             user_id=article_vote.user_id,
             vote=vote
         ).save()
