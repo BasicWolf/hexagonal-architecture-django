@@ -11,7 +11,6 @@ from myapp.application.ports.api.cast_article_vote.casted_article_vote import \
 class PostRatingService(
     CastArticleVoteUseCase
 ):
-
     def cast_article_vote(
         self, user_id: UUID, article_id: UUID, vote: Vote
     ) -> CastArticleVoteResult:

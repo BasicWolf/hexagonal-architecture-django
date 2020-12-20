@@ -11,16 +11,6 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 
 
-@pytest.fixture
-def article_id() -> UUID:
-    return uuid4()
-
-
-@pytest.fixture
-def user_id() -> UUID:
-    return uuid4()
-
-
 @pytest.mark.django_db
 def test_save_article_vote(user_id: UUID, article_id: UUID):
     article_vote_repository = ArticleVoteRepository()
@@ -42,7 +32,7 @@ def test_save_article_vote(user_id: UUID, article_id: UUID):
 
 @pytest.mark.django_db
 def test_saving_identical_article_votes_raises_integrity_error(
-        user_id: UUID, article_id: UUID
+    user_id: UUID, article_id: UUID
 ):
     article_vote_repository = ArticleVoteRepository()
 
@@ -62,7 +52,7 @@ def test_saving_identical_article_votes_raises_integrity_error(
 
 @pytest.mark.django_db
 def test_article_vote_exists(
-    user_id: UUID, article_id: UUID
+        user_id: UUID, article_id: UUID
 ):
     ArticleVoteEntity(
         user_id=user_id,
@@ -75,5 +65,3 @@ def test_article_vote_exists(
         user_id=user_id,
         article_id=article_id
     )
-
-
