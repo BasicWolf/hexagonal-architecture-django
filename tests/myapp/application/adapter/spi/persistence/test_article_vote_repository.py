@@ -35,14 +35,11 @@ def test_save_article_vote(user_id: UUID, article_id: UUID):
         )
     )
 
-    with connection.cursor() as cursor:
-        cursor.execute(f'SELECT user_id, article_id, vote from '
-                       f'{ArticleVoteEntity._meta.db_table}')
-        aritcle_vote_row = namedtuple_fetchall(cursor)[0]
-
-        assert user_id == UUID(aritcle_vote_row.user_id)
-        assert article_id == UUID(aritcle_vote_row.article_id)
-        assert 1 == aritcle_vote_row.vote
+    assert ArticleVoteEntity.objects.filter(
+        user_id=user_id,
+        article_id=article_id,
+        vote=ArticleVoteEntity.VOTE_UP
+    ).exists()
 
 
 @pytest.mark.django_db
