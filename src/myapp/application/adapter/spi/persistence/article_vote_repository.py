@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from myapp.application.adapter.spi.persistence.entity.article_vote import (
-    ArticleVoteEntity as ArticleVoteDbModel
+    ArticleVoteEntity
 )
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
@@ -14,15 +14,15 @@ class ArticleVoteRepository(
     ArticleVoteExistsPort
 ):
     def article_vote_exists(self, article_id: UUID, user_id: UUID):
-        pass
+
 
     def save_article_vote(self, article_vote: ArticleVote):
         vote = {
-            Vote.UP: ArticleVoteDbModel.VOTE_UP,
-            Vote.DOWN: ArticleVoteDbModel.VOTE_DOWN
+            Vote.UP: ArticleVoteEntity.VOTE_UP,
+            Vote.DOWN: ArticleVoteEntity.VOTE_DOWN
         }[article_vote.vote]
 
-        ArticleVoteDbModel(
+        ArticleVoteEntity(
             article_id=article_vote.article_id,
             user_id=article_vote.user_id,
             vote=vote
