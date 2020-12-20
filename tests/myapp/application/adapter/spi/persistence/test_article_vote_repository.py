@@ -9,8 +9,6 @@ from myapp.application.adapter.spi.persistence.entity.article_vote import \
     ArticleVoteEntity
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
-from tests.myapp.application.adapter.spi.persistence.namedtuple_fetchall import \
-    namedtuple_fetchall
 
 
 @pytest.fixture
