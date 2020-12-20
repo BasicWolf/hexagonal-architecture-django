@@ -14,7 +14,10 @@ class ArticleVoteRepository(
     ArticleVoteExistsPort
 ):
     def article_vote_exists(self, article_id: UUID, user_id: UUID):
-
+        return ArticleVoteEntity.objects.filter(
+            article_id=article_id,
+            user_id=user_id
+        ).exists()
 
     def save_article_vote(self, article_vote: ArticleVote):
         vote = {

@@ -60,3 +60,22 @@ def test_saving_identical_article_votes_raises_integrity_error(
         article_vote_repository.save_article_vote(article_vote)
     exception_info.match('UNIQUE constraint failed: article_vote.user_id, '
                          'article_vote.article_id')
+
+
+@pytest.mark.django_db
+def test_article_vote_exists(
+    user_id: UUID, article_id: UUID
+):
+    ArticleVoteEntity(
+        user_id=user_id,
+        article_id=article_id,
+        vote=ArticleVoteEntity.VOTE_UP
+    ).save()
+
+    article_vote_repository = ArticleVoteRepository()
+    assert article_vote_repository.article_vote_exists(
+        user_id=user_id,
+        article_id=article_id
+    )
+
+
