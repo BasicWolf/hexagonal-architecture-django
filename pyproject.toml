@@ -28,6 +28,7 @@ pytest = "*"
 pytest-django = "^4.1.0"
 pytest-mock = "*"
 pytest-pudb = "*"
+factory-boy = "^3.1.0"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "hexarch_project.settings"

@@ -4,19 +4,74 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.casted_article_vote import \
     CastedArticleVote
+from myapp.application.ports.api.cast_article_vote.vote_already_cast import \
+    VoteAlreadyCast
+from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.service.post_rating_service import PostRatingService
 
 
-def test_casting_vote_returns_expected_cast_article_vote_result():
-    result = PostRatingService().cast_article_vote(
-        user_id=UUID('fff0c0bf-ec3c-433a-9dc6-a1f9524f19b4'),
-        article_id=UUID('18287c9a-93a8-46a8-ae20-781cf36b4352'),
+def test_casting_vote_returns_casted_article_vote(
+    user_id: UUID, article_id: UUID
+):
+    post_rating_service = PostRatingService(
+        ArticleVoteExistsPortMock()
+    )
+
+    result = post_rating_service.cast_article_vote(
+        user_id=user_id,
+        article_id=article_id,
         vote=Vote.UP
     )
 
     assert isinstance(result, CastedArticleVote)
     assert result.article_vote == ArticleVote(
-        user_id=UUID('fff0c0bf-ec3c-433a-9dc6-a1f9524f19b4'),
-        article_id=UUID('18287c9a-93a8-46a8-ae20-781cf36b4352'),
+        user_id=user_id,
+        article_id=article_id,
         vote=Vote.UP
+    )
+
+
+def test_casting_same_vote_two_times_returns_vote_already_cast(
+    user_id: UUID, article_id: UUID
+):
+    post_rating_service = PostRatingService(
+        ArticleVoteExistsPortMock(article_exists=True)
+    )
+
+    post_rating_service.cast_article_vote(
+        user_id=user_id,
+        article_id=article_id,
+        vote=Vote.UP
+    )
+ 
+    result = post_rating_service.cast_article_vote(
+        user_id=user_id,
+        article_id=article_id,
+        vote=Vote.UP
+    )
+
+    assert isinstance(result, VoteAlreadyCast)
+    assert result.user_id == user_id
+    assert result.article_id == article_id
+
+
+def test_insufficient_karma_returned(
+    user_id: UUID, article_id: UUID
+):
+    pass
+
+
+class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
+    def __init__(self, article_exists=False):
+        self._article_exists = article_exists
+
+    def article_vote_exists(self, user_id: UUID, article_id: UUID):
+        return self._article_exists
+
+
+def post_rating_service_factory(
+    article_vote_exists_port: ArticleVoteExistsPort = ArticleVoteExistsPortMock(article_exists=True)
+):
+    return PostRatingService(
+        article_vote_exists_port=article_vote_exists_port
     )
