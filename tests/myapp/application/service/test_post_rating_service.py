@@ -13,9 +13,7 @@ from myapp.application.service.post_rating_service import PostRatingService
 def test_casting_vote_returns_casted_article_vote(
     user_id: UUID, article_id: UUID
 ):
-    post_rating_service = PostRatingService(
-        ArticleVoteExistsPortMock()
-    )
+    post_rating_service = build_post_rating_service()
 
     result = post_rating_service.cast_article_vote(
         user_id=user_id,
@@ -34,8 +32,8 @@ def test_casting_vote_returns_casted_article_vote(
 def test_casting_same_vote_two_times_returns_vote_already_cast(
     user_id: UUID, article_id: UUID
 ):
-    post_rating_service = PostRatingService(
-        ArticleVoteExistsPortMock(article_exists=True)
+    post_rating_service = build_post_rating_service(
+        article_vote_exists_port=ArticleVoteExistsPortMock(article_exists=True)
     )
 
     post_rating_service.cast_article_vote(
@@ -69,8 +67,8 @@ class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
         return self._article_exists
 
 
-def post_rating_service_factory(
-    article_vote_exists_port: ArticleVoteExistsPort = ArticleVoteExistsPortMock(article_exists=True)
+def build_post_rating_service(
+    article_vote_exists_port: ArticleVoteExistsPort = ArticleVoteExistsPortMock()
 ):
     return PostRatingService(
         article_vote_exists_port=article_vote_exists_port

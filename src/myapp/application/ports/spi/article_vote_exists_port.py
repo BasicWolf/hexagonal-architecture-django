@@ -3,5 +3,5 @@ from uuid import UUID
 
 
 class ArticleVoteExistsPort(Protocol):
-    def article_vote_exists(self, article_id: UUID, user_id: UUID):
+    def article_vote_exists(self, user_id: UUID, article_id: UUID):
         raise NotImplementedError()
