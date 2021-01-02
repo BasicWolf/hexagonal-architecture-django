@@ -4,8 +4,8 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.casted_article_vote import \
     CastedArticleVote
-from myapp.application.ports.api.cast_article_vote.vote_already_cast import \
-    VoteAlreadyCast
+from myapp.application.ports.api.cast_article_vote.vote_already_cast_result import \
+    VoteAlreadyCastResult
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.service.post_rating_service import PostRatingService
 
@@ -48,7 +48,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast(
         vote=Vote.UP
     )
 
-    assert isinstance(result, VoteAlreadyCast)
+    assert isinstance(result, VoteAlreadyCastResult)
     assert result.user_id == user_id
     assert result.article_id == article_id
 

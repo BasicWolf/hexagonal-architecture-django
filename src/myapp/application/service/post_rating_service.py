@@ -5,7 +5,7 @@ from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import CastArticleVoteUseCase
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import CastArticleVoteResult
 from myapp.application.ports.api.cast_article_vote.casted_article_vote import CastedArticleVote
-from myapp.application.ports.api.cast_article_vote.vote_already_cast import VoteAlreadyCast
+from myapp.application.ports.api.cast_article_vote.vote_already_cast_result import VoteAlreadyCastResult
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 
 
@@ -25,7 +25,7 @@ class PostRatingService(
             user_id=user_id,
             article_id=article_id
         ):
-            return VoteAlreadyCast(
+            return VoteAlreadyCastResult(
                 user_id=user_id,
                 article_id=article_id
             )

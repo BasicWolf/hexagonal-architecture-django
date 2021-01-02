@@ -4,7 +4,7 @@ from .cast_article_vote_result import CastArticleVoteResult
 from .cast_article_vote_result_handler import CastArticleVoteResultHandler
 
 
-class VoteAlreadyCast(CastArticleVoteResult):
+class VoteAlreadyCastResult(CastArticleVoteResult):
     user_id: UUID
     article_id: UUID
 
