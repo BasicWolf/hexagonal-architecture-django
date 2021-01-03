@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from typing import Protocol, TYPE_CHECKING
+from typing import Protocol
 
-if TYPE_CHECKING:
-    from casted_article_vote import CastedArticleVote
+from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import \
+    VoteAlreadyCast
 
 
 class CastArticleVoteResultHandler(Protocol):
-    def handle_casted_article_vote(self, casted_article_vote: CastedArticleVote):
+    def handle_cast_article_vote(self, article_vote: ArticleVote):
+        raise NotImplementedError()
+
+    def handle_vote_already_cast(self, vote_already_cast: VoteAlreadyCast):
         raise NotImplementedError()
