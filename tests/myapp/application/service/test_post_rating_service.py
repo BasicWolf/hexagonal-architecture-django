@@ -22,11 +22,15 @@ def test_casting_vote_returns_casted_article_vote(
         vote=Vote.UP
     )
 
-    assert isinstance(result, CastedArticleVote)
-    assert result.article_vote == ArticleVote(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
+    handler = Mock()
+    result.handle_by(handler)
+
+    handler.handle_cast_article_vote.assert_called_with(
+        ArticleVote(
+            user_id=user_id,
+            article_id=article_id,
+            vote=Vote.UP
+        )
     )
 
 
@@ -49,9 +53,13 @@ def test_casting_same_vote_two_times_returns_vote_already_cast(
         vote=Vote.UP
     )
 
-    assert isinstance(result, VoteAlreadyCastResult)
-    assert result.user_id == user_id
-    assert result.article_id == article_id
+    handler = Mock()
+    result.handle_by(handler)
+    handler.handle_vote_already_cast.assert_called()
+
+    # assert isinstance(result, VoteAlreadyCastResult)
+    # assert result.user_id == user_id
+    # assert result.article_id == article_id
 
 
 def test_insufficient_karma_returned(
