@@ -13,7 +13,7 @@ from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastin
 from myapp.application.service.post_rating_service import PostRatingService
 
 
-def test_casting_valid_vote_invokes_handler_with_article_vote_param(
+def test_casting_valid_vote_invokes_handler(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service()
@@ -36,7 +36,7 @@ def test_casting_valid_vote_invokes_handler_with_article_vote_param(
     )
 
 
-def test_casting_same_vote_two_times_invokes_handler_with_vote_already_cast_param(
+def test_casting_same_vote_two_times_invokes_vote_already_cast_handler(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
@@ -62,7 +62,7 @@ def test_casting_same_vote_two_times_invokes_handler_with_vote_already_cast_para
     )
 
 
-def test_casting_vote_invokes_handler_with_insufficient_karma_param(
+def test_casting_vote_invokes_insufficient_karma_handler(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
