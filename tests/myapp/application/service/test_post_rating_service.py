@@ -6,6 +6,8 @@ from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_casting_user import VoteCastingUser
 from myapp.application.ports.api.cast_article_vote.result.insufficient_karma_result import \
     InsufficientKarmaResult
+from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import \
+    VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
 from myapp.application.service.post_rating_service import PostRatingService
@@ -55,11 +57,9 @@ def test_casting_same_vote_two_times_returns_vote_already_cast(
 
     handler = Mock()
     result.handle_by(handler)
-    handler.handle_vote_already_cast.assert_called()
-
-    # assert isinstance(result, VoteAlreadyCastResult)
-    # assert result.user_id == user_id
-    # assert result.article_id == article_id
+    handler.handle_vote_already_cast.assert_called_with(
+        VoteAlreadyCast(user_id, article_id)
+    )
 
 
 def test_insufficient_karma_returned(
