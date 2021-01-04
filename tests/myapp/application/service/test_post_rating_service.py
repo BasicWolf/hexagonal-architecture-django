@@ -4,8 +4,6 @@ from uuid import UUID, uuid4
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_casting_user import VoteCastingUser
-from myapp.application.ports.api.cast_article_vote.result.insufficient_karma_result import \
-    InsufficientKarmaResult
 from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import \
     VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
@@ -78,7 +76,11 @@ def test_casting_vote_invokes_insufficient_karma_handler(
         vote=Vote.UP
     )
 
-    assert isinstance(result, InsufficientKarmaResult)
+    result_handler_mock = Mock()
+    result.handle_by(result_handler_mock)
+    result_handler_mock.handle_insufficient_karma.assert_called_with(
+        user_id
+    )
 
 
 class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
