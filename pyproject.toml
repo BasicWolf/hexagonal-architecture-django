@@ -17,6 +17,7 @@ homepage = "https://github.com/BasicWolf/hexagonal-architecture-django"
 [tool.poetry.dependencies]
 python = "^3.8"
 django = "^3.1"
+djangorestframework = "^3.12.2"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
