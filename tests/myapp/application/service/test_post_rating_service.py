@@ -4,6 +4,8 @@ from uuid import UUID, uuid4
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_casting_user import VoteCastingUser
+from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
+    CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import \
     VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
@@ -14,12 +16,14 @@ from myapp.application.service.post_rating_service import PostRatingService
 def test_casting_valid_vote_invokes_handler(
     user_id: UUID, article_id: UUID
 ):
-    post_rating_service = build_post_rating_service()
+    post_rating_service = build_post_rating_service(
+        get_vote_casting_user_port = GetVoteCastingUserPortMock(
+            user_id=user_id
+        )
+    )
 
     result = post_rating_service.cast_article_vote(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
+        CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
     handler = Mock()
@@ -40,17 +44,9 @@ def test_casting_same_vote_two_times_invokes_vote_already_cast_handler(
     post_rating_service = build_post_rating_service(
         article_vote_exists_port=ArticleVoteExistsPortMock(article_exists=True)
     )
-
-    post_rating_service.cast_article_vote(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
-    )
  
     result = post_rating_service.cast_article_vote(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
+        CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
     handler = Mock()
@@ -71,9 +67,7 @@ def test_casting_vote_invokes_insufficient_karma_handler(
     )
 
     result = post_rating_service.cast_article_vote(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
+        CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
     result_handler_mock = Mock()
