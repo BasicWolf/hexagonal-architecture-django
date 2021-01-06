@@ -1,6 +1,6 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class Vote(Enum):
-    UP = auto()
-    DOWN = auto()
+    UP = 'up'
+    DOWN = 'down'
