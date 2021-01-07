@@ -17,8 +17,8 @@ def test_casting_valid_vote_invokes_handler(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
-        get_vote_casting_user_port = GetVoteCastingUserPortMock(
-            user_id=user_id
+        get_vote_casting_user_port=GetVoteCastingUserPortMock(
+            build_vote_casting_user(user_id=user_id)
         )
     )
 
@@ -57,12 +57,15 @@ def test_casting_same_vote_two_times_invokes_vote_already_cast_handler(
 
 
 def test_casting_vote_invokes_insufficient_karma_handler(
-    user_id: UUID, article_id: UUID
+    user_id: UUID,
+    article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVoteCastingUserPortMock(
-            user_id=user_id,
-            user_karma=2
+            returned_vote_casting_user=VoteCastingUser(
+                user_id=user_id,
+                karma=2
+            )
         )
     )
 
@@ -72,9 +75,7 @@ def test_casting_vote_invokes_insufficient_karma_handler(
 
     result_handler_mock = Mock()
     result.handle_by(result_handler_mock)
-    result_handler_mock.handle_insufficient_karma.assert_called_with(
-        user_id
-    )
+    result_handler_mock.handle_insufficient_karma.assert_called_with(user_id)
 
 
 class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
@@ -85,13 +86,19 @@ class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
         return self._article_exists
 
 
+def build_vote_casting_user(user_id: UUID = uuid4(), karma: int = 10):
+    return VoteCastingUser(user_id=user_id, karma=karma)
+
+
 class GetVoteCastingUserPortMock(GetVoteCastingUserPort):
-    def __init__(self, user_id: UUID = uuid4(), user_karma: int = 10):
-        self.user_karma = user_karma
-        self.user_id = user_id
+    def __init__(
+        self,
+        returned_vote_casting_user: VoteCastingUser = build_vote_casting_user()
+    ):
+        self.returned_vote_casting_user = returned_vote_casting_user
 
     def get_vote_casting_user(self, user_id: UUID) -> VoteCastingUser:
-        return VoteCastingUser(user_id=self.user_id, karma=self.user_karma)
+        return self.returned_vote_casting_user
 
 
 def build_post_rating_service(
