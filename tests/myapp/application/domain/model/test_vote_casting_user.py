@@ -13,7 +13,7 @@ from myapp.application.domain.model.vote_casting_user import VoteCastingUser, \
 )
 def test_cast_vote_returns_article_vote(user_id, article_id, karma):
     vote_casting_user = VoteCastingUser(
-        user_id=user_id,
+        id=user_id,
         karma=10
     )
 
@@ -30,7 +30,7 @@ def test_cast_vote_returns_article_vote(user_id, article_id, karma):
 
 def test_cannot_cast_vote_with_insufficient_karma(user_id):
     vote_casting_user = VoteCastingUser(
-        user_id=user_id,
+        id=user_id,
         karma=4
     )
 

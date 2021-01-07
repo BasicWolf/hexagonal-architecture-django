@@ -63,7 +63,7 @@ def test_casting_vote_invokes_insufficient_karma_handler(
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVoteCastingUserPortMock(
             returned_vote_casting_user=VoteCastingUser(
-                user_id=user_id,
+                id=user_id,
                 karma=2
             )
         )
@@ -87,7 +87,7 @@ class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
 
 
 def build_vote_casting_user(user_id: UUID = uuid4(), karma: int = 10):
-    return VoteCastingUser(user_id=user_id, karma=karma)
+    return VoteCastingUser(id=user_id, karma=karma)
 
 
 class GetVoteCastingUserPortMock(GetVoteCastingUserPort):

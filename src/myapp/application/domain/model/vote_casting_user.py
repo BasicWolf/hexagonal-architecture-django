@@ -17,19 +17,19 @@ CastVoteResult = Union[InsufficientKarma, ArticleVote]
 
 
 class VoteCastingUser:
-    user_id: UUID
+    id: UUID
     karma: int
 
-    def __init__(self, user_id: UUID, karma: int):
-        self.user_id = user_id
+    def __init__(self, id: UUID, karma: int):
+        self.id = id
         self.karma = karma
 
     def cast_vote(self, article_id: UUID, vote: Vote) -> CastVoteResult:
         if self.karma >= MINIMUM_KARMA_REQUIRED_FOR_VOTING:
             return ArticleVote(
-                user_id=self.user_id,
+                user_id=self.id,
                 article_id=article_id,
                 vote=vote
             )
         else:
-            return InsufficientKarma(user_with_insufficient_karma_id=self.user_id)
+            return InsufficientKarma(user_with_insufficient_karma_id=self.id)
