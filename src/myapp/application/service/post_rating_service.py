@@ -42,7 +42,8 @@ class PostRatingService(
         )
 
         cast_vote_result: CastVoteResult = vote_casting_user.cast_vote(
-            command.article_id, command.vote
+            command.article_id,
+            command.vote
         )
 
         if isinstance(cast_vote_result, InsufficientKarma):

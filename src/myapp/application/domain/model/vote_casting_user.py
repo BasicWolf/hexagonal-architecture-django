@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Union
 from uuid import UUID
 
@@ -7,8 +8,9 @@ from myapp.application.domain.model.vote import Vote
 MINIMUM_KARMA_REQUIRED_FOR_VOTING = 5
 
 
+@dataclass
 class InsufficientKarma:
-    pass
+    user_with_insufficient_karma_id: UUID
 
 
 CastVoteResult = Union[InsufficientKarma, ArticleVote]
@@ -30,4 +32,4 @@ class VoteCastingUser:
                 vote=vote
             )
         else:
-            return InsufficientKarma()
+            return InsufficientKarma(user_with_insufficient_karma_id=self.user_id)

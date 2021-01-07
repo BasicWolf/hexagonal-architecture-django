@@ -28,9 +28,9 @@ def test_cast_vote_returns_article_vote(user_id, article_id, karma):
     assert result.user_id == user_id
 
 
-def test_cannot_cast_vote_with_insufficient_karma():
+def test_cannot_cast_vote_with_insufficient_karma(user_id):
     vote_casting_user = VoteCastingUser(
-        user_id=uuid4(),
+        user_id=user_id,
         karma=4
     )
 
@@ -40,3 +40,4 @@ def test_cannot_cast_vote_with_insufficient_karma():
     )
 
     assert isinstance(result, InsufficientKarma)
+    assert result.user_with_insufficient_karma_id == user_id
