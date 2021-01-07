@@ -1,12 +1,12 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 
 import pytest
-from django.db import connection, IntegrityError
+from django.db import IntegrityError
 
-from myapp.application.adapter.spi.persistence.article_vote_repository import \
-    ArticleVoteRepository
 from myapp.application.adapter.spi.persistence.entity.article_vote import \
     ArticleVoteEntity
+from myapp.application.adapter.spi.persistence.repository.article_vote_repository import \
+    ArticleVoteRepository
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 
