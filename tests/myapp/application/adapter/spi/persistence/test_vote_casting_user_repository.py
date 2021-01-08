@@ -11,7 +11,7 @@ def test_get_vote_casting_user(user_id):
     vote_casting_repository = VoteCastingUserRepository()
 
     VoteCastingUserEntity(
-        user_id=user_id,
+        id=user_id,
         karma=100
     ).save()
 
@@ -21,5 +21,3 @@ def test_get_vote_casting_user(user_id):
 
     assert vote_casting_user.id == user_id
     assert vote_casting_user.karma == 100
-
-
