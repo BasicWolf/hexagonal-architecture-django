@@ -10,6 +10,7 @@ from myapp.application.ports.api.cast_article_vote.result.vote_already_cast impo
     VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
+from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
 
 
@@ -78,6 +79,28 @@ def test_casting_vote_invokes_insufficient_karma_handler(
     result_handler_mock.handle_insufficient_karma.assert_called_with(user_id)
 
 
+def test_cast_vote_created(
+    user_id: UUID,
+    article_id: UUID
+):
+    save_article_vote_port_mock = SaveArticleVotePortMock()
+    post_rating_service = build_post_rating_service(
+        get_vote_casting_user_port=GetVoteCastingUserPortMock(
+            returned_vote_casting_user=build_vote_casting_user(user_id=user_id)
+        ),
+        save_article_vote_port=save_article_vote_port_mock
+    )
+
+    post_rating_service.cast_article_vote(
+        CastArticleVoteCommand(user_id, article_id, Vote.DOWN)
+    )
+
+    saved_article_vote = save_article_vote_port_mock.saved_article_vote
+    assert saved_article_vote.user_id == user_id
+    assert saved_article_vote.article_id == article_id
+    assert saved_article_vote.vote == Vote.DOWN
+
+
 class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
     def __init__(self, article_exists=False):
         self._article_exists = article_exists
@@ -101,11 +124,20 @@ class GetVoteCastingUserPortMock(GetVoteCastingUserPort):
         return self.returned_vote_casting_user
 
 
+class SaveArticleVotePortMock(SaveArticleVotePort):
+    saved_article_vote = None
+
+    def save_article_vote(self, article_vote: ArticleVote):
+        self.saved_article_vote = article_vote
+
+
 def build_post_rating_service(
     article_vote_exists_port: ArticleVoteExistsPort = ArticleVoteExistsPortMock(),
-    get_vote_casting_user_port: GetVoteCastingUserPort = GetVoteCastingUserPortMock()
+    get_vote_casting_user_port: GetVoteCastingUserPort = GetVoteCastingUserPortMock(),
+    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
 ):
     return PostRatingService(
         article_vote_exists_port=article_vote_exists_port,
-        get_vote_casting_user_port=get_vote_casting_user_port
+        get_vote_casting_user_port=get_vote_casting_user_port,
+        save_article_vote_port=save_article_vote_port
     )

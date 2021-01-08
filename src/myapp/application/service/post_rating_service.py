@@ -14,6 +14,7 @@ from myapp.application.ports.api.cast_article_vote.result.vote_cast_result impor
     VoteCastResult
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
+from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 
 
 class PostRatingService(
@@ -22,10 +23,12 @@ class PostRatingService(
     def __init__(
         self,
         article_vote_exists_port: ArticleVoteExistsPort,
-        get_vote_casting_user_port: GetVoteCastingUserPort
+        get_vote_casting_user_port: GetVoteCastingUserPort,
+        save_article_vote_port: SaveArticleVotePort
     ):
         self._article_vote_exists_port = article_vote_exists_port
         self._get_vote_casting_user_port = get_vote_casting_user_port
+        self._save_article_vote_port = save_article_vote_port
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         if self._article_vote_exists_port.article_vote_exists(
@@ -48,5 +51,7 @@ class PostRatingService(
 
         if isinstance(cast_vote_result, InsufficientKarma):
             return InsufficientKarmaResult(command.user_id)
+
+        self._save_article_vote_port.save_article_vote(cast_vote_result)
 
         return VoteCastResult(cast_vote_result)
