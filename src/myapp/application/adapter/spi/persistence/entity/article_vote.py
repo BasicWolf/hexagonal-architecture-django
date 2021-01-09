@@ -1,6 +1,10 @@
+from __future__ import annotations
 from uuid import uuid4
 
 from django.db import models
+
+from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.vote import Vote
 
 
 class ArticleVoteEntity(models.Model):
@@ -21,3 +25,29 @@ class ArticleVoteEntity(models.Model):
         unique_together = [['user_id', 'article_id']]
         db_table = 'article_vote'
 
+    @classmethod
+    def from_domain_model(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
+        vote: int = {
+            Vote.UP: cls.VOTE_UP,
+            Vote.DOWN: cls.VOTE_DOWN
+        }[article_vote.vote]
+
+        return ArticleVoteEntity(
+            id=article_vote.id,
+            article_id=article_vote.article_id,
+            user_id=article_vote.user_id,
+            vote=vote
+        )
+
+    def to_domain_model(self) -> ArticleVote:
+        vote: Vote = {
+            self.VOTE_UP: Vote.UP,
+            self.VOTE_DOWN: Vote.DOWN
+        }[self.vote]
+
+        return ArticleVote(
+            id=self.id,
+            user_id=self.user_id,
+            article_id=self.article_id,
+            vote=vote
+        )
