@@ -3,7 +3,7 @@ from uuid import UUID
 import pytest
 from django.db import IntegrityError
 
-from myapp.application.adapter.spi.persistence.entity.article_vote import \
+from myapp.application.adapter.spi.persistence.entity.article_vote_entity import \
     ArticleVoteEntity
 from myapp.application.adapter.spi.persistence.repository.article_vote_repository import \
     ArticleVoteRepository
