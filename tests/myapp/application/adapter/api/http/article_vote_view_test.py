@@ -14,6 +14,7 @@ from myapp.application.ports.api.cast_article_vote.result.cast_article_vote_resu
     CastArticleVoteResult
 from myapp.application.ports.api.cast_article_vote.result.vote_cast_result import \
     VoteCastResult
+from tests.myapp.application.adapter.api.http.content_types import ContentType
 
 
 def test_post_article_vote(rf: RequestFactory, user_id: UUID, article_id: UUID):
@@ -27,9 +28,18 @@ def test_post_article_vote(rf: RequestFactory, user_id: UUID, article_id: UUID):
 
     article_vote_view = ArticleVoteView(cast_article_use_case_mock)
     response = article_vote_view.post(
-        rf.post(f'/article/{article_id}/vote')
+        rf.post(
+            f'/article_vote',
+            data={
+                'user_id': user_id, 
+                'article_id': article_id,
+                'vote': Vote.UP
+            },
+            content_type=ContentType.APPLICATION_JSON
+        )
     )
     assert response.status_code == status.HTTP_201_CREATED
+    assert response.data == '{}'
 
 
 def build_article_vote(
