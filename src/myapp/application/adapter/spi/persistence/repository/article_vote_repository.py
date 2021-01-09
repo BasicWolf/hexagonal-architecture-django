@@ -12,13 +12,13 @@ class ArticleVoteRepository(
     SaveArticleVotePort,
     ArticleVoteExistsPort
 ):
-    def article_vote_exists(self, article_id: UUID, user_id: UUID):
+    def article_vote_exists(self, article_id: UUID, user_id: UUID) -> bool:
         return ArticleVoteEntity.objects.filter(
             article_id=article_id,
             user_id=user_id
         ).exists()
 
-    def save_article_vote(self, article_vote: ArticleVote):
+    def save_article_vote(self, article_vote: ArticleVote) -> ArticleVote:
         article_vote_entity = ArticleVoteEntity.from_domain_model(article_vote)
         article_vote_entity.save()
         return article_vote_entity.to_domain_model()
