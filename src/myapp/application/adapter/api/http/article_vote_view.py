@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from myapp.application.domain.model.article_vote import ArticleVote
@@ -14,12 +16,12 @@ from myapp.application.ports.api.cast_article_vote.result.vote_already_cast impo
 )
 
 
-class ArticleVoteController(CastArticleVoteResultHandler, APIView):
+class ArticleVoteView(CastArticleVoteResultHandler, APIView):
     def __init__(self, cast_article_vote_use_case: CastArticleVoteUseCase):
         self._cast_article_vote_use_case = cast_article_vote_use_case
 
     def post(self, request):
-        pass
+        return Response({}, status=status.HTTP_201_CREATED)
 
     def handle_cast_article_vote(self, article_vote: ArticleVote):
         pass
