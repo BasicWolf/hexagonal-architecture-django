@@ -8,8 +8,5 @@ from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastin
 
 class VoteCastingUserRepository(GetVoteCastingUserPort):
     def get_vote_casting_user(self, user_id: UUID) -> VoteCastingUser:
-        entity = VoteCastingUserEntity.objects.get(id=user_id)
-        return self.to_domain_model(entity)
-
-    def to_domain_model(self, entity: VoteCastingUserEntity) -> VoteCastingUser:
-        return VoteCastingUser(entity.id, entity.karma)
+        entity: VoteCastingUserEntity = VoteCastingUserEntity.objects.get(id=user_id)
+        return entity.to_domain_model()
