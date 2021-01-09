@@ -29,6 +29,7 @@ pytest = "*"
 pytest-django = "^4.1.0"
 pytest-mock = "*"
 pytest-pudb = "*"
+callee = "^0.3.1"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "hexarch_project.settings"

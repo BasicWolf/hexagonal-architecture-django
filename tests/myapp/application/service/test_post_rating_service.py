@@ -1,6 +1,8 @@
 from unittest.mock import Mock
 from uuid import UUID, uuid4
 
+from callee import InstanceOf, Attrs
+
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_casting_user import VoteCastingUser
@@ -31,7 +33,8 @@ def test_casting_valid_vote_invokes_handler(
     result.handle_by(handler)
 
     handler.handle_cast_article_vote.assert_called_with(
-        ArticleVote(
+        InstanceOf(ArticleVote)
+        & Attrs(
             user_id=user_id,
             article_id=article_id,
             vote=Vote.UP
