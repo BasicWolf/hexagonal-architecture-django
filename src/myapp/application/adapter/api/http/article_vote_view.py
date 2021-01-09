@@ -8,18 +8,15 @@ from rest_framework.views import APIView
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_serializer import \
     CastArticleVoteCommandSerializer
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_result_handler import (
-    CastArticleVoteResultHandler
-)
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
     CastArticleVoteUseCase
 )
-from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import (
+from myapp.application.ports.api.cast_article_vote.vote_already_cast import (
     VoteAlreadyCast
 )
 
 
-class ArticleVoteView(CastArticleVoteResultHandler, APIView):
+class ArticleVoteView(APIView):
     def __init__(self, cast_article_vote_use_case: CastArticleVoteUseCase):
         super().__init__()
         self._cast_article_vote_use_case = cast_article_vote_use_case

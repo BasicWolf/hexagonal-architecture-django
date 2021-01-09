@@ -10,10 +10,8 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase
-from myapp.application.ports.api.cast_article_vote.result.cast_article_vote_result import \
-    CastArticleVoteResult
-from myapp.application.ports.api.cast_article_vote.result.vote_cast_result import \
-    VoteCastResult
+from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
+    CastArticleVoteResult, VoteCastResult
 from tests.myapp.application.adapter.api.http.content_types import ContentType
 
 

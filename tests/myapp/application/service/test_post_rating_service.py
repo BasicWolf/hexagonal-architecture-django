@@ -1,14 +1,13 @@
-from unittest.mock import Mock
 from uuid import UUID, uuid4
-
-from callee import InstanceOf, Attrs
 
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_casting_user import VoteCastingUser
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
-from myapp.application.ports.api.cast_article_vote.result.vote_already_cast import \
+from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
+    VoteCastResult, VoteAlreadyCastResult, InsufficientKarmaResult
+from myapp.application.ports.api.cast_article_vote.vote_already_cast import \
     VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
@@ -16,7 +15,7 @@ from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePo
 from myapp.application.service.post_rating_service import PostRatingService
 
 
-def test_casting_valid_vote_invokes_handler(
+def test_casting_valid_vote_returns_result(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
@@ -29,20 +28,16 @@ def test_casting_valid_vote_invokes_handler(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
-    handler = Mock()
-    result.handle_by(handler)
-
-    handler.handle_cast_article_vote.assert_called_with(
-        InstanceOf(ArticleVote)
-        & Attrs(
-            user_id=user_id,
-            article_id=article_id,
-            vote=Vote.UP
-        )
+    assert isinstance(result, VoteCastResult)
+    assert result.article_vote == ArticleVote(
+        id=result.article_vote.id,
+        user_id=user_id,
+        article_id=article_id,
+        vote=Vote.UP
     )
 
 
-def test_casting_same_vote_two_times_invokes_vote_already_cast_handler(
+def test_casting_same_vote_two_times_returns_vote_alrady_cast_result(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
@@ -53,14 +48,11 @@ def test_casting_same_vote_two_times_invokes_vote_already_cast_handler(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
-    handler = Mock()
-    result.handle_by(handler)
-    handler.handle_vote_already_cast.assert_called_with(
-        VoteAlreadyCast(user_id, article_id)
-    )
+    assert isinstance(result, VoteAlreadyCastResult)
+    assert result.vote_already_cast == VoteAlreadyCast(user_id, article_id)
 
 
-def test_casting_vote_invokes_insufficient_karma_handler(
+def test_casting_vote_returns_insufficient_karma_handler(
     user_id: UUID,
     article_id: UUID
 ):
@@ -76,10 +68,8 @@ def test_casting_vote_invokes_insufficient_karma_handler(
     result = post_rating_service.cast_article_vote(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
-
-    result_handler_mock = Mock()
-    result.handle_by(result_handler_mock)
-    result_handler_mock.handle_insufficient_karma.assert_called_with(user_id)
+    assert isinstance(result, InsufficientKarmaResult)
+    assert result.user_with_insufficient_karma_id == user_id
 
 
 def test_cast_vote_created(
