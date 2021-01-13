@@ -12,7 +12,7 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
     CastArticleVoteUseCase
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
     CastArticleVoteResult, VoteCastResult
-from tests.myapp.application.adapter.api.http.content_types import ContentType
+from tests.test_myapp.application.adapter.api.http.content_types import ContentType
 
 
 def test_post_article_vote(rf: RequestFactory, user_id: UUID, article_id: UUID):
