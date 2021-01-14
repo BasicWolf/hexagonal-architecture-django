@@ -4,7 +4,7 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 
 
-class CastArticleVoteCommandSerializer(serializers.Serializer):
+class CastArticleVoteCommandDeserializer(serializers.Serializer):
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
     vote = serializers.CharField()

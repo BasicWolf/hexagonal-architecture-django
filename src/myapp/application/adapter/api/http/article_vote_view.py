@@ -21,8 +21,11 @@ class ArticleVoteView(APIView):
         super().__init__()
         self._cast_article_vote_use_case = cast_article_vote_use_case
 
-    def post(self, request: Request):
-        serializer = CastArticleVoteCommandSerializer(data=request.data)
+    def post(self, request: Request) -> Response:
+        serializer = CastArticleVoteCommandDeserializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            pass
+
         cast_article_vote_command = serializer.create()
 
         cast_article_vote_result = self._cast_article_vote_use_case.cast_article_vote(
