@@ -4,12 +4,14 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 
 
-class CastArticleVoteCommandDeserializer(serializers.Serializer):
+class CastArticleVoteCommandDeserializer(serializers.Serializer[CastArticleVoteCommand]):
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
     vote = serializers.CharField()
 
-    def create(self) -> CastArticleVoteCommand:
+    # Ignored mypy error:
+    # Signature of "create" incompatible with supertype "BaseSerializer"
+    def create(self) -> CastArticleVoteCommand:  # type: ignore
         """
         Create and return a new `CastArticleVoteCommand` instance,
         given the validated data.

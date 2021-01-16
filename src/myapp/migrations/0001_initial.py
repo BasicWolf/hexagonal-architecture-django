@@ -1,4 +1,5 @@
 import uuid
+from typing import Tuple, List
 
 from django.db import migrations, models
 
@@ -7,7 +8,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = []
+    dependencies: List[Tuple[str, str]] = []
 
     operations = [
         migrations.CreateModel(

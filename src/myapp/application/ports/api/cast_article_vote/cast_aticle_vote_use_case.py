@@ -9,5 +9,3 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_result impo
 class CastArticleVoteUseCase(Protocol):
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         raise NotImplementedError()
-
-

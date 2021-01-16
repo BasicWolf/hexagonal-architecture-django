@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from rest_framework import status
@@ -19,7 +20,9 @@ from myapp.application.util.assert_never import assert_never
 
 
 class ArticleVoteView(APIView):
-    cast_article_vote_use_case: CastArticleVoteUseCase = None
+    # ugly type ignore for sake of .as_view() which requires passed attributes
+    # to be declared in the class level :(
+    cast_article_vote_use_case: CastArticleVoteUseCase = None  # type: ignore
 
     def __init__(self, cast_article_vote_use_case: CastArticleVoteUseCase):
         self.cast_article_vote_use_case = cast_article_vote_use_case
