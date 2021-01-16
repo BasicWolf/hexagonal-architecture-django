@@ -28,12 +28,12 @@ def test_post_article_vote(arf: APIRequestFactory, user_id: UUID, article_id: UU
     response = article_vote_view.post(
         arf.post(
             f'/article_vote',
-            data={
+            {
                 'user_id': user_id, 
                 'article_id': article_id,
                 'vote': Vote.UP
             },
-            content_type=ContentType.APPLICATION_JSON.value
+            format='json'
         )
     )
     assert response.status_code == status.HTTP_201_CREATED
