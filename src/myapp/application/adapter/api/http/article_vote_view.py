@@ -1,6 +1,3 @@
-from typing import Optional
-from uuid import UUID
-
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -9,12 +6,9 @@ from rest_framework.views import APIView
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
     CastArticleVoteCommandDeserializer
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
-    VoteCastResult, CastArticleVoteResult
+    VoteCastResult
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
     CastArticleVoteUseCase
-)
-from myapp.application.ports.api.cast_article_vote.vote_already_cast import (
-    VoteAlreadyCast
 )
 from myapp.application.util.assert_never import assert_never
 
