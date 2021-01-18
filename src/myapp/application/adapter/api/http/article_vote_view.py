@@ -3,6 +3,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from myapp.application.adapter.api.http.serializer.article_vote_serializer import \
+    ArticleVoteSerializer
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
     CastArticleVoteCommandDeserializer
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
@@ -35,7 +37,8 @@ class ArticleVoteView(APIView):
 
         response = None
         if isinstance(result, VoteCastResult):
-            response = Response({}, status=status.HTTP_201_CREATED)
+            response_data = ArticleVoteSerializer(result.article_vote).data
+            response = Response(response_data, status=status.HTTP_201_CREATED)
         else:
             assert_never(result)
 
