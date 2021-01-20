@@ -11,7 +11,7 @@ from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
-    CastArticleVoteResult, VoteCastResult
+    CastArticleVoteResult, VoteCastResult, InsufficientKarmaResult
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase
 
@@ -59,6 +59,36 @@ def test_post_article_vote(
         'user_id': str(user_id),
         'vote': 'DOWN'
     }
+
+
+def test_post_article_vote_with_insufficient_karma_returns_bad_request(
+    arf: APIRequestFactory,
+    user_id: UUID
+):
+    cast_article_use_case_mock = CastArticleVoteUseCaseMock(
+        returned_result=InsufficientKarmaResult(
+            user_with_insufficient_karma_id=user_id
+        )
+    )
+
+    article_vote_view = ArticleVoteView.as_view(
+        cast_article_vote_use_case=cast_article_use_case_mock
+    )
+
+    response: Response = article_vote_view(
+        arf.post(
+            f'/article_vote',
+            {
+                'user_id': user_id,
+                'article_id': uuid4(),
+                'vote': Vote.UP.value
+            },
+            format='json'
+        )
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
 
 
 def build_article_vote(
