@@ -144,6 +144,18 @@ argon2 = ["argon2-cffi (>=16.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-rest-enumfield"
+version = "0.2.0"
+description = "EnumField for Django REST Framework"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = "*"
+djangorestframework = "*"
+
+[[package]]
 name = "django-stubs"
 version = "1.7.0"
 description = "Mypy stubs for Django"
@@ -518,7 +530,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "20188ea8f7425bcc84d1c3a502c4d6eece00f4c6cf1b7dd3a494b569d1c720af"
+content-hash = "d77bb25f613adfd1f8ab92fd8781c292c3f2b3210c58e347e9e628ae3bd7d509"
 
 [metadata.files]
 appdirs = [
@@ -570,6 +582,10 @@ coreschema = [
 django = [
     {file = "Django-3.1.5-py3-none-any.whl", hash = "sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9"},
     {file = "Django-3.1.5.tar.gz", hash = "sha256:2d78425ba74c7a1a74b196058b261b9733a8570782f4e2828974777ccca7edf7"},
+]
+django-rest-enumfield = [
+    {file = "django-rest-enumfield-0.2.0.tar.gz", hash = "sha256:0e3c1121e136dd7163c92737dcd67e0c6b78e78793b740b0811753343c7da8fe"},
+    {file = "django_rest_enumfield-0.2.0-py2.py3-none-any.whl", hash = "sha256:80792326d5d8fad8a66729e9404a4078fe16f7eb8b2a910b37157d96df415611"},
 ]
 django-stubs = [
     {file = "django-stubs-1.7.0.tar.gz", hash = "sha256:ddd190aca5b9adb4d30760d5c64f67cb3658703f5f42c3bb0c2c71ff4d752c39"},

@@ -18,6 +18,7 @@ homepage = "https://github.com/BasicWolf/hexagonal-architecture-django"
 python = "^3.8"
 django = "^3.1"
 djangorestframework = "^3.12.2"
+django-rest-enumfield = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
