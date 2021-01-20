@@ -1,6 +1,8 @@
 from uuid import uuid4, UUID
 
+import pytest
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
@@ -14,37 +16,58 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
     CastArticleVoteUseCase
 
 
-def test_post_article_vote(arf: APIRequestFactory, user_id: UUID, article_id: UUID):
+@pytest.fixture
+def article_vote_id() -> UUID:
+    return uuid4()
+
+
+def test_post_article_vote(
+    arf: APIRequestFactory,
+    article_vote_id: UUID,
+    user_id: UUID,
+    article_id: UUID
+):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
         returned_result=VoteCastResult(build_article_vote(
+            id=article_vote_id,
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
         ))
     )
 
-    article_vote_view = ArticleVoteView(cast_article_use_case_mock)
-    response = article_vote_view.post(
+    article_vote_view = ArticleVoteView.as_view(
+        cast_article_vote_use_case=cast_article_use_case_mock
+    )
+
+    response: Response = article_vote_view(
         arf.post(
             f'/article_vote',
             {
-                'user_id': user_id, 
+                'user_id': user_id,
                 'article_id': article_id,
-                'vote': Vote.UP
+                'vote': Vote.UP.value
             },
             format='json'
         )
     )
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data == '{}'
+    assert response.data == {
+        'id': str(article_vote_id),
+        'article_id': str(article_id),
+        'user_id': str(user_id),
+        'vote': 'DOWN'
+    }
 
 
 def build_article_vote(
+    id: UUID = uuid4(),
     user_id: UUID = uuid4(),
     article_id: UUID = uuid4(),
     vote: Vote = Vote.UP
 ) -> ArticleVote:
     return ArticleVote(
+        id=id,
         user_id=user_id,
         article_id=article_id,
         vote=vote
