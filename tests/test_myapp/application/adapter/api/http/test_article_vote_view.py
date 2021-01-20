@@ -46,11 +46,12 @@ def test_post_article_vote(
             {
                 'user_id': user_id,
                 'article_id': article_id,
-                'vote': Vote.UP.value
+                'vote': Vote.DOWN.value
             },
             format='json'
         )
     )
+
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data == {
         'id': str(article_vote_id),
