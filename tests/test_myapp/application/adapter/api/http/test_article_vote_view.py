@@ -1,7 +1,7 @@
+from http import HTTPStatus
 from uuid import uuid4, UUID
 
 import pytest
-from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
@@ -52,7 +52,7 @@ def test_post_article_vote(
         )
     )
 
-    assert response.status_code == status.HTTP_201_CREATED
+    assert response.status_code == HTTPStatus.CREATED
     assert response.data == {
         'id': str(article_vote_id),
         'article_id': str(article_id),
@@ -87,8 +87,8 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
         )
     )
 
-    assert response.status_code == status.HTTP_400_BAD_REQUEST
-
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.data == {}
 
 
 def build_article_vote(
