@@ -1,8 +1,10 @@
-from rest_framework import status
+from http import HTTPStatus
+
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from myapp.application.adapter.api.http.problem_response import problem_response
 from myapp.application.adapter.api.http.serializer.article_vote_serializer import \
     ArticleVoteSerializer
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
@@ -38,22 +40,14 @@ class ArticleVoteView(APIView):
         response = None
         if isinstance(result, VoteCastResult):
             response_data = ArticleVoteSerializer(result.article_vote).data
-            response = Response(response_data, status=status.HTTP_201_CREATED)
+            response = Response(response_data, status=HTTPStatus.CREATED)
         elif isinstance(result, InsufficientKarmaResult):
-            response = Response()
+            response = problem_response(
+                title='Cannot cast a vote',
+                detail=str(result),
+                status=HTTPStatus.BAD_REQUEST
+            )
         else:
             assert_never(result)
 
         return response
-
-    def _problem(self, status: int, title: str, detail: str) -> Response:
-        problem_data = {
-            title: title,
-            detail: detail,
-            status: status
-        }
-        return Response(
-            problem_data,
-            status=status,
-            content_type='application/problem+json'
-        )

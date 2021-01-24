@@ -88,7 +88,11 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     )
 
     assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.data == {}
+    assert response.data == {
+        'status': 400,
+        'detail': f"User {user_id} does not have enough karma to cast a vote",
+        'title': "Cannot cast a vote"
+    }
 
 
 def build_article_vote(

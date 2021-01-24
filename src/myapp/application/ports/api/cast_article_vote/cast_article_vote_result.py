@@ -14,6 +14,10 @@ class InsufficientKarmaResult:
     def __init__(self, user_with_insufficient_karma_id: UUID):
         self.user_with_insufficient_karma_id = user_with_insufficient_karma_id
 
+    def __str__(self) -> str:
+        return f'User {self.user_with_insufficient_karma_id} does not have ' \
+                'enough karma to cast a vote'
+
 
 class VoteAlreadyCastResult:
     vote_already_cast: VoteAlreadyCast
