@@ -4,8 +4,6 @@ from typing import Union
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.ports.api.cast_article_vote.vote_already_cast import \
-    VoteAlreadyCast
 
 
 class InsufficientKarmaResult:
@@ -20,13 +18,16 @@ class InsufficientKarmaResult:
 
 
 class VoteAlreadyCastResult:
-    vote_already_cast: VoteAlreadyCast
+    cast_vote_user_id: UUID
+    cast_vote_article_id: UUID
 
     def __init__(self, user_id: UUID, article_id: UUID):
-        self.vote_already_cast = VoteAlreadyCast(
-            user_id=user_id,
-            article_id=article_id
-        )
+        self.cast_vote_user_id = user_id
+        self.cast_vote_article_id = article_id
+
+    def __str__(self) -> str:
+        return f"User \"{self.cast_vote_user_id}\" has already cast a vote " \
+               f"for article \"{self.cast_vote_article_id}\""
 
 
 class VoteCastResult:

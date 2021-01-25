@@ -10,7 +10,7 @@ from myapp.application.adapter.api.http.serializer.article_vote_serializer impor
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
     CastArticleVoteCommandDeserializer
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
-    VoteCastResult, InsufficientKarmaResult
+    VoteCastResult, InsufficientKarmaResult, VoteAlreadyCastResult
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
     CastArticleVoteUseCase
 )
@@ -43,9 +43,15 @@ class ArticleVoteView(APIView):
             response = Response(response_data, status=HTTPStatus.CREATED)
         elif isinstance(result, InsufficientKarmaResult):
             response = problem_response(
-                title='Cannot cast a vote',
+                title='Cannot cast vote',
                 detail=str(result),
                 status=HTTPStatus.BAD_REQUEST
+            )
+        elif isinstance(result, VoteAlreadyCastResult):
+            response = problem_response(
+                title='Cannot cast vote',
+                detail=str(result),
+                status=HTTPStatus.CONFLICT
             )
         else:
             assert_never(result)

@@ -7,8 +7,6 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
     VoteCastResult, VoteAlreadyCastResult, InsufficientKarmaResult
-from myapp.application.ports.api.cast_article_vote.vote_already_cast import \
-    VoteAlreadyCast
 from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
