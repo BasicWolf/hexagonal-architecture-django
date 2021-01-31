@@ -47,7 +47,8 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     )
 
     assert isinstance(result, VoteAlreadyCastResult)
-    assert result.vote_already_cast == VoteAlreadyCast(user_id, article_id)
+    assert result.cast_vote_user_id == user_id
+    assert result.cast_vote_article_id == article_id
 
 
 def test_casting_vote_returns_insufficient_karma_handler(

@@ -43,13 +43,13 @@ class ArticleVoteView(APIView):
             response = Response(response_data, status=HTTPStatus.CREATED)
         elif isinstance(result, InsufficientKarmaResult):
             response = problem_response(
-                title='Cannot cast vote',
+                title='Cannot cast a vote',
                 detail=str(result),
                 status=HTTPStatus.BAD_REQUEST
             )
         elif isinstance(result, VoteAlreadyCastResult):
             response = problem_response(
-                title='Cannot cast vote',
+                title='Cannot cast a vote',
                 detail=str(result),
                 status=HTTPStatus.CONFLICT
             )
