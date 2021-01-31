@@ -16,11 +16,6 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
     CastArticleVoteUseCase
 
 
-@pytest.fixture
-def article_vote_id() -> UUID:
-    return uuid4()
-
-
 def test_post_article_vote(
     arf: APIRequestFactory,
     article_vote_id: UUID,
@@ -139,6 +134,11 @@ def build_article_vote(
         article_id=article_id,
         vote=vote
     )
+
+
+@pytest.fixture
+def article_vote_id() -> UUID:
+    return uuid4()
 
 
 class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
