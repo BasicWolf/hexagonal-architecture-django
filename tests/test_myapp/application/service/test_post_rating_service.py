@@ -51,7 +51,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     assert result.cast_vote_article_id == article_id
 
 
-def test_casting_vote_returns_insufficient_karma_handler(
+def test_casting_vote_returns_insufficient_karma_result(
     user_id: UUID,
     article_id: UUID
 ):
