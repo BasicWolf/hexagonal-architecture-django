@@ -23,7 +23,7 @@ def test_post_article_vote(
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteCastResult(build_article_vote(
+        returned_result=VoteCastResult(ArticleVote(
             id=article_vote_id,
             user_id=user_id,
             article_id=article_id,
@@ -122,20 +122,6 @@ def test_post_article_vote_returns_conflict(
     assert response.status_code == HTTPStatus.CONFLICT
 
 
-def build_article_vote(
-    id: UUID = uuid4(),
-    user_id: UUID = uuid4(),
-    article_id: UUID = uuid4(),
-    vote: Vote = Vote.UP
-) -> ArticleVote:
-    return ArticleVote(
-        id=id,
-        user_id=user_id,
-        article_id=article_id,
-        vote=vote
-    )
-
-
 @pytest.fixture
 def article_vote_id() -> UUID:
     return uuid4()
@@ -146,7 +132,7 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
 
     def __init__(
         self,
-        returned_result: CastArticleVoteResult = VoteCastResult(build_article_vote())
+        returned_result: CastArticleVoteResult
     ):
         self._returned_result = returned_result
 
