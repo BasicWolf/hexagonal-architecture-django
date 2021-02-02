@@ -56,6 +56,29 @@ def test_post_article_vote(
     }
 
 
+def test_post_article_vote_with_malformed_data_returns_bad_request(
+    arf: APIRequestFactory
+):
+    cast_article_use_case_mock = CastArticleVoteUseCaseMock()
+
+    article_vote_view = ArticleVoteView.as_view(
+        cast_article_vote_use_case=cast_article_use_case_mock
+    )
+
+    response: Response = article_vote_view(
+        arf.post(
+            f'/article_vote',
+            {
+                'user_id': str(uuid4()),
+                'article_id': str(uuid4())
+            },
+            format='json'
+        )
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+
+
 def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     arf: APIRequestFactory,
     user_id: UUID,
@@ -120,6 +143,25 @@ def test_post_article_vote_returns_conflict(
     )
 
     assert response.status_code == HTTPStatus.CONFLICT
+    assert response.data == {
+        'status': 409,
+        'detail': f"User \"{user_id}\" has already cast a vote for article \"{article_id}\"",
+        'title': "Cannot cast a vote"
+    }
+
+
+def build_article_vote(
+    id: UUID = uuid4(),
+    user_id: UUID = uuid4(),
+    article_id: UUID = uuid4(),
+    vote: Vote = Vote.UP
+) -> ArticleVote:
+    return ArticleVote(
+        id=id,
+        user_id=user_id,
+        article_id=article_id,
+        vote=vote
+    )
 
 
 @pytest.fixture
@@ -132,7 +174,7 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
 
     def __init__(
         self,
-        returned_result: CastArticleVoteResult
+        returned_result: CastArticleVoteResult = VoteCastResult(build_article_vote())
     ):
         self._returned_result = returned_result
 
