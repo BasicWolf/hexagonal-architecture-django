@@ -6,6 +6,11 @@ from uuid import UUID
 from myapp.application.domain.model.article_vote import ArticleVote
 
 
+class VoteCastResult:
+    def __init__(self, article_vote: ArticleVote):
+        self.article_vote = article_vote
+
+
 class InsufficientKarmaResult:
     user_with_insufficient_karma_id: UUID
 
@@ -30,14 +35,9 @@ class VoteAlreadyCastResult:
                f"for article \"{self.cast_vote_article_id}\""
 
 
-class VoteCastResult:
-    def __init__(self, article_vote: ArticleVote):
-        self.article_vote = article_vote
-
-
 CastArticleVoteResult = Union[
+    VoteCastResult,
     InsufficientKarmaResult,
     VoteAlreadyCastResult,
-    VoteCastResult,
 ]
 
