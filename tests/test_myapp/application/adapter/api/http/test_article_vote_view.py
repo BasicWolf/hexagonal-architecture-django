@@ -121,8 +121,8 @@ def test_post_article_vote_returns_conflict(
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
         returned_result=VoteAlreadyCastResult(
-            user_id=user_id,
-            article_id=article_id
+            cast_vote_user_id=user_id,
+            cast_vote_article_id=article_id
         )
     )
 
