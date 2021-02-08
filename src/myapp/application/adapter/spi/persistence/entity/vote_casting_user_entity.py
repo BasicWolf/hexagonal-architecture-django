@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from myapp.application.domain.model.vote_casting_user import VoteCastingUser
+from myapp.application.domain.model.voting_user import VotingUser
 
 
 class VoteCastingUserEntity(models.Model):
@@ -12,6 +12,6 @@ class VoteCastingUserEntity(models.Model):
     class Meta:
         db_table = 'user_data'
 
-    def to_domain_model(self) -> VoteCastingUser:
-        return VoteCastingUser(self.id, self.karma)
+    def to_domain_model(self) -> VotingUser:
+        return VotingUser(self.id, self.karma)
 

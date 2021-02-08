@@ -16,7 +16,7 @@ class InsufficientKarma:
 CastVoteResult = Union[InsufficientKarma, ArticleVote]
 
 
-class VoteCastingUser:
+class VotingUser:
     id: UUID
     karma: int
 
