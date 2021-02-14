@@ -10,7 +10,7 @@ MINIMUM_KARMA_REQUIRED_FOR_VOTING = 5
 
 @dataclass
 class InsufficientKarma:
-    user_with_insufficient_karma_id: UUID
+    user_id: UUID
 
 
 CastVoteResult = Union[InsufficientKarma, ArticleVote]
@@ -32,4 +32,4 @@ class VotingUser:
                 vote=vote
             )
         else:
-            return InsufficientKarma(user_with_insufficient_karma_id=self.id)
+            return InsufficientKarma(user_id=self.id)

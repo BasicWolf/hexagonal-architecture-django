@@ -40,4 +40,4 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id):
     )
 
     assert isinstance(result, InsufficientKarma)
-    assert result.user_with_insufficient_karma_id == user_id
+    assert result.user_id == user_id
