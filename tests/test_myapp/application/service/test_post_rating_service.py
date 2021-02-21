@@ -43,7 +43,6 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
-        article_vote_exists_port=ArticleVoteExistsPortMock(article_exists=True),
         get_vote_casting_user_port=GetVotingUserPortMock(
             build_voting_user(
                 user_id=user_id,
@@ -107,14 +106,6 @@ def test_cast_vote_created(
     assert saved_article_vote.vote == Vote.DOWN
 
 
-class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
-    def __init__(self, article_exists=False):
-        self._article_exists = article_exists
-
-    def article_vote_exists(self, user_id: UUID, article_id: UUID):
-        return self._article_exists
-
-
 class GetVotingUserPortMock(GetVotingUserPort):
     def __init__(
         self,
@@ -134,12 +125,10 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
 
 
 def build_post_rating_service(
-    article_vote_exists_port: ArticleVoteExistsPort = ArticleVoteExistsPortMock(),
     get_vote_casting_user_port: GetVotingUserPort = GetVotingUserPortMock(),
     save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
 ):
     return PostRatingService(
-        article_vote_exists_port=article_vote_exists_port,
         get_voting_user_port=get_vote_casting_user_port,
         save_article_vote_port=save_article_vote_port
     )

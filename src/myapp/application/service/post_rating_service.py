@@ -14,17 +14,14 @@ from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePo
 class PostRatingService(
     CastArticleVoteUseCase
 ):
-    _article_vote_exists_port: ArticleVoteExistsPort
     _get_voting_user_port: GetVotingUserPort
     _save_article_vote_port: SaveArticleVotePort
 
     def __init__(
         self,
-        article_vote_exists_port: ArticleVoteExistsPort,
         get_voting_user_port: GetVotingUserPort,
         save_article_vote_port: SaveArticleVotePort
     ):
-        self._article_vote_exists_port = article_vote_exists_port
         self._get_voting_user_port = get_voting_user_port
         self._save_article_vote_port = save_article_vote_port
 
