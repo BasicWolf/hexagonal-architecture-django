@@ -16,6 +16,7 @@ class PostRatingService(
 ):
     _article_vote_exists_port: ArticleVoteExistsPort
     _get_voting_user_port: GetVotingUserPort
+    _save_article_vote_port: SaveArticleVotePort
 
     def __init__(
         self,
