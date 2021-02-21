@@ -2,11 +2,10 @@ from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
     CastVoteResult, VoteAlreadyCast
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteUseCase
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
     CastArticleVoteResult, InsufficientKarmaResult, VoteAlreadyCastResult, VoteCastResult
-from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExistsPort
+from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
+    CastArticleVoteUseCase
 from myapp.application.ports.spi.get_voting_user_port import GetVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 
