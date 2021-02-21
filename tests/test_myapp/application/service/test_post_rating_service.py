@@ -127,6 +127,6 @@ def build_post_rating_service(
 ):
     return PostRatingService(
         article_vote_exists_port=article_vote_exists_port,
-        get_vote_casting_user_port=get_vote_casting_user_port,
+        get_voting_user_port=get_vote_casting_user_port,
         save_article_vote_port=save_article_vote_port
     )

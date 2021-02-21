@@ -15,16 +15,16 @@ class PostRatingService(
     CastArticleVoteUseCase
 ):
     _article_vote_exists_port: ArticleVoteExistsPort
-    _get_vote_casting_user_port: GetVotingUserPort
+    _get_voting_user_port: GetVotingUserPort
 
     def __init__(
         self,
         article_vote_exists_port: ArticleVoteExistsPort,
-        get_vote_casting_user_port: GetVotingUserPort,
+        get_voting_user_port: GetVotingUserPort,
         save_article_vote_port: SaveArticleVotePort
     ):
         self._article_vote_exists_port = article_vote_exists_port
-        self._get_vote_casting_user_port = get_vote_casting_user_port
+        self._get_voting_user_port = get_voting_user_port
         self._save_article_vote_port = save_article_vote_port
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
@@ -37,11 +37,12 @@ class PostRatingService(
                 cast_vote_article_id=command.article_id
             )
 
-        vote_casting_user = self._get_vote_casting_user_port.get_voting_user(
-            user_id=command.user_id
+        voting_user = self._get_voting_user_port.get_voting_user(
+            user_id=command.user_id,
+            article_id=command.article_id
         )
 
-        cast_vote_result: CastVoteResult = vote_casting_user.cast_vote(
+        cast_vote_result: CastVoteResult = voting_user.cast_vote(
             command.article_id,
             command.vote
         )
