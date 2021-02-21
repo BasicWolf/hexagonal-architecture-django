@@ -40,7 +40,7 @@ class VotingUser:
         self.voted = voted
         self.karma = karma
 
-    def cast_vote(self, article_id: UUID, vote: Vote) -> CastVoteResult:
+    def cast_vote(self, vote: Vote) -> CastVoteResult:
         if self.voted:
             return VoteAlreadyCast(
                 user_id=self.id,
@@ -52,6 +52,6 @@ class VotingUser:
 
         return ArticleVote(
             user_id=self.id,
-            article_id=article_id,
+            article_id=self.voting_for_article_id,
             vote=vote
         )

@@ -19,7 +19,10 @@ def test_casting_valid_vote_returns_result(
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVotingUserPortMock(
-            build_voting_user(user_id=user_id)
+            build_voting_user(
+                user_id=user_id,
+                voting_for_article_id=article_id
+            )
         )
     )
 
@@ -79,7 +82,10 @@ def test_cast_vote_created(
     save_article_vote_port_mock = SaveArticleVotePortMock()
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVotingUserPortMock(
-            returned_vote_casting_user=build_voting_user(user_id=user_id)
+            returned_vote_casting_user=build_voting_user(
+                user_id=user_id,
+                voting_for_article_id=article_id
+            )
         ),
         save_article_vote_port=save_article_vote_port_mock
     )
@@ -109,7 +115,7 @@ class GetVotingUserPortMock(GetVotingUserPort):
     ):
         self.returned_vote_casting_user = returned_vote_casting_user
 
-    def get_voting_user(self, user_id: UUID) -> VotingUser:
+    def get_voting_user(self, user_id: UUID, article_id: UUID) -> VotingUser:
         return self.returned_vote_casting_user
 
 
