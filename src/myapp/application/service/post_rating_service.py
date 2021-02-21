@@ -1,5 +1,5 @@
 from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
-    CastVoteResult
+    CastVoteResult, VoteAlreadyCast
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
@@ -28,15 +28,6 @@ class PostRatingService(
         self._save_article_vote_port = save_article_vote_port
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
-        if self._article_vote_exists_port.article_vote_exists(
-            user_id=command.user_id,
-            article_id=command.article_id
-        ):
-            return VoteAlreadyCastResult(
-                cast_vote_user_id=command.user_id,
-                cast_vote_article_id=command.article_id
-            )
-
         voting_user = self._get_voting_user_port.get_voting_user(
             user_id=command.user_id,
             article_id=command.article_id
@@ -46,7 +37,11 @@ class PostRatingService(
 
         if isinstance(cast_vote_result, InsufficientKarma):
             return InsufficientKarmaResult(command.user_id)
+        elif isinstance(cast_vote_result, VoteAlreadyCast):
+            return VoteAlreadyCastResult(
+                cast_vote_user_id=command.user_id,
+                cast_vote_article_id=command.article_id
+            )
 
         self._save_article_vote_port.save_article_vote(cast_vote_result)
-
         return VoteCastResult(cast_vote_result)

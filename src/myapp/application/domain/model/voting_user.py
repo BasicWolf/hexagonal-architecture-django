@@ -36,6 +36,8 @@ class VotingUser:
         if self.karma < MINIMUM_KARMA_REQUIRED_FOR_VOTING:
             return InsufficientKarma(user_id=self.id)
 
+        self.voted = True
+
         return ArticleVote(
             user_id=self.id,
             article_id=self.voting_for_article_id,

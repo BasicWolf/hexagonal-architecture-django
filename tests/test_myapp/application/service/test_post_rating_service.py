@@ -43,7 +43,14 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     user_id: UUID, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
-        article_vote_exists_port=ArticleVoteExistsPortMock(article_exists=True)
+        article_vote_exists_port=ArticleVoteExistsPortMock(article_exists=True),
+        get_vote_casting_user_port=GetVotingUserPortMock(
+            build_voting_user(
+                user_id=user_id,
+                voting_for_article_id=article_id,
+                voted=True
+            )
+        )
     )
  
     result = post_rating_service.cast_article_vote(
