@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, List
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
@@ -13,23 +13,45 @@ class InsufficientKarma:
     user_id: UUID
 
 
-CastVoteResult = Union[InsufficientKarma, ArticleVote]
+@dataclass
+class VoteAlreadyCast:
+    user_id: UUID
+    article_id: UUID
+
+
+CastVoteResult = Union[ArticleVote, InsufficientKarma, VoteAlreadyCast]
 
 
 class VotingUser:
     id: UUID
+    voting_for_article_id: UUID
+    voted: bool
     karma: int
 
-    def __init__(self, id: UUID, karma: int):
+    def __init__(
+        self,
+        id: UUID,
+        voting_for_article_id: UUID,
+        voted: bool,
+        karma: int
+    ):
         self.id = id
+        self.voting_for_article_id = voting_for_article_id
+        self.voted = voted
         self.karma = karma
 
     def cast_vote(self, article_id: UUID, vote: Vote) -> CastVoteResult:
-        if self.karma >= MINIMUM_KARMA_REQUIRED_FOR_VOTING:
-            return ArticleVote(
+        if self.voted:
+            return VoteAlreadyCast(
                 user_id=self.id,
-                article_id=article_id,
-                vote=vote
+                article_id=self.voting_for_article_id
             )
-        else:
+
+        if self.karma < MINIMUM_KARMA_REQUIRED_FOR_VOTING:
             return InsufficientKarma(user_id=self.id)
+
+        return ArticleVote(
+            user_id=self.id,
+            article_id=article_id,
+            vote=vote
+        )

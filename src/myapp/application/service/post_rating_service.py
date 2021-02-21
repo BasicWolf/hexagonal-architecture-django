@@ -14,6 +14,9 @@ from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePo
 class PostRatingService(
     CastArticleVoteUseCase
 ):
+    _article_vote_exists_port: ArticleVoteExistsPort
+    _get_vote_casting_user_port: GetVoteCastingUserPort
+
     def __init__(
         self,
         article_vote_exists_port: ArticleVoteExistsPort,

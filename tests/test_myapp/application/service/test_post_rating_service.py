@@ -1,4 +1,4 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
@@ -11,6 +11,7 @@ from myapp.application.ports.spi.article_vote_exists_port import ArticleVoteExis
 from myapp.application.ports.spi.get_vote_casting_user_port import GetVoteCastingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
+from tests.test_myapp.application.domain.model.voting_user import build_voting_user
 
 
 def test_casting_valid_vote_returns_result(
@@ -18,7 +19,7 @@ def test_casting_valid_vote_returns_result(
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVoteCastingUserPortMock(
-            build_vote_casting_user(user_id=user_id)
+            build_voting_user(user_id=user_id)
         )
     )
 
@@ -57,8 +58,8 @@ def test_casting_vote_returns_insufficient_karma_result(
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVoteCastingUserPortMock(
-            returned_vote_casting_user=VotingUser(
-                id=user_id,
+            returned_vote_casting_user=build_voting_user(
+                user_id=user_id,
                 karma=2
             )
         )
@@ -78,7 +79,7 @@ def test_cast_vote_created(
     save_article_vote_port_mock = SaveArticleVotePortMock()
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=GetVoteCastingUserPortMock(
-            returned_vote_casting_user=build_vote_casting_user(user_id=user_id)
+            returned_vote_casting_user=build_voting_user(user_id=user_id)
         ),
         save_article_vote_port=save_article_vote_port_mock
     )
@@ -101,14 +102,10 @@ class ArticleVoteExistsPortMock(ArticleVoteExistsPort):
         return self._article_exists
 
 
-def build_vote_casting_user(user_id: UUID = uuid4(), karma: int = 10):
-    return VotingUser(id=user_id, karma=karma)
-
-
 class GetVoteCastingUserPortMock(GetVoteCastingUserPort):
     def __init__(
         self,
-        returned_vote_casting_user: VotingUser = build_vote_casting_user()
+        returned_vote_casting_user: VotingUser = build_voting_user()
     ):
         self.returned_vote_casting_user = returned_vote_casting_user
 
