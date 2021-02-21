@@ -1,7 +1,7 @@
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity
-from myapp.application.adapter.spi.persistence.entity.vote_casting_user_entity import VoteCastingUserEntity
+from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity
 
 __all__ = [
     'ArticleVoteEntity',
-    'VoteCastingUserEntity'
+    'VotingUserEntity'
 ]
