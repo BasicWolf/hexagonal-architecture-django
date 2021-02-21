@@ -7,11 +7,11 @@ from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_vote_result import CastVoteResult, \
+    VoteAlreadyCast, InsufficientKarma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
-    CastArticleVoteResult, VoteCastResult, InsufficientKarmaResult, VoteAlreadyCastResult
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase
 
@@ -23,12 +23,12 @@ def test_post_article_vote(
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteCastResult(ArticleVote(
+        returned_result=ArticleVote(
             id=article_vote_id,
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
-        ))
+        )
     )
 
     article_vote_view = ArticleVoteView.as_view(
@@ -85,8 +85,8 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=InsufficientKarmaResult(
-            user_with_insufficient_karma_id=user_id
+        returned_result=InsufficientKarma(
+            user_id=user_id
         )
     )
 
@@ -120,9 +120,9 @@ def test_post_article_vote_returns_conflict(
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteAlreadyCastResult(
-            cast_vote_user_id=user_id,
-            cast_vote_article_id=article_id
+        returned_result=VoteAlreadyCast(
+            user_id=user_id,
+            article_id=article_id
         )
     )
 
@@ -174,10 +174,10 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
 
     def __init__(
         self,
-        returned_result: CastArticleVoteResult = VoteCastResult(build_article_vote())
+        returned_result: CastVoteResult = build_article_vote()
     ):
         self._returned_result = returned_result
 
-    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
+    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastVoteResult:
         self.called_with_command = command
         return self._returned_result

@@ -1,12 +1,12 @@
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_vote_result import VoteAlreadyCast, \
+    InsufficientKarma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_result import \
-    VoteCastResult, VoteAlreadyCastResult, InsufficientKarmaResult
 from myapp.application.ports.spi.get_voting_user_port import GetVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
@@ -29,9 +29,9 @@ def test_casting_valid_vote_returns_result(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
-    assert isinstance(result, VoteCastResult)
-    assert result.article_vote == ArticleVote(
-        id=result.article_vote.id,
+    assert isinstance(result, ArticleVote)
+    assert result == ArticleVote(
+        id=result.id,
         user_id=user_id,
         article_id=article_id,
         vote=Vote.UP
@@ -55,9 +55,9 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
-    assert isinstance(result, VoteAlreadyCastResult)
-    assert result.cast_vote_user_id == user_id
-    assert result.cast_vote_article_id == article_id
+    assert isinstance(result, VoteAlreadyCast)
+    assert result.user_id == user_id
+    assert result.article_id == article_id
 
 
 def test_casting_vote_returns_insufficient_karma_result(
@@ -76,8 +76,8 @@ def test_casting_vote_returns_insufficient_karma_result(
     result = post_rating_service.cast_article_vote(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
-    assert isinstance(result, InsufficientKarmaResult)
-    assert result.user_with_insufficient_karma_id == user_id
+    assert isinstance(result, InsufficientKarma)
+    assert result.user_id == user_id
 
 
 def test_cast_vote_created(
