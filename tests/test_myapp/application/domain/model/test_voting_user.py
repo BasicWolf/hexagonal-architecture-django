@@ -4,8 +4,9 @@ import pytest
 
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
-from myapp.application.domain.model.voting_user import VotingUser, \
-    InsufficientKarma, VoteAlreadyCast
+from myapp.application.domain.model.voting_user import VotingUser
+from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
+    VoteAlreadyCast
 from tests.test_myapp.application.domain.model.voting_user import build_voting_user
 
 

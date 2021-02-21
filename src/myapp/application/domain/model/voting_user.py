@@ -1,25 +1,11 @@
-from dataclasses import dataclass
-from typing import Union, List
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
+    VoteAlreadyCast, CastVoteResult
 from myapp.application.domain.model.vote import Vote
 
 MINIMUM_KARMA_REQUIRED_FOR_VOTING = 5
-
-
-@dataclass
-class InsufficientKarma:
-    user_id: UUID
-
-
-@dataclass
-class VoteAlreadyCast:
-    user_id: UUID
-    article_id: UUID
-
-
-CastVoteResult = Union[ArticleVote, InsufficientKarma, VoteAlreadyCast]
 
 
 class VotingUser:

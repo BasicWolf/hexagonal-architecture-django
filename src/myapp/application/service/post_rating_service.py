@@ -1,4 +1,4 @@
-from myapp.application.domain.model.voting_user import InsufficientKarma, \
+from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
     CastVoteResult
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
