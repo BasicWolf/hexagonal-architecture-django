@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.domain.model.cast_vote_result import VoteAlreadyCast, \
+from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyCast, \
     InsufficientKarma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser

@@ -10,7 +10,7 @@ from myapp.application.adapter.api.http.serializer.article_vote_serializer impor
 from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
     CastArticleVoteCommandDeserializer
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.domain.model.cast_vote_result import CastVoteResult, \
+from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     InsufficientKarma, VoteAlreadyCast
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
@@ -41,7 +41,7 @@ class ArticleVoteView(APIView):
         serializer.is_valid(raise_exception=True)
         return serializer.create()
 
-    def _build_response(self, result: CastVoteResult) -> Response:
+    def _build_response(self, result: CastArticleVoteResult) -> Response:
         response = None
 
         if isinstance(result, ArticleVote):

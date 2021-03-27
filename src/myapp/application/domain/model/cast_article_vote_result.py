@@ -16,4 +16,4 @@ class VoteAlreadyCast:
     article_id: UUID
 
 
-CastVoteResult = Union[ArticleVote, InsufficientKarma, VoteAlreadyCast]
+CastArticleVoteResult = Union[ArticleVote, InsufficientKarma, VoteAlreadyCast]

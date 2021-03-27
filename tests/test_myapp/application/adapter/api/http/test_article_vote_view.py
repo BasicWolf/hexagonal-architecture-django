@@ -7,7 +7,7 @@ from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.domain.model.cast_vote_result import CastVoteResult, \
+from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     VoteAlreadyCast, InsufficientKarma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
@@ -174,10 +174,10 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
 
     def __init__(
         self,
-        returned_result: CastVoteResult = build_article_vote()
+        returned_result: CastArticleVoteResult = build_article_vote()
     ):
         self._returned_result = returned_result
 
-    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastVoteResult:
+    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         self.called_with_command = command
         return self._returned_result

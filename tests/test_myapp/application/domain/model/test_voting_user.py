@@ -1,12 +1,12 @@
-from uuid import uuid4, UUID
+from uuid import UUID
 
 import pytest
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
+    VoteAlreadyCast
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
-from myapp.application.domain.model.cast_vote_result import InsufficientKarma, \
-    VoteAlreadyCast
 from tests.test_myapp.application.domain.model.voting_user import build_voting_user
 
 
