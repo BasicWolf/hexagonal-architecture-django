@@ -8,7 +8,7 @@ from myapp.application.adapter.spi.persistence.repository.voting_user_repository
 from myapp.application.service.post_rating_service import PostRatingService
 
 
-def build_production_ioc_container() -> Dict[str, Any]:
+def build_production_dependencies_container() -> Dict[str, Any]:
     save_article_vote_adapter = ArticleVoteRepository()
 
     get_vote_casting_user_adapter = VotingUserRepository()
@@ -18,11 +18,11 @@ def build_production_ioc_container() -> Dict[str, Any]:
         save_article_vote_adapter
     )
 
-    article_vote_view = ArticleVoteView.as_view(
+    article_vote_django_view = ArticleVoteView.as_view(
         cast_article_vote_use_case=_cast_article_vote_use_case
     )
 
     return {
-        'article_vote_view': article_vote_view
+        'article_vote_django_view': article_vote_django_view
     }
 

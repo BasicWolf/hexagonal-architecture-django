@@ -8,6 +8,6 @@ class MyAppConfig(AppConfig):
     container: Dict[str, Any]
 
     def ready(self) -> None:
-        from myapp.hexagonal_configuration import build_production_ioc_container
-        self.container = build_production_ioc_container()
+        from myapp.dependencies_container import build_production_dependencies_container
+        self.container = build_production_dependencies_container()
 
