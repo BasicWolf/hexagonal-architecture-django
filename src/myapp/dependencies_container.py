@@ -13,13 +13,13 @@ def build_production_dependencies_container() -> Dict[str, Any]:
 
     get_vote_casting_user_adapter = VotingUserRepository()
 
-    _cast_article_vote_use_case = PostRatingService(
+    cast_article_vote_use_case = PostRatingService(
         get_vote_casting_user_adapter,
         save_article_vote_adapter
     )
 
     article_vote_django_view = ArticleVoteView.as_view(
-        cast_article_vote_use_case=_cast_article_vote_use_case
+        cast_article_vote_use_case=cast_article_vote_use_case
     )
 
     return {
