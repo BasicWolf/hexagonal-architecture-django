@@ -12,11 +12,16 @@ from myapp.application.domain.model.vote import Vote
 
 
 @pytest.mark.django_db
-def test_save_article_vote(user_id: UUID, article_id: UUID):
+def test_save_article_vote_persists_to_database(
+    article_vote_id: UUID,
+    user_id: UUID,
+    article_id: UUID
+):
     article_vote_repository = ArticleVoteRepository()
 
     article_vote_repository.save_article_vote(
         ArticleVote(
+            id=article_vote_id,
             user_id=user_id,
             article_id=article_id,
             vote=Vote.UP
@@ -24,10 +29,31 @@ def test_save_article_vote(user_id: UUID, article_id: UUID):
     )
 
     assert ArticleVoteEntity.objects.filter(
+        id=article_vote_id,
         user_id=user_id,
         article_id=article_id,
         vote=ArticleVoteEntity.VOTE_UP
     ).exists()
+
+
+@pytest.mark.django_db
+def test_save_article_vote_returns_article_vote(
+    article_vote_id: UUID,
+    user_id: UUID,
+    article_id: UUID
+):
+    article_vote_repository = ArticleVoteRepository()
+
+    unsaved_article_vote = ArticleVote(
+        id=article_vote_id,
+        user_id=user_id,
+        article_id=article_id,
+        vote=Vote.UP
+    )
+    saved_article_vote = article_vote_repository.save_article_vote(unsaved_article_vote)
+
+    assert saved_article_vote == unsaved_article_vote
+    assert saved_article_vote is not unsaved_article_vote
 
 
 @pytest.mark.django_db

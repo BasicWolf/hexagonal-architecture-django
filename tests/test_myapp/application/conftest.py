@@ -15,5 +15,10 @@ def user_id() -> UUID:
 
 
 @pytest.fixture
+def article_vote_id() -> UUID:
+    return uuid4()
+
+
+@pytest.fixture
 def arf():
     return APIRequestFactory()

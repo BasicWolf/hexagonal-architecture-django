@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from uuid import uuid4, UUID
 
-import pytest
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
@@ -162,11 +161,6 @@ def build_article_vote(
         article_id=article_id,
         vote=vote
     )
-
-
-@pytest.fixture
-def article_vote_id() -> UUID:
-    return uuid4()
 
 
 class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):

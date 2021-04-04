@@ -22,9 +22,9 @@ class VotingUserRepository(GetVotingUserPort):
                 )
             ).get(id=user_id)
 
-        return self.to_domain_model(annotated_entity, voting_for_article_id=article_id)
+        return self._to_domain_model(annotated_entity, voting_for_article_id=article_id)
 
-    def to_domain_model(self, entity, voting_for_article_id: UUID) -> VotingUser:
+    def _to_domain_model(self, entity, voting_for_article_id: UUID) -> VotingUser:
         return VotingUser(
             id=entity.id,
             voting_for_article_id=voting_for_article_id,
