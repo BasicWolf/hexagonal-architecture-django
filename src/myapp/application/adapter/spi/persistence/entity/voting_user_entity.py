@@ -8,4 +8,5 @@ class VotingUserEntity(models.Model):
     karma = models.IntegerField()
 
     class Meta:
+        # in real application this should rather be a view
         db_table = 'user_data'

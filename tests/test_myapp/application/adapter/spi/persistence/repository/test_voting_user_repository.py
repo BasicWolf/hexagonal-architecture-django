@@ -1,4 +1,4 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import pytest
 
@@ -8,6 +8,7 @@ from myapp.application.adapter.spi.persistence.entity.voting_user_entity import 
     VotingUserEntity
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
+from myapp.application.domain.model.exceptions.user_not_found import UserNotFound
 
 
 @pytest.mark.django_db
@@ -32,3 +33,13 @@ def test_get_voting_user(user_id: UUID, article_id: UUID):
     assert voting_user.voting_for_article_id == article_id
     assert voting_user.voted
     assert voting_user.karma == 100
+
+
+@pytest.mark.django_db
+def test_get_non_existing_voting_user_raises_user_not_found():
+    with pytest.raises(UserNotFound) as e:
+        VotingUserRepository().get_voting_user(
+            user_id=uuid4(),
+            article_id=uuid4()
+        )
+

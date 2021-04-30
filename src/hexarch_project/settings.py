@@ -29,6 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS: List[str] = []
 
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'myapp.application.adapter.api.http.exceptions_handler.exceptions_handler'
+}
 
 # Application definition
 
