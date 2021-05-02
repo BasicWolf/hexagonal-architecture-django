@@ -21,8 +21,10 @@ def exceptions_handler(exc, context):
     if isinstance(exc, EntityNotFound):
         return problem_response("Error", str(exc), HTTPStatus.BAD_REQUEST)
 
+    logger.exception("Unhandled error: %s", exc, exc_info=True)
     return problem_response(
         "Unknown error",
-        "An unexpected error occurred and we can't do anything about it",
+        "Our deepest apologies, an unexpected error occurred "
+        "and we are already working on it.",
         HTTPStatus.INTERNAL_SERVER_ERROR
     )
