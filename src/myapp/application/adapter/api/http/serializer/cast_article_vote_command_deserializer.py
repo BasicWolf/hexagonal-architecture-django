@@ -1,5 +1,7 @@
+from rest_enumfield import EnumField
 from rest_framework import serializers
 
+from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
 
@@ -7,7 +9,7 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
 class CastArticleVoteCommandDeserializer(serializers.Serializer[CastArticleVoteCommand]):
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
-    vote = serializers.CharField()
+    vote = EnumField(Vote)
 
     # Ignored mypy error:
     # Signature of "create" incompatible with supertype "BaseSerializer"
