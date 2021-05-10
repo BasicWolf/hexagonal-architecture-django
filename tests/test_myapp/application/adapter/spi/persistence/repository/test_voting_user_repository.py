@@ -8,7 +8,7 @@ from myapp.application.adapter.spi.persistence.entity.voting_user_entity import 
     VotingUserEntity
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
-from myapp.application.domain.model.exceptions.user_not_found import UserNotFound
+from myapp.application.domain.model.exceptions.voting_user_not_found import VotingUserNotFound
 
 
 @pytest.mark.django_db
@@ -37,7 +37,7 @@ def test_get_voting_user(user_id: UUID, article_id: UUID):
 
 @pytest.mark.django_db
 def test_get_non_existing_voting_user_raises_user_not_found():
-    with pytest.raises(UserNotFound) as e:
+    with pytest.raises(VotingUserNotFound) as e:
         VotingUserRepository().get_voting_user(
             user_id=uuid4(),
             article_id=uuid4()

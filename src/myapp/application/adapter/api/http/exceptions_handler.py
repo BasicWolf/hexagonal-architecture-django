@@ -10,10 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 def exceptions_handler(exc, context):
-    # Call REST framework's default exception handler first,
-    # to get the standard error response.
     logger.error("Unexpected error occurred: %s", exc)
 
+    # Call REST framework's default exception handler first,
+    # to get the standard error response.
+    # NOTE: this is not formatted as Problem response,
+    #       currently left as-is for cleaner demo code.
     response = exception_handler(exc, context)
     if response is not None:
         return response

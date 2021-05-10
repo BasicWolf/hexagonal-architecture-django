@@ -6,7 +6,7 @@ from myapp.application.adapter.spi.persistence.entity.article_vote_entity import
     ArticleVoteEntity
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import \
     VotingUserEntity
-from myapp.application.domain.model.exceptions.user_not_found import UserNotFound
+from myapp.application.domain.model.exceptions.voting_user_not_found import VotingUserNotFound
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.spi.get_voting_user_port import GetVotingUserPort
 
@@ -24,7 +24,7 @@ class VotingUserRepository(GetVotingUserPort):
                     )
                 ).get(id=user_id)
         except VotingUserEntity.DoesNotExist as e:
-            raise UserNotFound(user_id) from e
+            raise VotingUserNotFound(user_id) from e
 
         return self._to_domain_model(annotated_entity, voting_for_article_id=article_id)
 
