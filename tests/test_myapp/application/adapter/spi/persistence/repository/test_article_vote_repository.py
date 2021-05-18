@@ -11,6 +11,7 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote import Vote
 
 
+@pytest.mark.integration
 @pytest.mark.django_db
 def test_save_article_vote_persists_to_database(
     article_vote_id: UUID,
@@ -36,6 +37,7 @@ def test_save_article_vote_persists_to_database(
     ).exists()
 
 
+@pytest.mark.integration
 @pytest.mark.django_db
 def test_save_article_vote_returns_article_vote(
     article_vote_id: UUID,
@@ -56,6 +58,7 @@ def test_save_article_vote_returns_article_vote(
     assert saved_article_vote is not unsaved_article_vote
 
 
+@pytest.mark.integration
 @pytest.mark.django_db
 def test_saving_identical_article_votes_raises_integrity_error(
     user_id: UUID, article_id: UUID

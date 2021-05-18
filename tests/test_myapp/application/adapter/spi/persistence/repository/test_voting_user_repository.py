@@ -11,6 +11,7 @@ from myapp.application.adapter.spi.persistence.repository.voting_user_repository
 from myapp.application.domain.model.exceptions.voting_user_not_found import VotingUserNotFound
 
 
+@pytest.mark.integration
 @pytest.mark.django_db
 def test_get_voting_user(user_id: UUID, article_id: UUID):
     ArticleVoteEntity(
@@ -35,6 +36,7 @@ def test_get_voting_user(user_id: UUID, article_id: UUID):
     assert voting_user.karma == 100
 
 
+@pytest.mark.integration
 @pytest.mark.django_db
 def test_get_non_existing_voting_user_raises_user_not_found():
     with pytest.raises(VotingUserNotFound) as e:
