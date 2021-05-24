@@ -8,7 +8,7 @@ from myapp.application.adapter.spi.persistence.entity.voting_user_entity import 
     VotingUserEntity
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
-from myapp.application.domain.model.exceptions.voting_user_not_found import VotingUserNotFound
+from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import VotingUserNotFound
 
 
 @pytest.mark.integration
