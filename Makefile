@@ -1,12 +1,16 @@
 MANAGEPY = src/manage.py
 PYTEST = pytest
-PYTEST_ENV = PYTHONPATH=src/:./
+MYPY = mypy
+ENV = PYTHONPATH=src/:./
 
 test:
-	$(PYTEST_ENV) $(PYTEST)
+	$(ENV) $(PYTEST)
 
 migrate:
 	$(MANAGEPY) migrate
 
 run:
 	$(MANAGEPY) runserver
+
+mypy:
+	MYPYPATH=src/ $(MYPY) --namespace-packages -p myapp

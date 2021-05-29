@@ -9,6 +9,13 @@ python3 -m venv .venv
 pip install -r requirements.txt
 ```
 
+# Static type checks (mypy)
+
+```shell
+export MYPYPATH=src/ 
+mypy --namespace-packages -v -p myapp
+```
+
 # Run unit tests
 ```shell
 export PYTHONPATH=${PYTHONPATH}:./:src/
