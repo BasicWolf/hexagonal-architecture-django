@@ -1,7 +1,13 @@
 # hexagonal-architecture-django
 Experiments with Django and Hexagonal Architecture
 
+**Current state**
 
+An articles series related to this project (in progress):
+
+[Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
+
+**Legacy**
 
 This project was originally a supporting example for
 [Domain-driven design, Hexagonal architecture of ports and adapters, Dependency injection и Python](https://habr.com/ru/post/559560/)
@@ -9,6 +15,8 @@ article.
 The article was written in Russian language and was published on 31 May 2021
 at russian tech-blog platform [Habr](https://habr.com/).
 This code is now tagged as ["habr"](https://github.com/BasicWolf/hexagonal-architecture-django/tree/habr).
+
+## Finding your way around
 
 
 **Installation**
