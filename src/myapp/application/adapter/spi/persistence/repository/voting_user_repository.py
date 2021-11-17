@@ -6,13 +6,14 @@ from myapp.application.adapter.spi.persistence.entity.article_vote_entity import
     ArticleVoteEntity
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import \
     VotingUserEntity
-from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import VotingUserNotFound
+from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import \
+    VotingUserNotFound
 from myapp.application.domain.model.voting_user import VotingUser
-from myapp.application.ports.spi.get_voting_user_port import GetVotingUserPort
+from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 
 
-class VotingUserRepository(GetVotingUserPort):
-    def get_voting_user(self, user_id: UUID, article_id: UUID) -> VotingUser:
+class VotingUserRepository(FindVotingUserPort):
+    def find_voting_user(self, user_id: UUID, article_id: UUID) -> VotingUser:
         try:
             annotated_entity = VotingUserEntity.objects\
                 .annotate(

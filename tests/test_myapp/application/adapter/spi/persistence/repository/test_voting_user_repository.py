@@ -6,14 +6,15 @@ from myapp.application.adapter.spi.persistence.entity.article_vote_entity import
     ArticleVoteEntity
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import \
     VotingUserEntity
+from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import \
+    VotingUserNotFound
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
-from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import VotingUserNotFound
 
 
 @pytest.mark.integration
 @pytest.mark.django_db
-def test_get_voting_user(user_id: UUID, article_id: UUID):
+def test_find_voting_user(user_id: UUID, article_id: UUID):
     ArticleVoteEntity(
         user_id=user_id,
         article_id=article_id,
@@ -25,7 +26,7 @@ def test_get_voting_user(user_id: UUID, article_id: UUID):
         karma=100
     ).save()
 
-    voting_user = VotingUserRepository().get_voting_user(
+    voting_user = VotingUserRepository().find_voting_user(
         user_id=user_id,
         article_id=article_id
     )
@@ -40,7 +41,7 @@ def test_get_voting_user(user_id: UUID, article_id: UUID):
 @pytest.mark.django_db
 def test_get_non_existing_voting_user_raises_user_not_found():
     with pytest.raises(VotingUserNotFound) as e:
-        VotingUserRepository().get_voting_user(
+        VotingUserRepository().find_voting_user(
             user_id=uuid4(),
             article_id=uuid4()
         )
