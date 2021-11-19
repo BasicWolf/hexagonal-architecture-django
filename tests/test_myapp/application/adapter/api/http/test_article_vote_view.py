@@ -14,6 +14,7 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase
+from tests.test_myapp.application.domain.model.voting_user import createUserId
 
 
 def test_post_article_vote(
@@ -157,7 +158,7 @@ def build_article_vote(
     vote: Vote = Vote.UP
 ) -> ArticleVote:
     id = id or uuid4()
-    user_id = user_id or UserId()
+    user_id = user_id or createUserId()
     article_id = article_id or uuid4()
 
     return ArticleVote(

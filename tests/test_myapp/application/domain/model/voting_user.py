@@ -5,8 +5,12 @@ from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.voting_user import VotingUser
 
 
+def createUserId():
+    return UserId(uuid4())
+
+
 def build_voting_user(
-    user_id: UserId = UserId(uuid4()),
+    user_id: UserId = createUserId(),
     voting_for_article_id: UUID = uuid4(),
     voted: bool = False,
     karma: int = 10

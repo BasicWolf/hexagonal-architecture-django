@@ -32,7 +32,7 @@ def test_save_article_vote_persists_to_database(
 
     assert ArticleVoteEntity.objects.filter(
         id=article_vote_id,
-        user_id=user_id.id,
+        user_id=user_id,
         article_id=article_id,
         vote=ArticleVoteEntity.VOTE_UP
     ).exists()

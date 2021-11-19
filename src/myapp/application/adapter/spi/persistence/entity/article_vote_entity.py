@@ -37,7 +37,7 @@ class ArticleVoteEntity(models.Model):
         return ArticleVoteEntity(
             id=article_vote.id,
             article_id=article_vote.article_id,
-            user_id=article_vote.user_id.id,
+            user_id=article_vote.user_id,
             vote=vote
         )
 

@@ -21,7 +21,7 @@ def test_build_article_vote_entity_from_domain_model(
 
     ave: ArticleVoteEntity = ArticleVoteEntity.from_domain_model(article_vote)
     assert ave.id == article_vote_id
-    assert ave.user_id == user_id.id
+    assert ave.user_id == user_id
     assert ave.article_id == article_id
     assert ave.vote == ArticleVoteEntity.VOTE_UP
 
@@ -33,7 +33,7 @@ def test_article_vote_entity_to_domain_model(
 ):
     article_vote_entity = ArticleVoteEntity(
         id=article_vote_id,
-        user_id=user_id.id,
+        user_id=user_id,
         article_id=article_id,
         vote=ArticleVoteEntity.VOTE_DOWN
     )

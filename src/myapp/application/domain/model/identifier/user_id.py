@@ -1,5 +1,4 @@
-from myapp.application.domain.model.identifier.identifier import Identifier
+from typing import NewType
+from uuid import UUID
 
-
-class UserId(Identifier):
-    ...
+UserId = NewType('UserId', UUID)

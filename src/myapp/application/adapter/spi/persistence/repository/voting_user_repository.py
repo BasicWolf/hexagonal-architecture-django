@@ -20,11 +20,11 @@ class VotingUserRepository(FindVotingUserPort):
                 .annotate(
                     voted=Exists(
                         ArticleVoteEntity.objects.filter(
-                            user_id=user_id.id,
+                            user_id=user_id,
                             article_id=article_id
                         )
                     )
-                ).get(id=user_id.id)
+                ).get(id=user_id)
         except VotingUserEntity.DoesNotExist as e:
             raise VotingUserNotFound(user_id) from e
 

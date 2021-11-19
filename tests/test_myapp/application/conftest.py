@@ -13,7 +13,7 @@ def article_id() -> UUID:
 
 @pytest.fixture
 def user_id() -> UserId:
-    return UserId()
+    return UserId(uuid4())
 
 
 @pytest.fixture

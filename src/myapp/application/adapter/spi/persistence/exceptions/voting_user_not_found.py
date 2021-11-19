@@ -4,5 +4,5 @@ from myapp.application.domain.model.identifier.user_id import UserId
 
 class VotingUserNotFound(EntityNotFound):
     def __init__(self, user_id: UserId):
-        super().__init__(user_id.id, f"User '{user_id}' not found")
+        super().__init__(user_id, f"User '{user_id}' not found")
 
