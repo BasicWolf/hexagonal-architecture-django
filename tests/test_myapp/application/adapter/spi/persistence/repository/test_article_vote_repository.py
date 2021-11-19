@@ -8,6 +8,7 @@ from myapp.application.adapter.spi.persistence.entity.article_vote_entity import
 from myapp.application.adapter.spi.persistence.repository.article_vote_repository import \
     ArticleVoteRepository
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
@@ -17,7 +18,7 @@ from myapp.application.domain.model.vote import Vote
 def test_save_article_vote_persists_to_database(
     article_vote_id: UUID,
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     article_vote_repository = ArticleVoteRepository()
 
@@ -43,7 +44,7 @@ def test_save_article_vote_persists_to_database(
 def test_save_article_vote_returns_article_vote(
     article_vote_id: UUID,
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     article_vote_repository = ArticleVoteRepository()
 
@@ -63,7 +64,7 @@ def test_save_article_vote_returns_article_vote(
 @pytest.mark.django_db
 def test_saving_identical_article_votes_raises_integrity_error(
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     article_vote_repository = ArticleVoteRepository()
 

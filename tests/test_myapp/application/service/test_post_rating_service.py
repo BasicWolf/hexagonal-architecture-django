@@ -3,6 +3,7 @@ from uuid import UUID
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyCast, \
     InsufficientKarma
+from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
@@ -15,7 +16,8 @@ from tests.test_myapp.application.domain.model.voting_user import build_voting_u
 
 
 def test_casting_valid_vote_returns_result(
-    user_id: UserId, article_id: UUID
+    user_id: UserId,
+    article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
@@ -41,7 +43,7 @@ def test_casting_valid_vote_returns_result(
 
 def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
@@ -64,7 +66,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
 
 def test_casting_vote_returns_insufficient_karma_result(
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
@@ -84,7 +86,7 @@ def test_casting_vote_returns_insufficient_karma_result(
 
 def test_cast_vote_created(
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     save_article_vote_port_mock = SaveArticleVotePortMock()
     post_rating_service = build_post_rating_service(

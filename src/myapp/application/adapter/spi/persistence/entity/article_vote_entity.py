@@ -5,6 +5,7 @@ from uuid import uuid4
 from django.db import models
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
@@ -50,6 +51,6 @@ class ArticleVoteEntity(models.Model):
         return ArticleVote(
             id=self.id,
             user_id=UserId(self.user_id),
-            article_id=self.article_id,
+            article_id=ArticleId(self.article_id),
             vote=vote
         )

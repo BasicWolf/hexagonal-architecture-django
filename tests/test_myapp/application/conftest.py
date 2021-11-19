@@ -3,12 +3,13 @@ from uuid import UUID, uuid4
 import pytest
 from rest_framework.test import APIRequestFactory
 
+from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 
 
 @pytest.fixture
 def article_id() -> UUID:
-    return uuid4()
+    return ArticleId(uuid4())
 
 
 @pytest.fixture
