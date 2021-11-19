@@ -3,6 +3,7 @@ from uuid import UUID
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
     VoteAlreadyCast, CastArticleVoteResult
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 
@@ -10,14 +11,14 @@ MINIMUM_KARMA_REQUIRED_FOR_VOTING = 5
 
 
 class VotingUser:
-    id: UUID
+    id: UserId
     voting_for_article_id: UUID
     voted: bool
     karma: Karma
 
     def __init__(
         self,
-        id: UUID,
+        id: UserId,
         voting_for_article_id: UUID,
         voted: bool,
         karma: Karma

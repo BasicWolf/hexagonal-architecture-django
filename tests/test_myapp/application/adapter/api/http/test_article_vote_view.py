@@ -8,6 +8,7 @@ from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     VoteAlreadyCast, InsufficientKarma
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
@@ -18,7 +19,7 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
 def test_post_article_vote(
     arf: APIRequestFactory,
     article_vote_id: UUID,
-    user_id: UUID,
+    user_id: UserId,
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
@@ -80,7 +81,7 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
 
 def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     arf: APIRequestFactory,
-    user_id: UUID,
+    user_id: UserId,
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
@@ -115,7 +116,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     arf: APIRequestFactory,
-    user_id: UUID,
+    user_id: UserId,
     article_id: UUID
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
@@ -150,11 +151,15 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
 
 
 def build_article_vote(
-    id: UUID = uuid4(),
-    user_id: UUID = uuid4(),
-    article_id: UUID = uuid4(),
+    id: UUID = None,
+    user_id: UserId = None,
+    article_id: UUID = None,
     vote: Vote = Vote.UP
 ) -> ArticleVote:
+    id = id or uuid4()
+    user_id = user_id or UserId()
+    article_id = article_id or uuid4()
+
     return ArticleVote(
         id=id,
         user_id=user_id,

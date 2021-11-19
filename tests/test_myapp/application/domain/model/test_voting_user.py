@@ -3,13 +3,14 @@ from uuid import UUID
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
     VoteAlreadyCast
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from tests.test_myapp.application.domain.model.voting_user import build_voting_user
 
 
-def test_cast_vote_returns_article_vote(user_id: UUID, article_id: UUID):
+def test_cast_vote_returns_article_vote(user_id: UserId, article_id: UUID):
     voting_user = build_voting_user(
         user_id=user_id,
         voting_for_article_id=article_id,
@@ -24,7 +25,7 @@ def test_cast_vote_returns_article_vote(user_id: UUID, article_id: UUID):
     assert result.user_id == user_id
 
 
-def test_cannot_cast_vote_with_insufficient_karma(user_id: UUID):
+def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId):
     voting_user = build_voting_user(
         user_id=user_id,
         karma=4
@@ -36,7 +37,7 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id: UUID):
     assert result.user_id == user_id
 
 
-def test_cannot_cast_vote_twice(user_id: UUID, article_id: UUID):
+def test_cannot_cast_vote_twice(user_id: UserId, article_id: UUID):
     voting_user = VotingUser(
         id=user_id,
         voting_for_article_id=article_id,

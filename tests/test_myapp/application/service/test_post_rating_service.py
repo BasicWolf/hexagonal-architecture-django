@@ -3,6 +3,7 @@ from uuid import UUID
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyCast, \
     InsufficientKarma
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
@@ -14,7 +15,7 @@ from tests.test_myapp.application.domain.model.voting_user import build_voting_u
 
 
 def test_casting_valid_vote_returns_result(
-    user_id: UUID, article_id: UUID
+    user_id: UserId, article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
@@ -39,7 +40,8 @@ def test_casting_valid_vote_returns_result(
 
 
 def test_casting_same_vote_two_times_returns_vote_already_cast_result(
-    user_id: UUID, article_id: UUID
+    user_id: UserId,
+    article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
@@ -61,7 +63,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
 
 
 def test_casting_vote_returns_insufficient_karma_result(
-    user_id: UUID,
+    user_id: UserId,
     article_id: UUID
 ):
     post_rating_service = build_post_rating_service(
@@ -81,7 +83,7 @@ def test_casting_vote_returns_insufficient_karma_result(
 
 
 def test_cast_vote_created(
-    user_id: UUID,
+    user_id: UserId,
     article_id: UUID
 ):
     save_article_vote_port_mock = SaveArticleVotePortMock()
@@ -112,12 +114,12 @@ class FindVotingUserPortMock(FindVotingUserPort):
     ):
         self.returned_vote_casting_user = returned_vote_casting_user
 
-    def find_voting_user(self, user_id: UUID, article_id: UUID) -> VotingUser:
+    def find_voting_user(self, user_id: UserId, article_id: UUID) -> VotingUser:
         return self.returned_vote_casting_user
 
 
 class SaveArticleVotePortMock(SaveArticleVotePort):
-    saved_article_vote = None
+    saved_article_vote: ArticleVote
 
     def save_article_vote(self, article_vote: ArticleVote):
         self.saved_article_vote = article_vote

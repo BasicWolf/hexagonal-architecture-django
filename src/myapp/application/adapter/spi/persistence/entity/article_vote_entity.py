@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 from uuid import uuid4
 
 from django.db import models
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
 
@@ -35,7 +37,7 @@ class ArticleVoteEntity(models.Model):
         return ArticleVoteEntity(
             id=article_vote.id,
             article_id=article_vote.article_id,
-            user_id=article_vote.user_id,
+            user_id=article_vote.user_id.id,
             vote=vote
         )
 
@@ -47,7 +49,7 @@ class ArticleVoteEntity(models.Model):
 
         return ArticleVote(
             id=self.id,
-            user_id=self.user_id,
+            user_id=UserId(self.user_id),
             article_id=self.article_id,
             vote=vote
         )

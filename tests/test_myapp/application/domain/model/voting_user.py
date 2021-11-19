@@ -1,11 +1,12 @@
 from uuid import UUID, uuid4
 
+from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.voting_user import VotingUser
 
 
 def build_voting_user(
-    user_id: UUID = uuid4(),
+    user_id: UserId = UserId(uuid4()),
     voting_for_article_id: UUID = uuid4(),
     voted: bool = False,
     karma: int = 10

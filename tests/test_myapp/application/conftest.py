@@ -3,6 +3,8 @@ from uuid import UUID, uuid4
 import pytest
 from rest_framework.test import APIRequestFactory
 
+from myapp.application.domain.model.identifier.user_id import UserId
+
 
 @pytest.fixture
 def article_id() -> UUID:
@@ -10,8 +12,8 @@ def article_id() -> UUID:
 
 
 @pytest.fixture
-def user_id() -> UUID:
-    return uuid4()
+def user_id() -> UserId:
+    return UserId()
 
 
 @pytest.fixture

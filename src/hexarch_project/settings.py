@@ -30,7 +30,16 @@ DEBUG = True
 ALLOWED_HOSTS: List[str] = []
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'myapp.application.adapter.api.http.exceptions_handler.exceptions_handler'
+    'EXCEPTION_HANDLER': 'myapp.application.adapter.api.http.exceptions_handler.exceptions_handler',
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'myapp.configuration.json_renderer.ApplicationJSONRenderer',
+    ],
+
+    'TEST_REQUEST_RENDERER_CLASSES': [
+        'rest_framework.renderers.MultiPartRenderer',
+        'myapp.configuration.json_renderer.ApplicationJSONRenderer',
+    ]
 }
 
 # Application definition
