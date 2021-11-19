@@ -12,7 +12,8 @@ from myapp.application.adapter.spi.persistence.repository.voting_user_repository
     VotingUserRepository
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
-from tests.test_myapp.application.domain.model.voting_user import create_user_id
+from tests.test_myapp.application.domain.model.identifier.user_id_creation import \
+    create_user_id
 
 
 @pytest.mark.integration

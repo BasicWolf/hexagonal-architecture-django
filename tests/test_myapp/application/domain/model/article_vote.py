@@ -1,12 +1,14 @@
-from uuid import uuid4
-
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.article_vote_id import ArticleVoteId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from tests.test_myapp.application.domain.model.voting_user import create_user_id, \
+from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
     create_article_id
+from tests.test_myapp.application.domain.model.identifier.article_vote_id_creation import \
+    create_article_vote_id
+from tests.test_myapp.application.domain.model.identifier.user_id_creation import \
+    create_user_id
 
 
 def build_article_vote(
@@ -27,5 +29,3 @@ def build_article_vote(
     )
 
 
-def create_article_vote_id() -> ArticleVoteId:
-    return ArticleVoteId(uuid4())
