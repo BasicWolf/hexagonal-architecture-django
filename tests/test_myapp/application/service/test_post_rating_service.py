@@ -12,7 +12,8 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
-from tests.test_myapp.application.domain.model.voting_user import build_voting_user
+from tests.test_myapp.application.domain.model.voting_user_creation import \
+    build_voting_user
 
 
 def test_casting_valid_vote_returns_result(

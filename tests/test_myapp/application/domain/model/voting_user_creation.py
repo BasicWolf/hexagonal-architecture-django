@@ -9,11 +9,14 @@ from tests.test_myapp.application.domain.model.identifier.user_id_creation impor
 
 
 def build_voting_user(
-    user_id: UserId = create_user_id(),
-    voting_for_article_id: ArticleId = create_article_id(),
+    user_id: UserId = None,
+    voting_for_article_id: ArticleId = None,
     voted: bool = False,
     karma: int = 10
 ):
+    user_id = user_id or create_user_id()
+    voting_for_article_id = voting_for_article_id or create_article_id()
+
     return VotingUser(
         id=user_id,
         voting_for_article_id=voting_for_article_id,
