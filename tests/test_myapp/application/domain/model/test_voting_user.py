@@ -16,7 +16,7 @@ def test_cast_vote_returns_article_vote(
     voting_user = build_voting_user(
         user_id=user_id,
         voting_for_article_id=article_id,
-        karma=5
+        karma=Karma(5)
     )
 
     result = voting_user.cast_vote(Vote.UP)
@@ -30,7 +30,7 @@ def test_cast_vote_returns_article_vote(
 def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId):
     voting_user = build_voting_user(
         user_id=user_id,
-        karma=4
+        karma=Karma(4)
     )
 
     result = voting_user.cast_vote(Vote.UP)

@@ -5,6 +5,7 @@ from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyC
     InsufficientKarma
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
+from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
@@ -73,7 +74,7 @@ def test_casting_vote_returns_insufficient_karma_result(
         get_vote_casting_user_port=FindVotingUserPortMock(
             returned_vote_casting_user=build_voting_user(
                 user_id=user_id,
-                karma=2
+                karma=Karma(2)
             )
         )
     )

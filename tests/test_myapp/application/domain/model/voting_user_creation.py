@@ -12,7 +12,7 @@ def build_voting_user(
     user_id: UserId = None,
     voting_for_article_id: ArticleId = None,
     voted: bool = False,
-    karma: int = 10
+    karma: Karma = Karma(10)
 ):
     user_id = user_id or create_user_id()
     voting_for_article_id = voting_for_article_id or create_article_id()
@@ -21,5 +21,5 @@ def build_voting_user(
         id=user_id,
         voting_for_article_id=voting_for_article_id,
         voted=voted,
-        karma=Karma(karma)
+        karma=karma
     )
