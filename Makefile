@@ -13,4 +13,4 @@ run:
 	$(MANAGEPY) runserver
 
 mypy:
-	MYPYPATH=src/ $(MYPY) --namespace-packages -p myapp
+	$(MYPY) --namespace-packages -p myapp -p tests
