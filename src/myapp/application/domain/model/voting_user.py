@@ -6,8 +6,6 @@ from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 
-MINIMUM_KARMA_REQUIRED_FOR_VOTING = 5
-
 
 class VotingUser:
     id: UserId
