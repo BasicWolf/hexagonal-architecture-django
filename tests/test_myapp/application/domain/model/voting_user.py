@@ -6,17 +6,17 @@ from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.voting_user import VotingUser
 
 
-def createUserId():
+def create_user_id():
     return UserId(uuid4())
 
 
-def createArticleId():
+def create_article_id():
     return ArticleId(uuid4())
 
 
 def build_voting_user(
-    user_id: UserId = createUserId(),
-    voting_for_article_id: ArticleId = createArticleId(),
+    user_id: UserId = create_user_id(),
+    voting_for_article_id: ArticleId = create_article_id(),
     voted: bool = False,
     karma: int = 10
 ):

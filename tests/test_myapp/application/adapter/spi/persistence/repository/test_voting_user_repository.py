@@ -12,7 +12,7 @@ from myapp.application.adapter.spi.persistence.repository.voting_user_repository
     VotingUserRepository
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
-from tests.test_myapp.application.domain.model.voting_user import createUserId
+from tests.test_myapp.application.domain.model.voting_user import create_user_id
 
 
 @pytest.mark.integration
@@ -45,7 +45,7 @@ def test_find_voting_user(user_id: UserId, article_id: ArticleId):
 def test_get_non_existing_voting_user_raises_user_not_found():
     with pytest.raises(VotingUserNotFound) as e:
         VotingUserRepository().find_voting_user(
-            user_id=createUserId(),
+            user_id=create_user_id(),
             article_id=uuid4()
         )
 

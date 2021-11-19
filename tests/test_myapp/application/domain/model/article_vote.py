@@ -5,8 +5,8 @@ from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.article_vote_id import ArticleVoteId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from tests.test_myapp.application.domain.model.voting_user import createUserId, \
-    createArticleId
+from tests.test_myapp.application.domain.model.voting_user import create_user_id, \
+    create_article_id
 
 
 def build_article_vote(
@@ -16,8 +16,8 @@ def build_article_vote(
     vote: Vote = Vote.UP
 ) -> ArticleVote:
     id = id or create_article_vote_id()
-    user_id = user_id or createUserId()
-    article_id = article_id or createArticleId()
+    user_id = user_id or create_user_id()
+    article_id = article_id or create_article_id()
 
     return ArticleVote(
         id=id,
