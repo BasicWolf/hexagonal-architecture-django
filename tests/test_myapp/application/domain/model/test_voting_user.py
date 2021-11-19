@@ -1,3 +1,5 @@
+import pytest
+
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
     VoteAlreadyCast
@@ -6,7 +8,18 @@ from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
-from tests.test_myapp.application.domain.model.voting_user_creation import build_voting_user
+from tests.test_myapp.application.domain.model.voting_user_creation import \
+    build_voting_user
+
+
+@pytest.mark.parametrize('cast_vote,result_vote', [
+    (Vote.UP, Vote.UP),
+    (Vote.DOWN, Vote.DOWN)
+])
+def test_cast_vote_up_updates_user_vote(cast_vote: Vote, result_vote: Vote):
+    voting_user = build_voting_user()
+    voting_user.cast_vote(cast_vote)
+    assert voting_user.vote == result_vote
 
 
 def test_cast_vote_returns_article_vote(

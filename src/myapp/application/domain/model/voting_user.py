@@ -11,6 +11,7 @@ class VotingUser:
     id: UserId
     voting_for_article_id: ArticleId
     voted: bool
+    vote: Vote
     karma: Karma
 
     def __init__(
@@ -18,12 +19,14 @@ class VotingUser:
         id: UserId,
         voting_for_article_id: ArticleId,
         voted: bool,
-        karma: Karma
+        karma: Karma,
+        vote: Vote = Vote.NOT_VOTED
     ):
         self.id = id
         self.voting_for_article_id = voting_for_article_id
         self.voted = voted
         self.karma = karma
+        self.vote = vote
 
     def cast_vote(self, vote: Vote) -> CastArticleVoteResult:
         if self.voted:
@@ -36,6 +39,7 @@ class VotingUser:
             return InsufficientKarma(user_id=self.id)
 
         self.voted = True
+        self.vote = vote
 
         return ArticleVote(
             user_id=self.id,
