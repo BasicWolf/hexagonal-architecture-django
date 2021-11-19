@@ -1,5 +1,3 @@
-from uuid import UUID
-
 import pytest
 from django.db import IntegrityError
 
@@ -9,6 +7,7 @@ from myapp.application.adapter.spi.persistence.repository.article_vote_repositor
     ArticleVoteRepository
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
+from myapp.application.domain.model.identifier.article_vote_id import ArticleVoteId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
@@ -16,7 +15,7 @@ from myapp.application.domain.model.vote import Vote
 @pytest.mark.integration
 @pytest.mark.django_db
 def test_save_article_vote_persists_to_database(
-    article_vote_id: UUID,
+    article_vote_id: ArticleVoteId,
     user_id: UserId,
     article_id: ArticleId
 ):
@@ -42,7 +41,7 @@ def test_save_article_vote_persists_to_database(
 @pytest.mark.integration
 @pytest.mark.django_db
 def test_save_article_vote_returns_article_vote(
-    article_vote_id: UUID,
+    article_vote_id: ArticleVoteId,
     user_id: UserId,
     article_id: ArticleId
 ):

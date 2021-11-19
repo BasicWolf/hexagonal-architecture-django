@@ -9,19 +9,19 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     VoteAlreadyCast, InsufficientKarma
 from myapp.application.domain.model.identifier.article_id import ArticleId
+from myapp.application.domain.model.identifier.article_vote_id import ArticleVoteId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase
-from tests.test_myapp.application.domain.model.voting_user import createUserId, \
-    createArticleId
+from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 
 
 def test_post_article_vote(
     arf: APIRequestFactory,
-    article_vote_id: UUID,
+    article_vote_id: ArticleVoteId,
     user_id: UserId,
     article_id: ArticleId
 ):
@@ -151,24 +151,6 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
         'detail': f"User \"{user_id}\" has already cast a vote for article \"{article_id}\"",
         'title': "Cannot cast a vote"
     }
-
-
-def build_article_vote(
-    id: UUID = None,
-    user_id: UserId = None,
-    article_id: ArticleId = None,
-    vote: Vote = Vote.UP
-) -> ArticleVote:
-    id = id or uuid4()
-    user_id = user_id or createUserId()
-    article_id = article_id or createArticleId()
-
-    return ArticleVote(
-        id=id,
-        user_id=user_id,
-        article_id=article_id,
-        vote=vote
-    )
 
 
 class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
