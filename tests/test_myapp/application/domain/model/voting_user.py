@@ -1,5 +1,6 @@
 from uuid import UUID, uuid4
 
+from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.voting_user import VotingUser
 
 
@@ -13,5 +14,5 @@ def build_voting_user(
         id=user_id,
         voting_for_article_id=voting_for_article_id,
         voted=voted,
-        karma=karma
+        karma=Karma(karma)
     )

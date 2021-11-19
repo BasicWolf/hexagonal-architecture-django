@@ -1,23 +1,19 @@
 from uuid import UUID
 
-import pytest
-
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
     VoteAlreadyCast
+from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from tests.test_myapp.application.domain.model.voting_user import build_voting_user
 
 
-@pytest.mark.parametrize(
-    'karma', [5, 10]
-)
-def test_cast_vote_returns_article_vote(user_id: UUID, article_id: UUID, karma: int):
+def test_cast_vote_returns_article_vote(user_id: UUID, article_id: UUID):
     voting_user = build_voting_user(
         user_id=user_id,
         voting_for_article_id=article_id,
-        karma=karma
+        karma=5
     )
 
     result = voting_user.cast_vote(Vote.UP)
@@ -45,7 +41,7 @@ def test_cannot_cast_vote_twice(user_id: UUID, article_id: UUID):
         id=user_id,
         voting_for_article_id=article_id,
         voted=True,
-        karma=10
+        karma=Karma(10)
     )
 
     result = voting_user.cast_vote(Vote.UP)
