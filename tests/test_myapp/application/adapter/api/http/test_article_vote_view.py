@@ -9,7 +9,6 @@ from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     VoteAlreadyCast, InsufficientKarma
 from myapp.application.domain.model.identifier.article_id import ArticleId
-from myapp.application.domain.model.identifier.article_vote_id import ArticleVoteId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
@@ -21,13 +20,11 @@ from tests.test_myapp.application.domain.model.article_vote import build_article
 
 def test_post_article_vote(
     arf: APIRequestFactory,
-    article_vote_id: ArticleVoteId,
     user_id: UserId,
     article_id: ArticleId
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
         returned_result=ArticleVote(
-            id=article_vote_id,
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
@@ -52,7 +49,6 @@ def test_post_article_vote(
 
     assert response.status_code == HTTPStatus.CREATED
     assert response.data == {
-        'id': str(article_vote_id),
         'article_id': str(article_id),
         'user_id': str(user_id),
         'vote': 'DOWN'

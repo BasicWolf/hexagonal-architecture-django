@@ -36,7 +36,6 @@ def test_casting_valid_vote_returns_result(
 
     assert isinstance(result, ArticleVote)
     assert result == ArticleVote(
-        id=result.id,
         user_id=user_id,
         article_id=article_id,
         vote=Vote.UP

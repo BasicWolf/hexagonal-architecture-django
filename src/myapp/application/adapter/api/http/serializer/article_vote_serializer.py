@@ -6,7 +6,6 @@ from myapp.application.domain.model.vote import Vote
 
 
 class ArticleVoteSerializer(serializers.Serializer[ArticleVote]):
-    id = serializers.UUIDField()
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
     vote = EnumField(Vote)
