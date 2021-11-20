@@ -52,7 +52,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
             build_voting_user(
                 user_id=user_id,
                 voting_for_article_id=article_id,
-                voted=True
+                vote=Vote.UP
             )
         )
     )

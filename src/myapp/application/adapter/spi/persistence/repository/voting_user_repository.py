@@ -20,7 +20,6 @@ class VotingUserRepository(FindVotingUserPort):
             id=UserId(voting_user_entity.user_id),
             voting_for_article_id=ArticleId(article_id),
             vote=vote,
-            voted=vote != Vote.NOT_VOTED,
             karma=Karma(voting_user_entity.karma)
         )
 

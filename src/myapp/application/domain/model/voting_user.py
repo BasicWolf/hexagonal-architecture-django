@@ -10,7 +10,6 @@ from myapp.application.domain.model.vote import Vote
 class VotingUser:
     id: UserId
     voting_for_article_id: ArticleId
-    voted: bool
     vote: Vote
     karma: Karma
 
@@ -18,13 +17,11 @@ class VotingUser:
         self,
         id: UserId,
         voting_for_article_id: ArticleId,
-        voted: bool,
         karma: Karma,
         vote: Vote = Vote.NOT_VOTED
     ):
         self.id = id
         self.voting_for_article_id = voting_for_article_id
-        self.voted = voted
         self.karma = karma
         self.vote = vote
 
@@ -38,7 +35,6 @@ class VotingUser:
         if not self.karma.enough_for_voting():
             return InsufficientKarma(user_id=self.id)
 
-        self.voted = True
         self.vote = vote
 
         return ArticleVote(
@@ -46,3 +42,7 @@ class VotingUser:
             article_id=self.voting_for_article_id,
             vote=vote
         )
+
+    @property
+    def voted(self):
+        return self.vote != Vote.NOT_VOTED
