@@ -7,7 +7,7 @@ from django.db import migrations
 def populate_demo_user_and_article_data(apps, schema_editor):
     VoteCastingUserEntity = apps.get_model('myapp', 'VoteCastingUserEntity')
     VoteCastingUserEntity.objects.create(
-        id=UUID('e47cec00-c22a-486d-afe6-e76902f211c1'),
+        user_id=UUID('e47cec00-c22a-486d-afe6-e76902f211c1'),
         karma=10
     )
 
