@@ -12,6 +12,7 @@ from myapp.application.adapter.spi.persistence.repository.voting_user_repository
     VotingUserRepository
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
+from myapp.application.domain.model.karma import Karma
 from tests.test_myapp.application.domain.model.identifier.user_id_creation import \
     create_user_id
 
@@ -26,7 +27,7 @@ def test_find_voting_user(user_id: UserId, article_id: ArticleId):
     ).save()
 
     VotingUserEntity(
-        id=user_id,
+        user_id=user_id,
         karma=100
     ).save()
 
@@ -38,7 +39,7 @@ def test_find_voting_user(user_id: UserId, article_id: ArticleId):
     assert voting_user.id == user_id
     assert voting_user.voting_for_article_id == article_id
     assert voting_user.voted
-    assert voting_user.karma == 100
+    assert voting_user.karma == Karma(100)
 
 
 @pytest.mark.integration
