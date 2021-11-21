@@ -37,7 +37,6 @@ def test_find_voting_user(user_id: UserId, article_id: ArticleId):
     )
 
     assert voting_user.id == user_id
-    assert voting_user.voting_for_article_id == article_id
     assert voting_user.voted
     assert voting_user.karma == Karma(100)
 

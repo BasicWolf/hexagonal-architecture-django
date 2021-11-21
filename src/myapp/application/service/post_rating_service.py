@@ -28,7 +28,7 @@ class PostRatingService(
             article_id=command.article_id
         )
 
-        cast_vote_result = voting_user.cast_vote(command.vote)
+        cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
 
         if isinstance(cast_vote_result, ArticleVote):
             self._save_article_vote_port.save_article_vote(cast_vote_result)

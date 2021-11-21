@@ -13,6 +13,7 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
+from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
     build_voting_user
 
@@ -23,10 +24,7 @@ def test_casting_valid_vote_returns_result(
 ):
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
-            build_voting_user(
-                user_id=user_id,
-                voting_for_article_id=article_id
-            )
+            build_voting_user(user_id=user_id)
         )
     )
 
@@ -50,8 +48,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
         get_vote_casting_user_port=FindVotingUserPortMock(
             build_voting_user(
                 user_id=user_id,
-                voting_for_article_id=article_id,
-                vote=Vote.UP
+                vote=build_article_vote(user_id=user_id, vote=Vote.UP)
             )
         )
     )
@@ -92,10 +89,7 @@ def test_cast_vote_created(
     save_article_vote_port_mock = SaveArticleVotePortMock()
     post_rating_service = build_post_rating_service(
         get_vote_casting_user_port=FindVotingUserPortMock(
-            returned_vote_casting_user=build_voting_user(
-                user_id=user_id,
-                voting_for_article_id=article_id
-            )
+            returned_vote_casting_user=build_voting_user(user_id=user_id)
         ),
         save_article_vote_port=save_article_vote_port_mock
     )

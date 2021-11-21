@@ -7,6 +7,7 @@ from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
+from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
     build_voting_user
 
@@ -15,10 +16,14 @@ from tests.test_myapp.application.domain.model.voting_user_creation import \
     (Vote.UP, Vote.UP),
     (Vote.DOWN, Vote.DOWN)
 ])
-def test_cast_vote_up_updates_user_vote(cast_vote: Vote, result_vote: Vote):
+def test_cast_vote_updates_user_vote(
+    cast_vote: Vote,
+    result_vote: Vote,
+    article_id: ArticleId
+):
     voting_user = build_voting_user()
-    voting_user.cast_vote(cast_vote)
-    assert voting_user.vote == result_vote
+    voting_user.cast_vote(article_id, cast_vote)
+    assert voting_user.article_vote.vote == result_vote
 
 
 def test_cast_vote_returns_article_vote(
@@ -27,11 +32,10 @@ def test_cast_vote_returns_article_vote(
 ):
     voting_user = build_voting_user(
         user_id=user_id,
-        voting_for_article_id=article_id,
         karma=Karma(5)
     )
 
-    result = voting_user.cast_vote(Vote.UP)
+    result = voting_user.cast_vote(article_id, Vote.UP)
 
     assert isinstance(result, ArticleVote)
     assert result.vote == Vote.UP
@@ -39,13 +43,13 @@ def test_cast_vote_returns_article_vote(
     assert result.user_id == user_id
 
 
-def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId):
+def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId, article_id: ArticleId):
     voting_user = build_voting_user(
         user_id=user_id,
         karma=Karma(4)
     )
 
-    result = voting_user.cast_vote(Vote.UP)
+    result = voting_user.cast_vote(article_id, Vote.UP)
 
     assert isinstance(result, InsufficientKarma)
     assert result.user_id == user_id
@@ -53,24 +57,34 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId):
 
 def test_casting_vote_returns_already_cast():
     voting_user = build_voting_user(
-        user_id=UserId('476820aa-d91f-4ab8-8743-6f6f4c5047d0'),
-        voting_for_article_id=ArticleId('d07af0ab-0576-4c10-b361-6587fee6a837'),
-        vote=Vote.UP
+        user_id=UserId('476820aa-0000-0000-0000-000000000000'),
+        vote=build_article_vote(
+            UserId('476820aa-0000-0000-0000-000000000000'),
+            ArticleId('d07af0ab-0000-0000-0000-000000000000'),
+        )
     )
 
-    result = voting_user.cast_vote(Vote.DOWN)
+    result = voting_user.cast_vote(
+        ArticleId('d07af0ab-0000-0000-0000-000000000000'),
+        Vote.DOWN
+    )
 
     assert isinstance(result, VoteAlreadyCast)
-    assert result.user_id == UserId('476820aa-d91f-4ab8-8743-6f6f4c5047d0')
-    assert result.article_id == ArticleId('d07af0ab-0576-4c10-b361-6587fee6a837')
+    assert result.user_id == UserId('476820aa-0000-0000-0000-000000000000')
+    assert result.article_id == ArticleId('d07af0ab-0000-0000-0000-000000000000')
 
 
 @pytest.mark.parametrize(
     'vote', [Vote.UP, Vote.DOWN]
 )
-def test_cannot_cast_vote_twice(vote: Vote):
-    voting_user = build_voting_user(vote=Vote.UP)
+def test_cannot_cast_vote_twice(article_id: ArticleId, vote: Vote):
+    voting_user = build_voting_user(
+        vote=build_article_vote(
+            article_id=article_id,
+            vote=vote
+        )
+    )
 
-    result = voting_user.cast_vote(vote)
+    result = voting_user.cast_vote(article_id, vote)
 
     assert isinstance(result, VoteAlreadyCast)

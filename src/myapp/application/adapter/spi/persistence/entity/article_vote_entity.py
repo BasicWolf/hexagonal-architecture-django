@@ -41,16 +41,14 @@ class ArticleVoteEntity(models.Model):
             vote=vote
         )
 
-    @classmethod
-    def vote_to_domain_model(cls, vote: int):
-        return {
-            cls.VOTE_UP: Vote.UP,
-            cls.VOTE_DOWN: Vote.DOWN
-        }[vote]
-
     def to_domain_model(self) -> ArticleVote:
+        vote = {
+            self.VOTE_UP: Vote.UP,
+            self.VOTE_DOWN: Vote.DOWN
+        }[self.vote]
+
         return ArticleVote(
             user_id=UserId(self.user_id),
             article_id=ArticleId(self.article_id),
-            vote=self.vote_to_domain_model(self.vote)
+            vote=vote
         )
