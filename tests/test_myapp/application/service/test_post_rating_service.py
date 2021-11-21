@@ -48,7 +48,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
         get_vote_casting_user_port=FindVotingUserPortMock(
             build_voting_user(
                 user_id=user_id,
-                vote=build_article_vote(user_id=user_id, vote=Vote.UP)
+                article_vote=build_article_vote(user_id=user_id, vote=Vote.UP)
             )
         )
     )

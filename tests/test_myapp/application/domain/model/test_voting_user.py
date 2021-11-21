@@ -58,7 +58,7 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId, article_id: A
 def test_casting_vote_returns_already_cast():
     voting_user = build_voting_user(
         user_id=UserId('476820aa-0000-0000-0000-000000000000'),
-        vote=build_article_vote(
+        article_vote=build_article_vote(
             UserId('476820aa-0000-0000-0000-000000000000'),
             ArticleId('d07af0ab-0000-0000-0000-000000000000'),
         )
@@ -79,7 +79,7 @@ def test_casting_vote_returns_already_cast():
 )
 def test_cannot_cast_vote_twice(article_id: ArticleId, vote: Vote):
     voting_user = build_voting_user(
-        vote=build_article_vote(
+        article_vote=build_article_vote(
             article_id=article_id,
             vote=vote
         )
