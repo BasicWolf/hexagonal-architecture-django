@@ -2,7 +2,7 @@ from rest_enumfield import EnumField
 from rest_framework import serializers
 
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
+from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteCommand
 
 

@@ -11,10 +11,8 @@ from myapp.application.domain.model.cast_article_vote_result import CastArticleV
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
-    CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteUseCase
+    CastArticleVoteUseCase, CastArticleVoteCommand
 from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 
 

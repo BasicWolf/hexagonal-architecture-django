@@ -12,10 +12,8 @@ from myapp.application.adapter.api.http.serializer.cast_article_vote_command_des
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
     InsufficientKarma, VoteAlreadyCast
-from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
-    CastArticleVoteCommand
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
-    CastArticleVoteUseCase
+    CastArticleVoteUseCase, CastArticleVoteCommand
 )
 from myapp.application.util.assert_never import assert_never
 
