@@ -1,8 +1,7 @@
 import pytest
 
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
-    VoteAlreadyCast
+    VoteAlreadyCast, VoteCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -26,7 +25,7 @@ def test_cast_vote_updates_user_vote(
     assert voting_user.article_vote.vote == result_vote
 
 
-def test_cast_vote_returns_article_vote(
+def test_cast_vote_returns_vote_cast(
     user_id: UserId,
     article_id: ArticleId
 ):
@@ -37,7 +36,7 @@ def test_cast_vote_returns_article_vote(
 
     result = voting_user.cast_vote(article_id, Vote.UP)
 
-    assert isinstance(result, ArticleVote)
+    assert isinstance(result, VoteCast)
     assert result.vote == Vote.UP
     assert result.article_id == article_id
     assert result.user_id == user_id

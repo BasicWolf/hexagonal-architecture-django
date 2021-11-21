@@ -5,15 +5,13 @@ from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
-    VoteAlreadyCast, InsufficientKarma
+    VoteAlreadyCast, InsufficientKarma, VoteCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase, CastArticleVoteCommand
-from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 
 
 def test_post_article_vote(
@@ -22,7 +20,7 @@ def test_post_article_vote(
     article_id: ArticleId
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=ArticleVote(
+        returned_result=VoteCast(
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
@@ -152,8 +150,14 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
 
     def __init__(
         self,
-        returned_result: CastArticleVoteResult = build_article_vote()
+        returned_result: CastArticleVoteResult = None
     ):
+        if returned_result is None:
+            returned_result = VoteCast(
+                user_id=UserId(uuid4()),
+                article_id=ArticleId(uuid4()),
+                vote=Vote.UP
+            )
         self._returned_result = returned_result
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
