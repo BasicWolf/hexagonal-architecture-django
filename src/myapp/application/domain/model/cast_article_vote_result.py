@@ -18,9 +18,9 @@ class VoteAlreadyCast:
 
 
 @dataclass
-class VoteCast:
+class VoteSuccessfullyCast:
     user_id: UserId
     article_id: ArticleId
     vote: Vote
 
-CastArticleVoteResult = Union[VoteCast, InsufficientKarma, VoteAlreadyCast]
+CastArticleVoteResult = Union[VoteSuccessfullyCast, InsufficientKarma, VoteAlreadyCast]

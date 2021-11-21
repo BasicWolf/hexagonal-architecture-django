@@ -6,7 +6,7 @@ from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
-    VoteAlreadyCast, InsufficientKarma, VoteCast
+    VoteAlreadyCast, InsufficientKarma, VoteSuccessfullyCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
@@ -20,7 +20,7 @@ def test_post_article_vote(
     article_id: ArticleId
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteCast(
+        returned_result=VoteSuccessfullyCast(
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
@@ -153,7 +153,7 @@ class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
         returned_result: CastArticleVoteResult = None
     ):
         if returned_result is None:
-            returned_result = VoteCast(
+            returned_result = VoteSuccessfullyCast(
                 user_id=UserId(uuid4()),
                 article_id=ArticleId(uuid4()),
                 vote=Vote.UP

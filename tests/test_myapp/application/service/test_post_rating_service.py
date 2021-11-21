@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyCast, \
-    InsufficientKarma, VoteCast
+    InsufficientKarma, VoteSuccessfullyCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -31,8 +31,8 @@ def test_casting_valid_vote_returns_result(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
 
-    assert isinstance(result, VoteCast)
-    assert result == VoteCast(
+    assert isinstance(result, VoteSuccessfullyCast)
+    assert result == VoteSuccessfullyCast(
         user_id=user_id,
         article_id=article_id,
         vote=Vote.UP

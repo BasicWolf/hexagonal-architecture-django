@@ -2,7 +2,7 @@ from typing import Optional
 
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
-    VoteAlreadyCast, CastArticleVoteResult, VoteCast
+    VoteAlreadyCast, CastArticleVoteResult, VoteSuccessfullyCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -40,7 +40,7 @@ class VotingUser:
             vote=vote
         )
 
-        return VoteCast(self.id, article_id, vote)
+        return VoteSuccessfullyCast(self.id, article_id, vote)
 
     @property
     def article_vote(self):

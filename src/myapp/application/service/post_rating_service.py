@@ -1,5 +1,5 @@
 from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
-    VoteCast
+    VoteSuccessfullyCast
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteUseCase, CastArticleVoteCommand
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
@@ -29,7 +29,7 @@ class PostRatingService(
         cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
 
         # TODO: result should be of type CastArticleVoteResult!
-        if isinstance(cast_vote_result, VoteCast):
+        if isinstance(cast_vote_result, VoteSuccessfullyCast):
             self._save_voting_user_port.save_voting_user(voting_user)
 
         return cast_vote_result
