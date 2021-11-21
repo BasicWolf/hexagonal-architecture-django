@@ -12,6 +12,7 @@ from myapp.application.ports.api.cast_article_vote.cast_article_vote_command imp
     CastArticleVoteCommand
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
+from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.post_rating_service import PostRatingService
 from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
@@ -122,11 +123,18 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
         self.saved_article_vote = article_vote
 
 
+class SaveVotingUserPortMock(SaveVotingUserPort):
+    def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
+        pass
+
+
 def build_post_rating_service(
     get_vote_casting_user_port: FindVotingUserPort = FindVotingUserPortMock(),
-    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
+    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock(),
+    save_voting_user_port: SaveVotingUserPort = SaveVotingUserPortMock()
 ):
     return PostRatingService(
         find_voting_user_port=get_vote_casting_user_port,
-        save_article_vote_port=save_article_vote_port
+        save_voting_user_port=save_voting_user_port,
+        save_article_vote_port=save_article_vote_port,
     )

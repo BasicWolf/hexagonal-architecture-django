@@ -11,11 +11,14 @@ from myapp.application.service.post_rating_service import PostRatingService
 def build_production_dependencies_container() -> Dict[str, Any]:
     save_article_vote_adapter = ArticleVoteRepository()
 
-    get_vote_casting_user_adapter = VotingUserRepository()
+    voting_user_repository = VotingUserRepository()
+    save_voting_user_adapter = voting_user_repository
+    get_vote_casting_user_adapter = voting_user_repository
 
     cast_article_vote_use_case = PostRatingService(
         get_vote_casting_user_adapter,
-        save_article_vote_adapter
+        save_article_vote_adapter,
+        save_voting_user_adapter
     )
 
     article_vote_django_view = ArticleVoteView.as_view(
