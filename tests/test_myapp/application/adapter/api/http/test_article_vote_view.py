@@ -114,7 +114,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     arf: APIRequestFactory,
     user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     cast_article_use_case_mock = CastArticleVoteUseCaseMock(
         returned_result=VoteAlreadyCast(

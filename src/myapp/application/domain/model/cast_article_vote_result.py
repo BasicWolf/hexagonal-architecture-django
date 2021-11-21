@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Union
-from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 
 
@@ -14,7 +14,7 @@ class InsufficientKarma:
 @dataclass
 class VoteAlreadyCast:
     user_id: UserId
-    article_id: UUID
+    article_id: ArticleId
 
 
 CastArticleVoteResult = Union[ArticleVote, InsufficientKarma, VoteAlreadyCast]
