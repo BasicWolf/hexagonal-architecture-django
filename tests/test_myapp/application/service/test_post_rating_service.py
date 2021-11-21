@@ -11,7 +11,6 @@ from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.cast_article_vote.cast_article_vote_command import \
     CastArticleVoteCommand
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
-from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.post_rating_service import PostRatingService
 from tests.test_myapp.application.domain.model.article_vote import build_article_vote
@@ -24,7 +23,7 @@ def test_casting_valid_vote_returns_result(
     article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
-        get_vote_casting_user_port=FindVotingUserPortMock(
+        get_vote_casting_user_port=FindVotingUserPortStub(
             build_voting_user(user_id=user_id)
         )
     )
@@ -46,7 +45,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
     article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
-        get_vote_casting_user_port=FindVotingUserPortMock(
+        get_vote_casting_user_port=FindVotingUserPortStub(
             build_voting_user(
                 user_id=user_id,
                 article_vote=build_article_vote(user_id=user_id, vote=Vote.UP)
@@ -68,7 +67,7 @@ def test_casting_vote_returns_insufficient_karma_result(
     article_id: ArticleId
 ):
     post_rating_service = build_post_rating_service(
-        get_vote_casting_user_port=FindVotingUserPortMock(
+        get_vote_casting_user_port=FindVotingUserPortStub(
             returned_vote_casting_user=build_voting_user(
                 user_id=user_id,
                 karma=Karma(2)
@@ -83,29 +82,35 @@ def test_casting_vote_returns_insufficient_karma_result(
     assert result.user_id == user_id
 
 
-def test_cast_vote_created(
+def test_voting_user_saved(
     user_id: UserId,
     article_id: ArticleId
 ):
-    save_article_vote_port_mock = SaveArticleVotePortMock()
+    save_voting_user_port_mock = SaveVotingUserPortMock()
     post_rating_service = build_post_rating_service(
-        get_vote_casting_user_port=FindVotingUserPortMock(
-            returned_vote_casting_user=build_voting_user(user_id=user_id)
+        get_vote_casting_user_port=FindVotingUserPortStub(
+            returned_vote_casting_user=build_voting_user(
+                user_id=user_id,
+                karma=Karma(21)
+            )
         ),
-        save_article_vote_port=save_article_vote_port_mock
+        save_voting_user_port=save_voting_user_port_mock
     )
 
     post_rating_service.cast_article_vote(
-        CastArticleVoteCommand(user_id, article_id, Vote.DOWN)
+        CastArticleVoteCommand(
+            user_id,
+            article_id,
+            Vote.DOWN
+        )
     )
 
-    saved_article_vote = save_article_vote_port_mock.saved_article_vote
-    assert saved_article_vote.user_id == user_id
-    assert saved_article_vote.article_id == article_id
-    assert saved_article_vote.vote == Vote.DOWN
+    saved_voting_user = save_voting_user_port_mock.saved_voting_user
+    assert saved_voting_user.id == user_id
+    assert saved_voting_user.karma == Karma(21)
 
 
-class FindVotingUserPortMock(FindVotingUserPort):
+class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,
         returned_vote_casting_user: VotingUser = build_voting_user()
@@ -116,25 +121,19 @@ class FindVotingUserPortMock(FindVotingUserPort):
         return self.returned_vote_casting_user
 
 
-class SaveArticleVotePortMock(SaveArticleVotePort):
-    saved_article_vote: ArticleVote
-
-    def save_article_vote(self, article_vote: ArticleVote):
-        self.saved_article_vote = article_vote
-
-
 class SaveVotingUserPortMock(SaveVotingUserPort):
+    saved_voting_user: VotingUser
+
     def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
-        pass
+        self.saved_voting_user = voting_user
+        return voting_user
 
 
 def build_post_rating_service(
-    get_vote_casting_user_port: FindVotingUserPort = FindVotingUserPortMock(),
-    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock(),
+    get_vote_casting_user_port: FindVotingUserPort = FindVotingUserPortStub(),
     save_voting_user_port: SaveVotingUserPort = SaveVotingUserPortMock()
 ):
     return PostRatingService(
         find_voting_user_port=get_vote_casting_user_port,
-        save_voting_user_port=save_voting_user_port,
-        save_article_vote_port=save_article_vote_port,
+        save_voting_user_port=save_voting_user_port
     )

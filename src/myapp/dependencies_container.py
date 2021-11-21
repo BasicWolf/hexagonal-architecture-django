@@ -1,23 +1,18 @@
 from typing import Dict, Any
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
-from myapp.application.adapter.spi.persistence.repository.article_vote_repository import \
-    ArticleVoteRepository
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
 from myapp.application.service.post_rating_service import PostRatingService
 
 
 def build_production_dependencies_container() -> Dict[str, Any]:
-    save_article_vote_adapter = ArticleVoteRepository()
-
     voting_user_repository = VotingUserRepository()
     save_voting_user_adapter = voting_user_repository
     get_vote_casting_user_adapter = voting_user_repository
 
     cast_article_vote_use_case = PostRatingService(
         get_vote_casting_user_adapter,
-        save_article_vote_adapter,
         save_voting_user_adapter
     )
 
