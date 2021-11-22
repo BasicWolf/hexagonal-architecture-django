@@ -23,4 +23,5 @@ class VoteSuccessfullyCast:
     article_id: ArticleId
     vote: Vote
 
+
 CastArticleVoteResult = Union[VoteSuccessfullyCast, InsufficientKarma, VoteAlreadyCast]
