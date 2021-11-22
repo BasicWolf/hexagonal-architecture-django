@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import \
     ArticleVoteEntity
-from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.voting_user import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote

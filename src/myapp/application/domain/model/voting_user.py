@@ -1,6 +1,8 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
 from typing import Optional
 
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
     VoteAlreadyCast, CastArticleVoteResult, VoteSuccessfullyCast
 from myapp.application.domain.model.identifier.article_id import ArticleId
@@ -49,3 +51,10 @@ class VotingUser:
     @property
     def voted(self):
         return self.article_vote is not None
+
+
+@dataclass
+class ArticleVote:
+    user_id: UserId
+    article_id: ArticleId
+    vote: Vote

@@ -1,9 +1,8 @@
 from typing import Optional
 
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
-from myapp.application.domain.model.voting_user import VotingUser
+from myapp.application.domain.model.voting_user import VotingUser, ArticleVote
 from tests.test_myapp.application.domain.model.identifier.user_id_creation import \
     create_user_id
 
