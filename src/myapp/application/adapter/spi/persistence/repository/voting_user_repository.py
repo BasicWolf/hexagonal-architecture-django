@@ -36,7 +36,7 @@ class VotingUserRepository(
             return ArticleVoteEntity.objects.get(
                 user_id=user_id,
                 article_id=article_id
-            ).to_domain_model()
+            ).to_article_vote()
         except ArticleVoteEntity.DoesNotExist as _:
             return None
 
@@ -63,6 +63,6 @@ class VotingUserRepository(
         )
 
     def _save_article_vote(self, article_vote: ArticleVote) -> ArticleVote:
-        article_vote_entity = ArticleVoteEntity.from_domain_model(article_vote)
+        article_vote_entity = ArticleVoteEntity.from_article_vote(article_vote)
         article_vote_entity.save()
-        return article_vote_entity.to_domain_model()
+        return article_vote_entity.to_article_vote()

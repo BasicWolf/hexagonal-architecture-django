@@ -4,10 +4,10 @@ from uuid import uuid4
 
 from django.db import models
 
-from myapp.application.domain.model.voting_user import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
+from myapp.application.domain.model.voting_user import ArticleVote
 
 
 class ArticleVoteEntity(models.Model):
@@ -29,7 +29,7 @@ class ArticleVoteEntity(models.Model):
         db_table = 'article_vote'
 
     @classmethod
-    def from_domain_model(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
+    def from_article_vote(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
         vote: int = {
             Vote.UP: cls.VOTE_UP,
             Vote.DOWN: cls.VOTE_DOWN
@@ -41,7 +41,7 @@ class ArticleVoteEntity(models.Model):
             vote=vote
         )
 
-    def to_domain_model(self) -> ArticleVote:
+    def to_article_vote(self) -> ArticleVote:
         vote = {
             self.VOTE_UP: Vote.UP,
             self.VOTE_DOWN: Vote.DOWN
