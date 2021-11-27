@@ -4,9 +4,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.vote import Vote
-from myapp.application.domain.model.voting_user import ArticleVote
 
 
 class ArticleVoteEntity(models.Model):
@@ -26,16 +24,3 @@ class ArticleVoteEntity(models.Model):
     class Meta:
         unique_together = [['user_id', 'article_id']]
         db_table = 'article_vote'
-
-    @classmethod
-    def from_article_vote(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
-        return ArticleVoteEntity(
-            article_id=article_vote.article_id,
-            vote=article_vote.vote.value
-        )
-
-    def to_article_vote(self) -> ArticleVote:
-        return ArticleVote(
-            article_id=ArticleId(self.article_id),
-            vote=Vote(self.vote)
-        )

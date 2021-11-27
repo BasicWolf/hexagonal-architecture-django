@@ -34,12 +34,17 @@ class VotingUserRepository(
         article_id: ArticleId
     ) -> Optional[ArticleVote]:
         try:
-            return ArticleVoteEntity.objects.get(
+            article_vote_entity = ArticleVoteEntity.objects.get(
                 user_id=user_id,
                 article_id=article_id
-            ).to_article_vote()
+            )
         except ArticleVoteEntity.DoesNotExist as _:
             return None
+
+        return ArticleVote(
+            ArticleId(article_vote_entity.article_id),
+            Vote(article_vote_entity.vote)
+        )
 
     def _get_voting_user_entity(self, user_id: UserId) -> VotingUserEntity:
         try:
