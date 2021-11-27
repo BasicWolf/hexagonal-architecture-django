@@ -5,7 +5,6 @@ from uuid import uuid4
 from django.db import models
 
 from myapp.application.domain.model.identifier.article_id import ArticleId
-from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import ArticleVote
 
@@ -32,13 +31,11 @@ class ArticleVoteEntity(models.Model):
     def from_article_vote(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
         return ArticleVoteEntity(
             article_id=article_vote.article_id,
-            user_id=article_vote.user_id,
             vote=article_vote.vote.value
         )
 
     def to_article_vote(self) -> ArticleVote:
         return ArticleVote(
-            user_id=UserId(self.user_id),
             article_id=ArticleId(self.article_id),
             vote=Vote(self.vote)
         )

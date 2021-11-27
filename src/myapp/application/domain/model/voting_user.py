@@ -37,7 +37,6 @@ class VotingUser:
             return InsufficientKarma(user_id=self.id)
 
         self._article_vote = ArticleVote(
-            user_id=self.id,
             article_id=article_id,
             vote=vote
         )
@@ -55,6 +54,5 @@ class VotingUser:
 
 @dataclass
 class ArticleVote:
-    user_id: UserId
     article_id: ArticleId
     vote: Vote

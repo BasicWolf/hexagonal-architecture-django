@@ -9,6 +9,7 @@ from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found 
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
+from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser, ArticleVote
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
@@ -52,7 +53,10 @@ class VotingUserRepository(
 
         saved_article_vote: Optional[ArticleVote]
         if voting_user.voted:
-            saved_article_vote = self._save_article_vote(voting_user.article_vote)
+            saved_article_vote = self._save_article_vote(
+                voting_user.id,
+                voting_user.article_vote
+            )
         else:
             saved_article_vote = None
 
@@ -62,7 +66,18 @@ class VotingUserRepository(
             article_vote=saved_article_vote
         )
 
-    def _save_article_vote(self, article_vote: ArticleVote) -> ArticleVote:
-        article_vote_entity = ArticleVoteEntity.from_article_vote(article_vote)
+    def _save_article_vote(
+        self,
+        user_id: UserId,
+        article_vote: ArticleVote
+    ) -> ArticleVote:
+        article_vote_entity = ArticleVoteEntity(
+            article_id=article_vote.article_id,
+            user_id=user_id,
+            vote=article_vote.vote.value
+        )
         article_vote_entity.save()
-        return article_vote_entity.to_article_vote()
+        return ArticleVote(
+            ArticleId(article_vote_entity.article_id),
+            Vote(article_vote_entity.vote)
+        )

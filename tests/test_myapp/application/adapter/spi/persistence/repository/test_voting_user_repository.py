@@ -82,7 +82,6 @@ def _build_voting_user_who_casted_vote_for_article(
     return build_voting_user(
         user_id=user_id,
         article_vote=build_article_vote(
-            user_id=user_id,
             article_id=article_id,
             vote=vote
         )
