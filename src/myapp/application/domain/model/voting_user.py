@@ -14,7 +14,6 @@ from myapp.application.domain.model.vote import Vote
 class VotingUser:
     id: UserId
     karma: Karma
-    _voted: bool
     _article_vote: Optional[ArticleVote]
 
     def __init__(
@@ -26,10 +25,9 @@ class VotingUser:
         self.id = id
         self.karma = karma
         self._article_vote = article_vote
-        self._voted = article_vote is not None
 
     def cast_vote(self, article_id: ArticleId, vote: Vote) -> CastArticleVoteResult:
-        if self._voted:
+        if self.voted:
             return VoteAlreadyCast(
                 user_id=self.id,
                 article_id=article_id
@@ -52,7 +50,7 @@ class VotingUser:
 
     @property
     def voted(self) -> bool:
-        return self._voted
+        return self._article_vote is not None
 
 
 @dataclass
