@@ -17,7 +17,10 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('user_id', models.UUIDField()),
                 ('article_id', models.UUIDField()),
-                ('vote', models.IntegerField(choices=[(1, 'UP'), (2, 'DOWN')])),
+                ('vote', models.CharField(
+                    max_length=4,
+                    choices=[('up', 'UP'), ('down', 'DOWN')]
+                )),
             ],
             options={
                 'db_table': 'article_vote',

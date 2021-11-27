@@ -11,8 +11,8 @@ from myapp.application.domain.model.voting_user import ArticleVote
 
 
 class ArticleVoteEntity(models.Model):
-    VOTE_UP = 1
-    VOTE_DOWN = 2
+    VOTE_UP = Vote.UP.value
+    VOTE_DOWN = Vote.DOWN.value
 
     VOTES_CHOICES = [
         (VOTE_UP, 'UP'),
@@ -22,7 +22,7 @@ class ArticleVoteEntity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     user_id = models.UUIDField()
     article_id = models.UUIDField()
-    vote = models.IntegerField(choices=VOTES_CHOICES)
+    vote = models.CharField(max_length=4, choices=VOTES_CHOICES)
 
     class Meta:
         unique_together = [['user_id', 'article_id']]
@@ -30,25 +30,15 @@ class ArticleVoteEntity(models.Model):
 
     @classmethod
     def from_article_vote(cls, article_vote: ArticleVote) -> ArticleVoteEntity:
-        vote: int = {
-            Vote.UP: cls.VOTE_UP,
-            Vote.DOWN: cls.VOTE_DOWN
-        }[article_vote.vote]
-
         return ArticleVoteEntity(
             article_id=article_vote.article_id,
             user_id=article_vote.user_id,
-            vote=vote
+            vote=article_vote.vote.value
         )
 
     def to_article_vote(self) -> ArticleVote:
-        vote = {
-            self.VOTE_UP: Vote.UP,
-            self.VOTE_DOWN: Vote.DOWN
-        }[self.vote]
-
         return ArticleVote(
             user_id=UserId(self.user_id),
             article_id=ArticleId(self.article_id),
-            vote=vote
+            vote=Vote(self.vote)
         )
