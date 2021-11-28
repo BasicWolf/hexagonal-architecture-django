@@ -5,14 +5,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from myapp.application.adapter.api.http.problem_response import problem_response
-from myapp.application.adapter.api.http.serializer.article_vote_serializer import \
+from myapp.application.adapter.api.http.serializer.article_vote_serializer import (
     VoteCastSerializer
-from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import \
+)
+from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import (
     CastArticleVoteCommandDeserializer
-from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
+)
+from myapp.application.domain.model.cast_article_vote_result import (
+    CastArticleVoteResult,
     InsufficientKarma, VoteAlreadyCast, VoteSuccessfullyCast
+)
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
-    CastArticleVoteUseCase, CastArticleVoteCommand
+    CastArticleVoteCommand,
+    CastArticleVoteUseCase
 )
 from myapp.application.util.assert_never import assert_never
 
