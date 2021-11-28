@@ -28,7 +28,6 @@ class PostRatingService(
 
         cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
 
-        # TODO: result should be of type CastArticleVoteResult!
         if isinstance(cast_vote_result, VoteSuccessfullyCast):
             self._save_voting_user_port.save_voting_user(voting_user)
 
