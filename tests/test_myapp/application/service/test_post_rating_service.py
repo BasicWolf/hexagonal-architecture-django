@@ -1,7 +1,10 @@
 from uuid import UUID
 
-from myapp.application.domain.model.cast_article_vote_result import VoteAlreadyCast, \
-    InsufficientKarma, VoteSuccessfullyCast
+from myapp.application.domain.model.cast_article_vote_result import (
+    InsufficientKarma,
+    VoteAlreadyCast,
+    VoteSuccessfullyCast
+)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -12,9 +15,10 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.post_rating_service import PostRatingService
-from tests.test_myapp.application.domain.model.article_vote import build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
-    build_voting_user
+    (
+    build_article_vote, build_voting_user
+)
 
 
 def test_casting_valid_vote_returns_result(
