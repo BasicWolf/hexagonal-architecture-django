@@ -1,10 +1,14 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Optional
 
-from myapp.application.domain.model.cast_article_vote_result import InsufficientKarma, \
-    VoteAlreadyCast, CastArticleVoteResult, VoteSuccessfullyCast
+from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_article_vote_result import (
+    CastArticleVoteResult,
+    InsufficientKarma,
+    VoteAlreadyCast,
+    VoteSuccessfullyCast
+)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -50,9 +54,3 @@ class VotingUser:
     @property
     def voted(self) -> bool:
         return self._article_vote is not None
-
-
-@dataclass
-class ArticleVote:
-    article_id: ArticleId
-    vote: Vote
