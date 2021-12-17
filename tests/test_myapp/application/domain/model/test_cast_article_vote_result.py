@@ -12,13 +12,14 @@ from myapp.application.domain.model.vote import Vote
 
 def test_article_vote_property_of_successfully_cast_vote():
     vote_cast_result = VoteSuccessfullyCast(
-        UserId(uuid4()),
+        UserId('432fedfb-0000-0000-0000-000000000000'),
         ArticleId('1aaaaaaa-0000-0000-0000-000000000000'),
         Vote.UP
     )
 
     assert vote_cast_result.article_vote == ArticleVote(
         ArticleId('1aaaaaaa-0000-0000-0000-000000000000'),
+        UserId('432fedfb-0000-0000-0000-000000000000'),
         Vote.UP
     )
 

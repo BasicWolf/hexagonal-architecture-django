@@ -33,7 +33,7 @@ class PostRatingService(
         )
 
         cast_vote_result = voting_user.cast_vote(
-            ArticleVote(command.article_id, command.vote)
+            ArticleVote(command.article_id, command.user_id, command.vote)
         )
 
         if isinstance(cast_vote_result, VoteSuccessfullyCast):

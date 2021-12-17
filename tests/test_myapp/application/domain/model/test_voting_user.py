@@ -24,11 +24,10 @@ from tests.test_myapp.application.domain.model.voting_user_creation import \
 def test_cast_vote_updates_user_vote(
     cast_vote: Vote,
     result_vote: Vote,
-    article_id: ArticleId
 ):
     voting_user = build_voting_user()
     voting_user.cast_vote(
-        ArticleVote(article_id, cast_vote)
+        build_article_vote(vote=cast_vote)
     )
     assert voting_user.article_vote.vote == result_vote
 
@@ -43,7 +42,7 @@ def test_cast_vote_returns_vote_cast(
     )
 
     result = voting_user.cast_vote(
-        ArticleVote(article_id, Vote.UP)
+        ArticleVote(article_id, user_id, Vote.UP)
     )
 
     assert isinstance(result, VoteSuccessfullyCast)
@@ -59,7 +58,7 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId, article_id: A
     )
 
     result = voting_user.cast_vote(
-        ArticleVote(article_id, Vote.UP)
+        ArticleVote(article_id, user_id, Vote.UP)
     )
 
     assert isinstance(result, InsufficientKarma)
@@ -78,6 +77,7 @@ def test_casting_vote_returns_already_cast():
     result = voting_user.cast_vote(
         ArticleVote(
             ArticleId('d07af0ab-0000-0000-0000-000000000000'),
+            UserId('476820aa-0000-0000-0000-000000000000'),
             Vote.DOWN
         )
     )
@@ -87,17 +87,21 @@ def test_casting_vote_returns_already_cast():
     assert result.article_id == ArticleId('d07af0ab-0000-0000-0000-000000000000')
 
 
-@pytest.mark.parametrize(
-    'vote', [Vote.UP, Vote.DOWN]
-)
-def test_cannot_cast_vote_twice(article_id: ArticleId, vote: Vote):
+def test_cannot_cast_vote_twice():
     voting_user = build_voting_user(
+        user_id=UserId('9ab9ac19-0000-0000-0000-000000000000'),
         article_vote=build_article_vote(
-            article_id=article_id,
-            vote=vote
+            article_id=ArticleId('01ec495e-0000-0000-0000-000000000000'),
+            vote=Vote.UP
         )
     )
 
-    result = voting_user.cast_vote(ArticleVote(article_id, vote))
+    result = voting_user.cast_vote(
+        ArticleVote(
+            ArticleId('01ec495e-0000-0000-0000-000000000000'),
+            UserId('9ab9ac19-0000-0000-0000-000000000000'),
+            Vote.UP
+        )
+    )
 
     assert isinstance(result, VoteAlreadyCast)

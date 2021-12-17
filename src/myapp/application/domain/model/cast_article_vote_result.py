@@ -40,7 +40,7 @@ class VoteSuccessfullyCast(CastArticleVoteResultProtocol):
 
     @property
     def article_vote(self) -> Optional[ArticleVote]:
-        return ArticleVote(self.article_id, self.vote)
+        return ArticleVote(self.article_id, self.user_id, self.vote)
 
 
 CastArticleVoteResult = Union[VoteSuccessfullyCast, InsufficientKarma, VoteAlreadyCast]

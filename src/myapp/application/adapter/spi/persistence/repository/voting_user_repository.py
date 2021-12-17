@@ -44,6 +44,7 @@ class VotingUserRepository(
 
         return ArticleVote(
             ArticleId(article_vote_entity.article_id),
+            UserId(article_vote_entity.user_id),
             Vote(article_vote_entity.vote)
         )
 
@@ -85,5 +86,6 @@ class VotingUserRepository(
         article_vote_entity.save()
         return ArticleVote(
             ArticleId(article_vote_entity.article_id),
+            UserId(user_id),
             Vote(article_vote_entity.vote)
         )
