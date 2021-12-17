@@ -15,9 +15,11 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.post_rating_service import PostRatingService
+from tests.test_myapp.application.domain.model.article_vote_creation import \
+    build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
     (
-    build_article_vote, build_voting_user
+    build_voting_user
 )
 
 

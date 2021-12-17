@@ -8,9 +8,11 @@ from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
+from tests.test_myapp.application.domain.model.article_vote_creation import \
+    build_article_vote
 from tests.test_myapp.application.domain.model.voting_user_creation import \
     (
-    build_article_vote, build_voting_user
+    build_voting_user
 )
 
 
