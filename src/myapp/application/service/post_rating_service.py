@@ -1,7 +1,13 @@
-from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
+from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.cast_article_vote_result import (
+    CastArticleVoteResult,
     VoteSuccessfullyCast
+)
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteUseCase, CastArticleVoteCommand
+    (
+    CastArticleVoteCommand,
+    CastArticleVoteUseCase
+)
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 
@@ -26,7 +32,9 @@ class PostRatingService(
             article_id=command.article_id
         )
 
-        cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
+        cast_vote_result = voting_user.cast_vote(
+            ArticleVote(command.article_id, command.vote)
+        )
 
         if isinstance(cast_vote_result, VoteSuccessfullyCast):
             self._save_voting_user_port.save_voting_user(voting_user)
