@@ -12,12 +12,10 @@ def build_production_dependencies_container() -> Dict[str, Any]:
     voting_user_repository = VotingUserRepository()
     article_vote_repository = ArticleVoteRepository()
 
-    save_voting_user_adapter = voting_user_repository
     get_vote_casting_user_adapter = voting_user_repository
 
     cast_article_vote_use_case = PostRatingService(
         get_vote_casting_user_adapter,
-        save_voting_user_adapter,
         article_vote_repository
     )
 
