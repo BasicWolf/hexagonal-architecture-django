@@ -8,6 +8,7 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
     CastArticleVoteUseCase
 )
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
+from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 
 
@@ -16,14 +17,17 @@ class PostRatingService(
 ):
     _find_voting_user_port: FindVotingUserPort
     _save_voting_user_port: SaveVotingUserPort
+    _save_article_vote_port: SaveArticleVotePort
 
     def __init__(
         self,
         find_voting_user_port: FindVotingUserPort,
-        save_voting_user_port: SaveVotingUserPort
+        save_voting_user_port: SaveVotingUserPort,
+        save_article_vote_port: SaveArticleVotePort,
     ):
         self._find_voting_user_port = find_voting_user_port
         self._save_voting_user_port = save_voting_user_port
+        self._save_article_vote_port = save_article_vote_port
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         voting_user = self._find_voting_user_port.find_voting_user(
