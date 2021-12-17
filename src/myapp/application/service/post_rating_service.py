@@ -1,4 +1,3 @@
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import (
     CastArticleVoteResult,
     VoteSuccessfullyCast
@@ -32,9 +31,7 @@ class PostRatingService(
             article_id=command.article_id
         )
 
-        cast_vote_result = voting_user.cast_vote(
-            ArticleVote(command.article_id, command.user_id, command.vote)
-        )
+        cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
 
         if isinstance(cast_vote_result, VoteSuccessfullyCast):
             self._save_voting_user_port.save_voting_user(voting_user)
