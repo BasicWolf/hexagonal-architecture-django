@@ -17,9 +17,9 @@ from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePo
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
-from tests.test_myapp.application.domain.model.article_vote_creation import \
+from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
-from tests.test_myapp.application.domain.model.voting_user_creation import \
+from tests.test_myapp.application.domain.model.builder.voting_user_creation import \
     (
     build_voting_user
 )
