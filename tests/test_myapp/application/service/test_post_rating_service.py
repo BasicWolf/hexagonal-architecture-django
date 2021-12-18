@@ -13,6 +13,7 @@ from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
     CastArticleVoteCommand
+from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePort
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.post_rating_service import PostRatingService
@@ -91,13 +92,13 @@ def test_casting_vote_returns_insufficient_karma_result(
 def test_voting_user_saved():
     save_article_vote_port_mock = SaveArticleVotePortMock()
     post_rating_service = build_post_rating_service(
-        FindVotingUserPortStub(
+        find_voting_user_port=FindVotingUserPortStub(
             returned_vote_casting_user=build_voting_user(
                 user_id=UserId('896ca302-0000-0000-0000-000000000000'),
                 karma=Karma(21)
             )
         ),
-        save_article_vote_port_mock
+        save_article_vote_port=save_article_vote_port_mock
     )
 
     post_rating_service.cast_article_vote(
@@ -135,11 +136,23 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
         return article_vote
 
 
+class FindArticleVotePortStub(FindArticleVotePort):
+    returned_article_vote: ArticleVote
+
+    def __init__(self, returned_article_vote: ArticleVote = build_article_vote()):
+        self.returned_article_vote = returned_article_vote
+
+    def find_article_vote(self, article_id: ArticleId, user_id: UserId) -> ArticleVote:
+        return self.returned_article_vote
+
+
 def build_post_rating_service(
+    find_article_vote_port: FindArticleVotePort = FindArticleVotePortStub(),
     find_voting_user_port: FindVotingUserPort = FindVotingUserPortStub(),
     save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
 ):
     return PostRatingService(
+        find_article_vote_port,
         find_voting_user_port,
         save_article_vote_port
     )

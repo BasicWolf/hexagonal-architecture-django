@@ -15,6 +15,7 @@ def build_production_dependencies_container() -> Dict[str, Any]:
     get_vote_casting_user_adapter = voting_user_repository
 
     cast_article_vote_use_case = PostRatingService(
+        article_vote_repository,
         get_vote_casting_user_adapter,
         article_vote_repository
     )
