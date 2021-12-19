@@ -1,10 +1,14 @@
-from dataclasses import dataclass
-from typing import Optional, Protocol, Union
+from __future__ import annotations
 
-from myapp.application.domain.model.article_vote import ArticleVote
+from dataclasses import dataclass
+from typing import Optional, Protocol, TYPE_CHECKING, Union
+
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
+
+if TYPE_CHECKING:
+    from myapp.application.domain.model.article_vote import ArticleVote
 
 
 class CastArticleVoteResultProtocol(Protocol):
@@ -40,6 +44,7 @@ class VoteSuccessfullyCast(CastArticleVoteResultProtocol):
 
     @property
     def article_vote(self) -> Optional[ArticleVote]:
+        from myapp.application.domain.model.article_vote import ArticleVote
         return ArticleVote(self.article_id, self.user_id, self.vote)
 
 
