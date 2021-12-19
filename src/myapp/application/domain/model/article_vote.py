@@ -1,21 +1,57 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Union
+from typing import Optional, Protocol, TYPE_CHECKING, Union
 
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
+if TYPE_CHECKING:
+    from myapp.application.domain.model.cast_article_vote_result import (
+        VoteAlreadyCast
+    )
+
+
+class ArticleVoteProtocol(Protocol):
+    @property
+    def was_cast_successfully(self) -> bool:
+        raise NotImplementedError()
+
+    @property
+    def already_cast_result(self) -> Optional[VoteAlreadyCast]:
+        raise NotImplementedError()
+
 
 @dataclass
-class ArticleVote:
+class ArticleVote(ArticleVoteProtocol):
     article_id: ArticleId
     user_id: UserId
     vote: Vote
 
+    @property
+    def was_cast_successfully(self) -> bool:
+        return True
+
+    @property
+    def already_cast_result(self) -> Optional[VoteAlreadyCast]:
+        from myapp.application.domain.model.cast_article_vote_result import (
+            VoteAlreadyCast
+        )
+        return VoteAlreadyCast(self.user_id, self.article_id)
+
 
 @dataclass
-class UncastArticleVote:
+class UncastArticleVote(ArticleVoteProtocol):
     article_id: ArticleId
+
+    @property
+    def was_cast_successfully(self) -> bool:
+        return False
+
+    @property
+    def already_cast_result(self) -> Optional[VoteAlreadyCast]:
+        return None
 
 
 CastOrUncastArticleVote = Union[ArticleVote, UncastArticleVote]
