@@ -1,6 +1,10 @@
+from typing import Optional
 from uuid import UUID
 
-from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.domain.model.article_vote import (
+    ArticleVote,
+    CastOrUncastArticleVote, UncastArticleVote
+)
 from myapp.application.domain.model.cast_article_vote_result import (
     InsufficientKarma,
     VoteAlreadyCast,
@@ -23,6 +27,8 @@ from tests.test_myapp.application.domain.model.builder.voting_user_creation impo
     (
     build_voting_user
 )
+from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
+    create_article_id
 
 
 def test_casting_valid_vote_returns_result(
@@ -117,6 +123,29 @@ def test_voting_user_saved():
     )
 
 
+def test_cast_article_vote_returned_without_being_saved():
+    save_article_vote_port_mock = SaveArticleVotePortMock()
+    post_rating_service = build_post_rating_service(
+        find_article_vote_port=FindArticleVotePortStub(
+            ArticleVote(
+                ArticleId('b63b6490-0000-0000-0000-000000000000'),
+                UserId('4110f0fc-0000-0000-0000-000000000000'),
+                Vote.UP
+            )
+        ),
+        save_article_vote_port=save_article_vote_port_mock
+    )
+    post_rating_service.cast_article_vote(
+        CastArticleVoteCommand(
+            UserId('4110f0fc-0000-0000-0000-000000000000'),
+            ArticleId('b63b6490-0000-0000-0000-000000000000'),
+            Vote.UP
+        )
+    )
+    assert save_article_vote_port_mock.saved_article_vote is None
+
+
+
 class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,
@@ -129,7 +158,7 @@ class FindVotingUserPortStub(FindVotingUserPort):
 
 
 class SaveArticleVotePortMock(SaveArticleVotePort):
-    saved_article_vote: ArticleVote
+    saved_article_vote: Optional[ArticleVote] = None
 
     def save_article_vote(self, article_vote: ArticleVote) -> ArticleVote:
         self.saved_article_vote = article_vote
@@ -137,12 +166,17 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
 
 
 class FindArticleVotePortStub(FindArticleVotePort):
-    returned_article_vote: ArticleVote
+    returned_article_vote: CastOrUncastArticleVote
 
-    def __init__(self, returned_article_vote: ArticleVote = build_article_vote()):
+    def __init__(
+        self,
+        returned_article_vote: CastOrUncastArticleVote = UncastArticleVote(
+            create_article_id()
+        )
+    ):
         self.returned_article_vote = returned_article_vote
 
-    def find_article_vote(self, article_id: ArticleId, user_id: UserId) -> ArticleVote:
+    def find_article_vote(self, article_id: ArticleId, user_id: UserId) -> CastOrUncastArticleVote:
         return self.returned_article_vote
 
 
