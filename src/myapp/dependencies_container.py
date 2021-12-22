@@ -27,4 +27,3 @@ def build_production_dependencies_container() -> Dict[str, Any]:
     return {
         'article_vote_django_view': article_vote_django_view
     }
-

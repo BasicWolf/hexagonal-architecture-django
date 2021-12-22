@@ -15,7 +15,11 @@ class ArticleVoteRepository(
     FindArticleVotePort,
     SaveArticleVotePort
 ):
-    def find_article_vote(self, article_id: ArticleId, user_id: UserId) -> CastOrUncastArticleVote:
+    def find_article_vote(
+        self,
+        article_id: ArticleId,
+        user_id: UserId
+    ) -> CastOrUncastArticleVote:
         found_article_vote_entity = ArticleVoteEntity.objects.filter(
             article_id=article_id,
             user_id=user_id

@@ -23,8 +23,7 @@ from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePo
 from myapp.application.service.post_rating_service import PostRatingService
 from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
-from tests.test_myapp.application.domain.model.builder.voting_user_creation import \
-    (
+from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
 from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
@@ -65,7 +64,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result(
             )
         )
     )
- 
+
     result = post_rating_service.cast_article_vote(
         CastArticleVoteCommand(user_id, article_id, Vote.UP)
     )
@@ -145,7 +144,6 @@ def test_cast_article_vote_returned_without_being_saved():
     assert save_article_vote_port_mock.saved_article_vote is None
 
 
-
 class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,
@@ -176,7 +174,11 @@ class FindArticleVotePortStub(FindArticleVotePort):
     ):
         self.returned_article_vote = returned_article_vote
 
-    def find_article_vote(self, article_id: ArticleId, user_id: UserId) -> CastOrUncastArticleVote:
+    def find_article_vote(
+        self,
+        article_id: ArticleId,
+        user_id: UserId
+    ) -> CastOrUncastArticleVote:
         return self.returned_article_vote
 
 

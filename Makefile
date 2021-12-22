@@ -1,7 +1,4 @@
 MANAGEPY = src/manage.py
-PYTEST = pytest
-MYPY = mypy
-ENV = PYTHONPATH=src/:./
 
 help:
 	@echo 'Usage:'
@@ -17,11 +14,14 @@ buidl: build
 
 build: mypy test
 
+flake8:
+	flake8
+
 mypy:
-	$(MYPY) --namespace-packages -p myapp -p tests
+	mypy --namespace-packages -p myapp -p tests
 
 test:
-	$(ENV) $(PYTEST)
+	PYTHONPATH=src/:./ pytest
 
 migrate:
 	$(MANAGEPY) migrate

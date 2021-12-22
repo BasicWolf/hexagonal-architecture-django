@@ -1,8 +1,7 @@
 from myapp.application.domain.model.cast_article_vote_result import (
     CastArticleVoteResult
 )
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    (
+from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
     CastArticleVoteCommand,
     CastArticleVoteUseCase
 )

@@ -8,7 +8,7 @@ from myapp.application.adapter.api.http.problem_response import problem_response
 from myapp.application.adapter.api.http.serializer.article_vote_serializer import (
     VoteCastSerializer
 )
-from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import (
+from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import ( # noqa
     CastArticleVoteCommandDeserializer
 )
 from myapp.application.domain.model.cast_article_vote_result import (

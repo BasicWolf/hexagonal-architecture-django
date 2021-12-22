@@ -1,5 +1,5 @@
 import uuid
-from typing import Tuple, List
+from typing import List, Tuple
 
 from django.db import migrations, models
 
@@ -14,7 +14,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ArticleVoteEntity',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.UUIDField(
+                    default=uuid.uuid4,
+                    editable=False,
+                    primary_key=True,
+                    serialize=False)
+                 ),
                 ('user_id', models.UUIDField()),
                 ('article_id', models.UUIDField()),
                 ('vote', models.CharField(
@@ -31,7 +36,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='VoteCastingUserEntity',
             fields=[
-                ('user_id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('user_id', models.UUIDField(
+                    default=uuid.uuid4,
+                    editable=False,
+                    primary_key=True,
+                    serialize=False)
+                 ),
                 ('karma', models.IntegerField()),
             ],
             options={

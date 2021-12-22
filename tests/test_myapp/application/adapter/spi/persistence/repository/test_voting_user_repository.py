@@ -15,8 +15,7 @@ from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import VotingUser
 from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
-from tests.test_myapp.application.domain.model.builder.voting_user_creation import \
-    (
+from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
 from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
@@ -52,7 +51,7 @@ def test_find_voting_user(user_id: UserId, article_id: ArticleId):
 @pytest.mark.integration
 @pytest.mark.django_db
 def test_get_non_existing_voting_user_raises_user_not_found():
-    with pytest.raises(VotingUserNotFound) as e:
+    with pytest.raises(VotingUserNotFound):
         VotingUserRepository().find_voting_user(
             user_id=create_user_id(),
             article_id=create_article_id()

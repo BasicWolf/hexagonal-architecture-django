@@ -1,3 +1,5 @@
+from typing import Optional
+
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
@@ -9,8 +11,8 @@ from tests.test_myapp.application.domain.model.identifier.user_id_creation impor
 
 
 def build_article_vote(
-    article_id: ArticleId = None,
-    user_id: UserId = None,
+    article_id: Optional[ArticleId] = None,
+    user_id: Optional[UserId] = None,
     vote: Vote = Vote.UP
 ) -> ArticleVote:
     article_id = article_id or create_article_id()

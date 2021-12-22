@@ -12,8 +12,7 @@ from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
-from tests.test_myapp.application.domain.model.builder.voting_user_creation import \
-    (
+from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
 from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
@@ -67,8 +66,8 @@ def test_casting_vote_returns_already_cast():
     voting_user = build_voting_user(
         user_id=UserId(UUID('476820aa-0000-0000-0000-000000000000')),
         article_vote=build_article_vote(
-            UserId(UUID('476820aa-0000-0000-0000-000000000000')),
             ArticleId(UUID('d07af0ab-0000-0000-0000-000000000000')),
+            UserId(UUID('476820aa-0000-0000-0000-000000000000')),
         )
     )
 

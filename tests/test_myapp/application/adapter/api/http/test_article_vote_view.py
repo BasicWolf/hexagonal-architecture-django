@@ -1,17 +1,23 @@
 from http import HTTPStatus
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
-from myapp.application.domain.model.cast_article_vote_result import CastArticleVoteResult, \
-    VoteAlreadyCast, InsufficientKarma, VoteSuccessfullyCast
+from myapp.application.domain.model.cast_article_vote_result import (
+    CastArticleVoteResult,
+    InsufficientKarma,
+    VoteAlreadyCast,
+    VoteSuccessfullyCast
+)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteUseCase, CastArticleVoteCommand
+from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
+    CastArticleVoteCommand,
+    CastArticleVoteUseCase
+)
 
 
 def test_post_article_vote(
@@ -33,7 +39,7 @@ def test_post_article_vote(
 
     response: Response = article_vote_view(
         arf.post(
-            f'/article_vote',
+            '/article_vote',
             {
                 'user_id': user_id,
                 'article_id': article_id,
@@ -62,7 +68,7 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
 
     response: Response = article_vote_view(
         arf.post(
-            f'/article_vote',
+            '/article_vote',
             {
                 'user_id': str(uuid4()),
                 'article_id': str(uuid4())
@@ -91,7 +97,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 
     response: Response = article_vote_view(
         arf.post(
-            f'/article_vote',
+            '/article_vote',
             {
                 'user_id': user_id,
                 'article_id': article_id,
@@ -127,7 +133,7 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
 
     response: Response = article_vote_view(
         arf.post(
-            f'/article_vote',
+            '/article_vote',
             {
                 'user_id': user_id,
                 'article_id': article_id,
@@ -140,7 +146,8 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.data == {
         'status': 409,
-        'detail': f"User \"{user_id}\" has already cast a vote for article \"{article_id}\"",
+        'detail': (f"User \"{user_id}\" has already cast a vote "
+                   f"for article \"{article_id}\""),
         'title': "Cannot cast a vote"
     }
 

@@ -11,4 +11,3 @@ class EntityNotFound(RuntimeError):
         if message is None:
             message = f"Entity '{entity_id}' not found"
         super().__init__(message)
-

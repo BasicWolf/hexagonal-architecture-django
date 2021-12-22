@@ -30,7 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS: List[str] = []
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'myapp.application.adapter.api.http.exceptions_handler.exceptions_handler',
+    'EXCEPTION_HANDLER': 'myapp.application.adapter.api.http.exceptions_handler.exceptions_handler',  # noqa
 }
 
 # Application definition
@@ -92,7 +92,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',

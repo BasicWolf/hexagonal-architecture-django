@@ -17,5 +17,3 @@ class CastArticleVoteCommand:
 class CastArticleVoteUseCase(Protocol):
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         raise NotImplementedError()
-
-

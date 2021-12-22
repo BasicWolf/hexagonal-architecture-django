@@ -37,7 +37,7 @@ class VotingUserRepository(
                 user_id=user_id,
                 article_id=article_id
             )
-        except ArticleVoteEntity.DoesNotExist as _:
+        except ArticleVoteEntity.DoesNotExist:
             return None
 
         return ArticleVote(
