@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from myapp.application.domain.model.article_vote import ArticleVote, UncastArticleVote
 from myapp.application.domain.model.cast_article_vote_result import (
     VoteAlreadyCast
@@ -11,14 +13,14 @@ from tests.test_myapp.application.domain.model.identifier.article_id_creation im
 
 def test_article_vote_has_already_cast_result():
     article_vote = ArticleVote(
-        ArticleId('5eb18d6d-0000-0000-0000-000000000000'),
-        UserId('87613e13-0000-0000-0000-000000000000'),
+        ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000')),
+        UserId(UUID('87613e13-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
     assert article_vote.was_cast_successfully
     assert article_vote.already_cast_result == VoteAlreadyCast(
-        UserId('87613e13-0000-0000-0000-000000000000'),
-        ArticleId('5eb18d6d-0000-0000-0000-000000000000')
+        UserId(UUID('87613e13-0000-0000-0000-000000000000')),
+        ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000'))
     )
 
 

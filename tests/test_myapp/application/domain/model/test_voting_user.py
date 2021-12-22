@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from myapp.application.domain.model.cast_article_vote_result import (
@@ -63,34 +65,34 @@ def test_cannot_cast_vote_with_insufficient_karma(user_id: UserId, article_id: A
 
 def test_casting_vote_returns_already_cast():
     voting_user = build_voting_user(
-        user_id=UserId('476820aa-0000-0000-0000-000000000000'),
+        user_id=UserId(UUID('476820aa-0000-0000-0000-000000000000')),
         article_vote=build_article_vote(
-            UserId('476820aa-0000-0000-0000-000000000000'),
-            ArticleId('d07af0ab-0000-0000-0000-000000000000'),
+            UserId(UUID('476820aa-0000-0000-0000-000000000000')),
+            ArticleId(UUID('d07af0ab-0000-0000-0000-000000000000')),
         )
     )
 
     result = voting_user.cast_vote(
-        ArticleId('d07af0ab-0000-0000-0000-000000000000'),
+        ArticleId(UUID('d07af0ab-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
 
     assert isinstance(result, VoteAlreadyCast)
-    assert result.user_id == UserId('476820aa-0000-0000-0000-000000000000')
-    assert result.article_id == ArticleId('d07af0ab-0000-0000-0000-000000000000')
+    assert result.user_id == UserId(UUID('476820aa-0000-0000-0000-000000000000'))
+    assert result.article_id == ArticleId(UUID('d07af0ab-0000-0000-0000-000000000000'))
 
 
 def test_cannot_cast_vote_twice():
     voting_user = build_voting_user(
-        user_id=UserId('9ab9ac19-0000-0000-0000-000000000000'),
+        user_id=UserId(UUID('9ab9ac19-0000-0000-0000-000000000000')),
         article_vote=build_article_vote(
-            article_id=ArticleId('01ec495e-0000-0000-0000-000000000000'),
+            article_id=ArticleId(UUID('01ec495e-0000-0000-0000-000000000000')),
             vote=Vote.UP
         )
     )
 
     result = voting_user.cast_vote(
-        ArticleId('01ec495e-0000-0000-0000-000000000000'),
+        ArticleId(UUID('01ec495e-0000-0000-0000-000000000000')),
         Vote.UP
     )
 

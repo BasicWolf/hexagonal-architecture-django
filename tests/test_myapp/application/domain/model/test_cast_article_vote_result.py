@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import (
@@ -12,14 +12,14 @@ from myapp.application.domain.model.vote import Vote
 
 def test_article_vote_property_of_successfully_cast_vote():
     vote_cast_result = VoteSuccessfullyCast(
-        UserId('432fedfb-0000-0000-0000-000000000000'),
-        ArticleId('1aaaaaaa-0000-0000-0000-000000000000'),
+        UserId(UUID('432fedfb-0000-0000-0000-000000000000')),
+        ArticleId(UUID('1aaaaaaa-0000-0000-0000-000000000000')),
         Vote.UP
     )
 
     assert vote_cast_result.article_vote == ArticleVote(
-        ArticleId('1aaaaaaa-0000-0000-0000-000000000000'),
-        UserId('432fedfb-0000-0000-0000-000000000000'),
+        ArticleId(UUID('1aaaaaaa-0000-0000-0000-000000000000')),
+        UserId(UUID('432fedfb-0000-0000-0000-000000000000')),
         Vote.UP
     )
 

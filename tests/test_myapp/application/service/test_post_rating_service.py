@@ -100,7 +100,7 @@ def test_voting_user_saved():
     post_rating_service = build_post_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
             returned_vote_casting_user=build_voting_user(
-                user_id=UserId('896ca302-0000-0000-0000-000000000000'),
+                user_id=UserId(UUID('896ca302-0000-0000-0000-000000000000')),
                 karma=Karma(21)
             )
         ),
@@ -109,16 +109,16 @@ def test_voting_user_saved():
 
     post_rating_service.cast_article_vote(
         CastArticleVoteCommand(
-            UserId('896ca302-0000-0000-0000-000000000000'),
-            ArticleId('dd329c97-0000-0000-0000-000000000000'),
+            UserId(UUID('896ca302-0000-0000-0000-000000000000')),
+            ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             Vote.DOWN
         )
     )
 
     saved_article_vote = save_article_vote_port_mock.saved_article_vote
     assert saved_article_vote == ArticleVote(
-        ArticleId('dd329c97-0000-0000-0000-000000000000'),
-        UserId('896ca302-0000-0000-0000-000000000000'),
+        ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
+        UserId(UUID('896ca302-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
 
@@ -128,8 +128,8 @@ def test_cast_article_vote_returned_without_being_saved():
     post_rating_service = build_post_rating_service(
         find_article_vote_port=FindArticleVotePortStub(
             ArticleVote(
-                ArticleId('b63b6490-0000-0000-0000-000000000000'),
-                UserId('4110f0fc-0000-0000-0000-000000000000'),
+                ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
+                UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
                 Vote.UP
             )
         ),
@@ -137,8 +137,8 @@ def test_cast_article_vote_returned_without_being_saved():
     )
     post_rating_service.cast_article_vote(
         CastArticleVoteCommand(
-            UserId('4110f0fc-0000-0000-0000-000000000000'),
-            ArticleId('b63b6490-0000-0000-0000-000000000000'),
+            UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
+            ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
             Vote.UP
         )
     )
