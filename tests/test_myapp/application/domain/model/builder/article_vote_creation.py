@@ -1,6 +1,6 @@
 from typing import Optional
 
-from myapp.application.domain.model.article_vote import ArticleVote, UncastArticleVote
+from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
@@ -19,11 +19,3 @@ def build_article_vote(
     user_id = user_id or create_user_id()
 
     return ArticleVote(article_id, user_id, vote)
-
-
-def build_uncast_article_vote(
-    article_id: Optional[ArticleId] = None,
-) -> UncastArticleVote:
-    article_id = article_id or create_article_id()
-
-    return UncastArticleVote(article_id)

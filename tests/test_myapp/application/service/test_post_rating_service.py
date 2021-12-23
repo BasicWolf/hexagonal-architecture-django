@@ -1,10 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from myapp.application.domain.model.article_vote import (
-    ArticleVote,
-    CastOrUncastArticleVote, UncastArticleVote
-)
+from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.cast_article_vote_result import (
     InsufficientKarma,
     VoteAlreadyCast,
@@ -26,8 +23,6 @@ from tests.test_myapp.application.domain.model.builder.article_vote_creation imp
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
-from tests.test_myapp.application.domain.model.identifier.article_id_creation import \
-    create_article_id
 
 
 def test_casting_valid_vote_returns_result(
@@ -169,13 +164,11 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
 
 
 class FindArticleVotePortStub(FindArticleVotePort):
-    returned_article_vote: CastOrUncastArticleVote
+    returned_article_vote: Optional[ArticleVote]
 
     def __init__(
         self,
-        returned_article_vote: CastOrUncastArticleVote = UncastArticleVote(
-            create_article_id()
-        )
+        returned_article_vote: Optional[ArticleVote] = None
     ):
         self.returned_article_vote = returned_article_vote
 
@@ -183,7 +176,7 @@ class FindArticleVotePortStub(FindArticleVotePort):
         self,
         article_id: ArticleId,
         user_id: UserId
-    ) -> CastOrUncastArticleVote:
+    ) -> Optional[ArticleVote]:
         return self.returned_article_vote
 
 

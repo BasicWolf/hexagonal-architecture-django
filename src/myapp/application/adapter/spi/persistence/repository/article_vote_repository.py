@@ -1,9 +1,9 @@
+from typing import Optional
+
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import \
     ArticleVoteEntity
 from myapp.application.domain.model.article_vote import (
-    ArticleVote,
-    CastOrUncastArticleVote,
-    UncastArticleVote
+    ArticleVote
 )
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
@@ -19,16 +19,16 @@ class ArticleVoteRepository(
         self,
         article_id: ArticleId,
         user_id: UserId
-    ) -> CastOrUncastArticleVote:
+    ) -> Optional[ArticleVote]:
         found_article_vote_entity = ArticleVoteEntity.objects.filter(
             article_id=article_id,
             user_id=user_id
         ).first()
 
-        if found_article_vote_entity is not None:
-            return found_article_vote_entity.to_domain_model()
+        if found_article_vote_entity is None:
+            return None
         else:
-            return UncastArticleVote(article_id)
+            return found_article_vote_entity.to_domain_model()
 
     def save_article_vote(self, article_vote: ArticleVote) -> ArticleVote:
         article_vote_entity = ArticleVoteEntity.from_domain_model(article_vote)

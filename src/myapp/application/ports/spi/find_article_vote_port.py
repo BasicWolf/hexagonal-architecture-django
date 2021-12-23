@@ -1,8 +1,6 @@
-from typing import Protocol
+from typing import Optional, Protocol
 
-from myapp.application.domain.model.article_vote import (
-    CastOrUncastArticleVote
-)
+from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 
@@ -12,5 +10,5 @@ class FindArticleVotePort(Protocol):
         self,
         article_id: ArticleId,
         user_id: UserId
-    ) -> CastOrUncastArticleVote:
+    ) -> Optional[ArticleVote]:
         raise NotImplementedError()

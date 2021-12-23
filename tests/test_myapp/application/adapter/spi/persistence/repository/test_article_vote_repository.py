@@ -7,7 +7,7 @@ from myapp.application.adapter.spi.persistence.entity.article_vote_entity import
     ArticleVoteEntity
 from myapp.application.adapter.spi.persistence.repository.article_vote_repository import \
     ArticleVoteRepository
-from myapp.application.domain.model.article_vote import ArticleVote, UncastArticleVote
+from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
@@ -100,11 +100,9 @@ def test_find_article_vote_returns_article_vote():
 
 @pytest.mark.integration
 @pytest.mark.django_db
-def test_find_article_vote_returns_uncast_vote(user_id: UserId):
+def test_find_article_vote_returns_none(user_id: UserId):
     article_vote = ArticleVoteRepository().find_article_vote(
         article_id=ArticleId(UUID('aed5675c-0000-0000-0000-000000000000')),
         user_id=user_id
     )
-    assert article_vote == UncastArticleVote(
-        ArticleId(UUID('aed5675c-0000-0000-0000-000000000000'))
-    )
+    assert article_vote is None
