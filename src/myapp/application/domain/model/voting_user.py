@@ -20,11 +20,7 @@ class VotingUser:
     id: UserId
     karma: Karma
 
-    def __init__(
-        self,
-        id: UserId,
-        karma: Karma,
-    ):
+    def __init__(self, id: UserId, karma: Karma):
         self.id = id
         self.karma = karma
 
