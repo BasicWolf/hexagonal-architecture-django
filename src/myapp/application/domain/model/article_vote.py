@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class ArticleVoteProtocol(Protocol):
     @property
-    def was_cast_successfully(self) -> bool:
+    def was_already_cast(self) -> bool:
         raise NotImplementedError()
 
     @property
@@ -30,7 +30,7 @@ class ArticleVote(ArticleVoteProtocol):
     vote: Vote
 
     @property
-    def was_cast_successfully(self) -> bool:
+    def was_already_cast(self) -> bool:
         return True
 
     @property
@@ -46,7 +46,7 @@ class UncastArticleVote(ArticleVoteProtocol):
     article_id: ArticleId
 
     @property
-    def was_cast_successfully(self) -> bool:
+    def was_already_cast(self) -> bool:
         return False
 
     @property

@@ -31,8 +31,8 @@ class PostRatingService(
         article_vote = self._find_article_vote_port.find_article_vote(
             command.article_id, command.user_id
         )
-        if article_vote.was_cast_successfully:
-            assert article_vote.already_cast_result is not None
+        if article_vote.was_already_cast:
+            assert article_vote.already_cast_result is not None  # otherwise mypy warning
             return article_vote.already_cast_result
 
         voting_user = self._find_voting_user_port.find_voting_user(

@@ -17,7 +17,7 @@ def test_article_vote_has_already_cast_result():
         UserId(UUID('87613e13-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
-    assert article_vote.was_cast_successfully
+    assert article_vote.was_already_cast
     assert article_vote.already_cast_result == VoteAlreadyCast(
         UserId(UUID('87613e13-0000-0000-0000-000000000000')),
         ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000'))
@@ -26,5 +26,5 @@ def test_article_vote_has_already_cast_result():
 
 def test_uncast_article_vote_already_cast_result_is_none():
     uncast_article_vote = UncastArticleVote(create_article_id())
-    assert not uncast_article_vote.was_cast_successfully
+    assert not uncast_article_vote.was_already_cast
     assert uncast_article_vote.already_cast_result is None
