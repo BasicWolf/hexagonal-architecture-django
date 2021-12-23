@@ -26,11 +26,11 @@ class VotingUser:
         self,
         article_id: ArticleId,
         vote: Vote
-    ) -> Tuple[Optional[ArticleVote], CastArticleVoteResult]:
+    ) -> Tuple[CastArticleVoteResult, Optional[ArticleVote]]:
         if not self.karma.enough_for_voting():
-            return None, InsufficientKarma(user_id=self.id)
+            return  InsufficientKarma(user_id=self.id), None
 
         return (
-            ArticleVote(article_id, self.id, vote),
-            VoteSuccessfullyCast(article_id, self.id, vote)
+            VoteSuccessfullyCast(article_id, self.id, vote),
+            ArticleVote(article_id, self.id, vote)
         )
