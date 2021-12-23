@@ -18,12 +18,12 @@ def test_cast_vote_returns_expected_article_vote():
     voting_user = build_voting_user(
         UserId(UUID('24dbcd39-0000-0000-0000-000000000000'))
     )
-    result_article_vote, _ = voting_user.cast_vote(
+    _, article_vote_result = voting_user.cast_vote(
         ArticleId(UUID('aed7efd1-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
 
-    assert result_article_vote == ArticleVote(
+    assert article_vote_result == ArticleVote(
         ArticleId(UUID('aed7efd1-0000-0000-0000-000000000000')),
         UserId(UUID('24dbcd39-0000-0000-0000-000000000000')),
         Vote.DOWN
@@ -35,7 +35,7 @@ def test_cast_vote_returns_expected_cast_result():
         UserId(UUID('739c753c-0000-0000-0000-000000000000'))
     )
 
-    _, cast_result = voting_user.cast_vote(
+    cast_result, _ = voting_user.cast_vote(
         ArticleId(UUID('4df32c92-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
@@ -53,7 +53,7 @@ def test_cannot_cast_vote_with_insufficient_karma(article_id: ArticleId):
         karma=Karma(4)
     )
 
-    article_vote, result = voting_user.cast_vote(article_id, Vote.UP)
+    result, article_vote = voting_user.cast_vote(article_id, Vote.UP)
 
     assert result == InsufficientKarma(
         UserId(UUID('df777758-0000-0000-0000-000000000000'))
