@@ -41,8 +41,8 @@ def test_cast_vote_returns_expected_cast_result():
     )
 
     assert cast_result == VoteSuccessfullyCast(
-        UserId(UUID('739c753c-0000-0000-0000-000000000000')),
         ArticleId(UUID('4df32c92-0000-0000-0000-000000000000')),
+        UserId(UUID('739c753c-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
 

@@ -34,5 +34,5 @@ class VotingUser:
 
         return (
             ArticleVote(article_id, self.id, vote),
-            VoteSuccessfullyCast(self.id, article_id, vote)
+            VoteSuccessfullyCast(article_id, self.id, vote)
         )

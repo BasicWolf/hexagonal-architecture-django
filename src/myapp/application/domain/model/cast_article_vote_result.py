@@ -21,8 +21,8 @@ class VoteAlreadyCast:
 
 @dataclass
 class VoteSuccessfullyCast:
-    user_id: UserId
     article_id: ArticleId
+    user_id: UserId
     vote: Vote
 
 
