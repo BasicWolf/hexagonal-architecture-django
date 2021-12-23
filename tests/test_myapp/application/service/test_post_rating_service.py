@@ -41,7 +41,7 @@ def test_casting_valid_vote_returns_result(
     )
 
     result = post_rating_service.cast_article_vote(
-        CastArticleVoteCommand(user_id, article_id, Vote.UP)
+        CastArticleVoteCommand(article_id, user_id, Vote.UP)
     )
 
     assert isinstance(result, VoteSuccessfullyCast)
@@ -93,7 +93,7 @@ def test_casting_vote_returns_insufficient_karma_result(
     )
 
     result = post_rating_service.cast_article_vote(
-        CastArticleVoteCommand(user_id, article_id, Vote.UP)
+        CastArticleVoteCommand(article_id, user_id, Vote.UP)
     )
     assert isinstance(result, InsufficientKarma)
     assert result.user_id == user_id
@@ -113,8 +113,8 @@ def test_voting_user_saved():
 
     post_rating_service.cast_article_vote(
         CastArticleVoteCommand(
-            UserId(UUID('896ca302-0000-0000-0000-000000000000')),
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
+            UserId(UUID('896ca302-0000-0000-0000-000000000000')),
             Vote.DOWN
         )
     )

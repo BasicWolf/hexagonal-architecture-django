@@ -9,8 +9,8 @@ from myapp.application.domain.model.vote import Vote
 
 @dataclass
 class CastArticleVoteCommand:
-    user_id: UserId
     article_id: ArticleId
+    user_id: UserId
     vote: Vote
 
 
