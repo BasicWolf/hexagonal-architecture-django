@@ -15,7 +15,7 @@ def test_article_vote_has_already_cast_result():
         UserId(UUID('87613e13-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
-    assert article_vote.to_already_cast_result() == VoteAlreadyCast(
+    assert article_vote.to_vote_already_cast_result() == VoteAlreadyCast(
         ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000')),
         UserId(UUID('87613e13-0000-0000-0000-000000000000'))
     )

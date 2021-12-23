@@ -16,5 +16,5 @@ class ArticleVote:
     user_id: UserId
     vote: Vote
 
-    def to_already_cast_result(self) -> VoteAlreadyCast:
+    def to_vote_already_cast_result(self) -> VoteAlreadyCast:
         return VoteAlreadyCast(self.article_id, self.user_id)

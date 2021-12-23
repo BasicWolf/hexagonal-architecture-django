@@ -32,7 +32,7 @@ class PostRatingService(
             command.article_id, command.user_id
         )
         if article_vote is not None:
-            return article_vote.to_already_cast_result()
+            return article_vote.to_vote_already_cast_result()
 
         voting_user = self._find_voting_user_port.find_voting_user(
             user_id=command.user_id
