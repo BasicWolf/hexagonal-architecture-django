@@ -74,8 +74,8 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result():
     )
 
     assert result == VoteAlreadyCast(
-        UserId(UUID('912997c2-0000-0000-0000-000000000000')),
-        ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000'))
+        ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+        UserId(UUID('912997c2-0000-0000-0000-000000000000'))
     )
 
 

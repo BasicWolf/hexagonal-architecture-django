@@ -15,8 +15,8 @@ class InsufficientKarma:
 
 @dataclass
 class VoteAlreadyCast:
-    user_id: UserId
     article_id: ArticleId
+    user_id: UserId
 
 
 @dataclass

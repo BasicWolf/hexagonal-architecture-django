@@ -33,7 +33,7 @@ class ArticleVote(ArticleVoteProtocol):
 
     @property
     def already_cast_result(self) -> Optional[VoteAlreadyCast]:
-        return VoteAlreadyCast(self.user_id, self.article_id)
+        return VoteAlreadyCast(self.article_id, self.user_id)
 
 
 @dataclass

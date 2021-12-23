@@ -19,8 +19,8 @@ def test_article_vote_has_already_cast_result():
     )
     assert article_vote.was_already_cast
     assert article_vote.already_cast_result == VoteAlreadyCast(
-        UserId(UUID('87613e13-0000-0000-0000-000000000000')),
-        ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000'))
+        ArticleId(UUID('5eb18d6d-0000-0000-0000-000000000000')),
+        UserId(UUID('87613e13-0000-0000-0000-000000000000'))
     )
 
 
