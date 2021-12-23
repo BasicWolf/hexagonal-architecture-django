@@ -52,26 +52,31 @@ def test_casting_valid_vote_returns_result(
     )
 
 
-def test_casting_same_vote_two_times_returns_vote_already_cast_result(
-    user_id: UserId,
-    article_id: ArticleId
-):
+def test_casting_same_vote_two_times_returns_vote_already_cast_result():
     post_rating_service = build_post_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            build_voting_user(
-                user_id=user_id,
-                article_vote=build_article_vote(vote=Vote.UP)
+        FindArticleVotePortStub(
+            build_article_vote(
+                ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+                UserId(UUID('912997c2-0000-0000-0000-000000000000'))
             )
+        ),
+        FindVotingUserPortStub(
+            build_voting_user(UserId(UUID('912997c2-0000-0000-0000-000000000000')))
         )
     )
 
     result = post_rating_service.cast_article_vote(
-        CastArticleVoteCommand(user_id, article_id, Vote.UP)
+        CastArticleVoteCommand(
+            UserId(UUID('912997c2-0000-0000-0000-000000000000')),
+            ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+            Vote.UP
+        )
     )
 
-    assert isinstance(result, VoteAlreadyCast)
-    assert result.user_id == user_id
-    assert result.article_id == article_id
+    assert result == VoteAlreadyCast(
+        UserId(UUID('912997c2-0000-0000-0000-000000000000')),
+        ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000'))
+    )
 
 
 def test_casting_vote_returns_insufficient_karma_result(

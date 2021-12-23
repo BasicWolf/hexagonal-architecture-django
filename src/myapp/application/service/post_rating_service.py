@@ -39,11 +39,12 @@ class PostRatingService(
             user_id=command.user_id
         )
 
-        cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
+        result_article_vote, cast_vote_result = voting_user.cast_vote(
+            command.article_id,
+            command.vote
+        )
 
-        if cast_vote_result.article_vote is not None:
-            self._save_article_vote_port.save_article_vote(
-                cast_vote_result.article_vote
-            )
+        if result_article_vote is not None:
+            self._save_article_vote_port.save_article_vote(result_article_vote)
 
         return cast_vote_result
