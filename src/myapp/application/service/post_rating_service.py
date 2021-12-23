@@ -36,8 +36,7 @@ class PostRatingService(
             return article_vote.already_cast_result
 
         voting_user = self._find_voting_user_port.find_voting_user(
-            user_id=command.user_id,
-            article_id=command.article_id
+            user_id=command.user_id
         )
 
         cast_vote_result = voting_user.cast_vote(command.article_id, command.vote)
