@@ -29,7 +29,8 @@ class PostRatingService(
 
     def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
         article_vote = self._find_article_vote_port.find_article_vote(
-            command.article_id, command.user_id
+            command.article_id,
+            command.user_id
         )
         if article_vote is not None:
             return article_vote.to_vote_already_cast_result()
