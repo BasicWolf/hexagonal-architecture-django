@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Optional, Tuple
 
 from myapp.application.domain.model.article_vote import (
@@ -16,13 +17,10 @@ from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 
 
+@dataclass
 class VotingUser:
     id: UserId
     karma: Karma
-
-    def __init__(self, id: UserId, karma: Karma):
-        self.id = id
-        self.karma = karma
 
     def cast_vote(
         self,
