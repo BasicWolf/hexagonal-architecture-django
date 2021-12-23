@@ -1,5 +1,5 @@
-from typing import NoReturn
+from typing import Any, NoReturn
 
 
-def assert_never(v: NoReturn) -> NoReturn:
+def assert_never(v: Any) -> NoReturn:
     raise AssertionError(f"Invalid value: {v!r}")
