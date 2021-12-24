@@ -5,7 +5,7 @@ from myapp.application.adapter.spi.persistence.repository.article_vote_repositor
     ArticleVoteRepository
 from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
     VotingUserRepository
-from myapp.application.service.post_rating_service import PostRatingService
+from myapp.application.service.article_rating_service import ArticleRatingService
 
 
 def build_production_dependencies_container() -> Dict[str, Any]:
@@ -14,7 +14,7 @@ def build_production_dependencies_container() -> Dict[str, Any]:
 
     get_vote_casting_user_adapter = voting_user_repository
 
-    cast_article_vote_use_case = PostRatingService(
+    cast_article_vote_use_case = ArticleRatingService(
         article_vote_repository,
         get_vote_casting_user_adapter,
         article_vote_repository

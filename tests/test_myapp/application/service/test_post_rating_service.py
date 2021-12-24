@@ -17,7 +17,7 @@ from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case imp
 from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePort
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
-from myapp.application.service.post_rating_service import PostRatingService
+from myapp.application.service.article_rating_service import ArticleRatingService
 from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
@@ -29,13 +29,13 @@ def test_casting_valid_vote_returns_result(
     user_id: UserId,
     article_id: ArticleId
 ):
-    post_rating_service = build_post_rating_service(
+    article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
             build_voting_user(user_id=user_id)
         )
     )
 
-    result = post_rating_service.cast_article_vote(
+    result = article_rating_service.cast_article_vote(
         CastArticleVoteCommand(article_id, user_id, Vote.UP)
     )
 
@@ -48,7 +48,7 @@ def test_casting_valid_vote_returns_result(
 
 
 def test_casting_same_vote_two_times_returns_vote_already_cast_result():
-    post_rating_service = build_post_rating_service(
+    article_rating_service = build_article_rating_service(
         FindArticleVotePortStub(
             build_article_vote(
                 ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
@@ -60,7 +60,7 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result():
         )
     )
 
-    result = post_rating_service.cast_article_vote(
+    result = article_rating_service.cast_article_vote(
         CastArticleVoteCommand(
             ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
             UserId(UUID('912997c2-0000-0000-0000-000000000000')),
@@ -78,7 +78,7 @@ def test_casting_vote_returns_insufficient_karma_result(
     user_id: UserId,
     article_id: ArticleId
 ):
-    post_rating_service = build_post_rating_service(
+    article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
             returned_vote_casting_user=build_voting_user(
                 user_id=user_id,
@@ -87,7 +87,7 @@ def test_casting_vote_returns_insufficient_karma_result(
         )
     )
 
-    result = post_rating_service.cast_article_vote(
+    result = article_rating_service.cast_article_vote(
         CastArticleVoteCommand(article_id, user_id, Vote.UP)
     )
     assert isinstance(result, InsufficientKarma)
@@ -96,7 +96,7 @@ def test_casting_vote_returns_insufficient_karma_result(
 
 def test_voting_user_saved():
     save_article_vote_port_mock = SaveArticleVotePortMock()
-    post_rating_service = build_post_rating_service(
+    article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
             returned_vote_casting_user=build_voting_user(
                 user_id=UserId(UUID('896ca302-0000-0000-0000-000000000000')),
@@ -106,7 +106,7 @@ def test_voting_user_saved():
         save_article_vote_port=save_article_vote_port_mock
     )
 
-    post_rating_service.cast_article_vote(
+    article_rating_service.cast_article_vote(
         CastArticleVoteCommand(
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             UserId(UUID('896ca302-0000-0000-0000-000000000000')),
@@ -124,7 +124,7 @@ def test_voting_user_saved():
 
 def test_cast_article_vote_returned_without_being_saved():
     save_article_vote_port_mock = SaveArticleVotePortMock()
-    post_rating_service = build_post_rating_service(
+    article_rating_service = build_article_rating_service(
         find_article_vote_port=FindArticleVotePortStub(
             ArticleVote(
                 ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
@@ -134,7 +134,7 @@ def test_cast_article_vote_returned_without_being_saved():
         ),
         save_article_vote_port=save_article_vote_port_mock
     )
-    post_rating_service.cast_article_vote(
+    article_rating_service.cast_article_vote(
         CastArticleVoteCommand(
             ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
             UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
@@ -180,12 +180,12 @@ class FindArticleVotePortStub(FindArticleVotePort):
         return self.returned_article_vote
 
 
-def build_post_rating_service(
+def build_article_rating_service(
     find_article_vote_port: FindArticleVotePort = FindArticleVotePortStub(),
     find_voting_user_port: FindVotingUserPort = FindVotingUserPortStub(),
     save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
 ):
-    return PostRatingService(
+    return ArticleRatingService(
         find_article_vote_port,
         find_voting_user_port,
         save_article_vote_port
