@@ -62,8 +62,8 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result():
 
     result = post_rating_service.cast_article_vote(
         CastArticleVoteCommand(
-            UserId(UUID('912997c2-0000-0000-0000-000000000000')),
             ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+            UserId(UUID('912997c2-0000-0000-0000-000000000000')),
             Vote.UP
         )
     )
@@ -136,8 +136,8 @@ def test_cast_article_vote_returned_without_being_saved():
     )
     post_rating_service.cast_article_vote(
         CastArticleVoteCommand(
-            UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
             ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
+            UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
             Vote.UP
         )
     )
