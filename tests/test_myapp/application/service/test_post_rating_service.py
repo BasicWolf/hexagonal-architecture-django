@@ -2,18 +2,18 @@ from typing import Optional
 from uuid import UUID
 
 from myapp.application.domain.model.article_vote import ArticleVote
-from myapp.application.domain.model.cast_article_vote_result import (
-    InsufficientKarma,
-    VoteAlreadyCast,
-    VoteSuccessfullyCast
-)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
+from myapp.application.domain.model.vote_for_article_result import (
+    AlreadyVotedResult,
+    InsufficientKarmaResult,
+    SuccessfullyVotedResult
+)
 from myapp.application.domain.model.voting_user import VotingUser
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteCommand
+from myapp.application.ports.api.vote_for_article_use_case import \
+    VoteForArticleCommand
 from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePort
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
@@ -25,7 +25,7 @@ from tests.test_myapp.application.domain.model.builder.voting_user_creation impo
 )
 
 
-def test_casting_valid_vote_returns_result(
+def test_valid_vote_for_article_returns_result(
     user_id: UserId,
     article_id: ArticleId
 ):
@@ -35,19 +35,19 @@ def test_casting_valid_vote_returns_result(
         )
     )
 
-    result = article_rating_service.cast_article_vote(
-        CastArticleVoteCommand(article_id, user_id, Vote.UP)
+    result = article_rating_service.vote_for_article(
+        VoteForArticleCommand(article_id, user_id, Vote.UP)
     )
 
-    assert isinstance(result, VoteSuccessfullyCast)
-    assert result == VoteSuccessfullyCast(
+    assert isinstance(result, SuccessfullyVotedResult)
+    assert result == SuccessfullyVotedResult(
         user_id=user_id,
         article_id=article_id,
         vote=Vote.UP
     )
 
 
-def test_casting_same_vote_two_times_returns_vote_already_cast_result():
+def test_voting_for_article_two_times_returns_already_voted_result():
     article_rating_service = build_article_rating_service(
         FindArticleVotePortStub(
             build_article_vote(
@@ -60,37 +60,37 @@ def test_casting_same_vote_two_times_returns_vote_already_cast_result():
         )
     )
 
-    result = article_rating_service.cast_article_vote(
-        CastArticleVoteCommand(
+    result = article_rating_service.vote_for_article(
+        VoteForArticleCommand(
             ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
             UserId(UUID('912997c2-0000-0000-0000-000000000000')),
             Vote.UP
         )
     )
 
-    assert result == VoteAlreadyCast(
+    assert result == AlreadyVotedResult(
         ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
         UserId(UUID('912997c2-0000-0000-0000-000000000000'))
     )
 
 
-def test_casting_vote_returns_insufficient_karma_result(
+def test_voting_for_article_returns_insufficient_karma_result(
     user_id: UserId,
     article_id: ArticleId
 ):
     article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
-            returned_vote_casting_user=build_voting_user(
+            returned_voting_user=build_voting_user(
                 user_id=user_id,
                 karma=Karma(2)
             )
         )
     )
 
-    result = article_rating_service.cast_article_vote(
-        CastArticleVoteCommand(article_id, user_id, Vote.UP)
+    result = article_rating_service.vote_for_article(
+        VoteForArticleCommand(article_id, user_id, Vote.UP)
     )
-    assert isinstance(result, InsufficientKarma)
+    assert isinstance(result, InsufficientKarmaResult)
     assert result.user_id == user_id
 
 
@@ -98,7 +98,7 @@ def test_voting_user_saved():
     save_article_vote_port_mock = SaveArticleVotePortMock()
     article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
-            returned_vote_casting_user=build_voting_user(
+            returned_voting_user=build_voting_user(
                 user_id=UserId(UUID('896ca302-0000-0000-0000-000000000000')),
                 karma=Karma(21)
             )
@@ -106,8 +106,8 @@ def test_voting_user_saved():
         save_article_vote_port=save_article_vote_port_mock
     )
 
-    article_rating_service.cast_article_vote(
-        CastArticleVoteCommand(
+    article_rating_service.vote_for_article(
+        VoteForArticleCommand(
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             UserId(UUID('896ca302-0000-0000-0000-000000000000')),
             Vote.DOWN
@@ -122,7 +122,7 @@ def test_voting_user_saved():
     )
 
 
-def test_cast_article_vote_returned_without_being_saved():
+def test_vote_for_article_does_not_save_the_vote():
     save_article_vote_port_mock = SaveArticleVotePortMock()
     article_rating_service = build_article_rating_service(
         find_article_vote_port=FindArticleVotePortStub(
@@ -134,8 +134,8 @@ def test_cast_article_vote_returned_without_being_saved():
         ),
         save_article_vote_port=save_article_vote_port_mock
     )
-    article_rating_service.cast_article_vote(
-        CastArticleVoteCommand(
+    article_rating_service.vote_for_article(
+        VoteForArticleCommand(
             ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
             UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
             Vote.UP
@@ -147,12 +147,12 @@ def test_cast_article_vote_returned_without_being_saved():
 class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,
-        returned_vote_casting_user: VotingUser = build_voting_user()
+        returned_voting_user: VotingUser = build_voting_user()
     ):
-        self.returned_vote_casting_user = returned_vote_casting_user
+        self.returned_voting_user = returned_voting_user
 
     def find_voting_user(self, user_id: UserId) -> VotingUser:
-        return self.returned_vote_casting_user
+        return self.returned_voting_user
 
 
 class SaveArticleVotePortMock(SaveArticleVotePort):

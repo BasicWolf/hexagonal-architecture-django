@@ -1,11 +1,11 @@
 from rest_enumfield import EnumField
 from rest_framework import serializers
 
-from myapp.application.domain.model.cast_article_vote_result import VoteSuccessfullyCast
 from myapp.application.domain.model.vote import Vote
+from myapp.application.domain.model.vote_for_article_result import SuccessfullyVotedResult
 
 
-class VoteCastSerializer(serializers.Serializer[VoteSuccessfullyCast]):
+class SuccessfullyVotedResultSerializer(serializers.Serializer[SuccessfullyVotedResult]):
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
     vote = EnumField(Vote)

@@ -2,20 +2,20 @@ from rest_enumfield import EnumField
 from rest_framework import serializers
 
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import \
-    CastArticleVoteCommand
+from myapp.application.ports.api.vote_for_article_use_case import \
+    VoteForArticleCommand
 
 
-class CastArticleVoteCommandDeserializer(serializers.Serializer[CastArticleVoteCommand]):
+class VoteForArticleCommandDeserializer(serializers.Serializer[VoteForArticleCommand]):
     user_id = serializers.UUIDField()
     article_id = serializers.UUIDField()
     vote = EnumField(Vote)
 
     # Ignored mypy error:
     # Signature of "create" incompatible with supertype "BaseSerializer"
-    def create(self) -> CastArticleVoteCommand:  # type: ignore
+    def create(self) -> VoteForArticleCommand:  # type: ignore
         """
-        Create and return a new `CastArticleVoteCommand` instance,
+        Create and return a new `VoteForArticleCommand` instance,
         given the validated data.
         """
-        return CastArticleVoteCommand(**self.validated_data)
+        return VoteForArticleCommand(**self.validated_data)

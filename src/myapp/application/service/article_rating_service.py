@@ -1,9 +1,9 @@
-from myapp.application.domain.model.cast_article_vote_result import (
-    CastArticleVoteResult
+from myapp.application.domain.model.vote_for_article_result import (
+    VoteForArticleResult
 )
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
-    CastArticleVoteCommand,
-    CastArticleVoteUseCase
+from myapp.application.ports.api.vote_for_article_use_case import (
+    VoteForArticleCommand,
+    VoteForArticleUseCase
 )
 from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePort
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
@@ -11,7 +11,7 @@ from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePo
 
 
 class ArticleRatingService(
-    CastArticleVoteUseCase
+    VoteForArticleUseCase
 ):
     _find_article_vote_port: FindArticleVotePort
     _find_voting_user_port: FindVotingUserPort
@@ -27,24 +27,24 @@ class ArticleRatingService(
         self._find_voting_user_port = find_voting_user_port
         self._save_article_vote_port = save_article_vote_port
 
-    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
+    def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
         existing_article_vote = self._find_article_vote_port.find_article_vote(
             command.article_id,
             command.user_id
         )
         if existing_article_vote is not None:
-            return existing_article_vote.to_vote_already_cast_result()
+            return existing_article_vote.to_already_voted_result()
 
         voting_user = self._find_voting_user_port.find_voting_user(
             user_id=command.user_id
         )
 
-        cast_vote_result, article_vote_result = voting_user.cast_vote(
+        vote_for_article_result, article_vote = voting_user.vote_for_article(
             command.article_id,
             command.vote
         )
 
-        if article_vote_result is not None:
-            self._save_article_vote_port.save_article_vote(article_vote_result)
+        if article_vote is not None:
+            self._save_article_vote_port.save_article_vote(article_vote)
 
-        return cast_vote_result
+        return vote_for_article_result

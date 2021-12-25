@@ -7,23 +7,23 @@ from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 
 
-class CastArticleVoteResult:
+class VoteForArticleResult:
     pass
 
 
 @dataclass
-class InsufficientKarma(CastArticleVoteResult):
+class InsufficientKarmaResult(VoteForArticleResult):
     user_id: UserId
 
 
 @dataclass
-class VoteAlreadyCast(CastArticleVoteResult):
+class AlreadyVotedResult(VoteForArticleResult):
     article_id: ArticleId
     user_id: UserId
 
 
 @dataclass
-class VoteSuccessfullyCast(CastArticleVoteResult):
+class SuccessfullyVotedResult(VoteForArticleResult):
     article_id: ArticleId
     user_id: UserId
     vote: Vote

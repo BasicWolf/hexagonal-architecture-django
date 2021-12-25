@@ -5,19 +5,21 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from myapp.application.adapter.api.http.problem_response import problem_response
-from myapp.application.adapter.api.http.serializer.article_vote_serializer import (
-    VoteCastSerializer
+from myapp.application.adapter.api.http.serializer.successfully_voted_result_serializer import (  # noqa
+    SuccessfullyVotedResultSerializer
 )
-from myapp.application.adapter.api.http.serializer.cast_article_vote_command_deserializer import ( # noqa
-    CastArticleVoteCommandDeserializer
+from myapp.application.adapter.api.http.serializer.vote_for_article_command_deserializer import (  # noqa
+    VoteForArticleCommandDeserializer
 )
-from myapp.application.domain.model.cast_article_vote_result import (
-    CastArticleVoteResult,
-    InsufficientKarma, VoteAlreadyCast, VoteSuccessfullyCast
+from myapp.application.domain.model.vote_for_article_result import (
+    AlreadyVotedResult,
+    InsufficientKarmaResult,
+    SuccessfullyVotedResult,
+    VoteForArticleResult
 )
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
-    CastArticleVoteCommand,
-    CastArticleVoteUseCase
+from myapp.application.ports.api.vote_for_article_use_case import (
+    VoteForArticleCommand,
+    VoteForArticleUseCase
 )
 from myapp.application.util.assert_never import assert_never
 
@@ -25,42 +27,43 @@ from myapp.application.util.assert_never import assert_never
 class ArticleVoteView(APIView):
     # default `None` and # `type: ignore` for sake of .as_view()
     # which requires passed attributes to be declared on the class level :(
-    cast_article_vote_use_case: CastArticleVoteUseCase = None  # type: ignore
+    vote_for_article_use_case: VoteForArticleUseCase = None  # type: ignore
 
-    def __init__(self, cast_article_vote_use_case: CastArticleVoteUseCase):
-        self.cast_article_vote_use_case = cast_article_vote_use_case
+    def __init__(self, vote_for_article_use_case: VoteForArticleUseCase):
+        self.vote_for_article_use_case = vote_for_article_use_case
         super().__init__()
 
     def post(self, request: Request) -> Response:
-        cast_article_vote_command = self._read_command(request)
-        result = self.cast_article_vote_use_case.cast_article_vote(
-            cast_article_vote_command
+        vote_for_article_command = self._read_command(request)
+        result = self.vote_for_article_use_case.vote_for_article(
+            vote_for_article_command
         )
         return self._build_response(result)
 
-    def _read_command(self, request: Request) -> CastArticleVoteCommand:
-        serializer = CastArticleVoteCommandDeserializer(data=request.data)
+    def _read_command(self, request: Request) -> VoteForArticleCommand:
+        serializer = VoteForArticleCommandDeserializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return serializer.create()
 
-    def _build_response(self, result: CastArticleVoteResult) -> Response:
+    def _build_response(self, result: VoteForArticleResult) -> Response:
         response = None
 
-        if isinstance(result, VoteSuccessfullyCast):
-            response_data = VoteCastSerializer(result).data
+        if isinstance(result, SuccessfullyVotedResult):
+            response_data = SuccessfullyVotedResultSerializer(result).data
             response = Response(response_data, status=HTTPStatus.CREATED)
-        elif isinstance(result, InsufficientKarma):
-            detail = f"User {result.user_id} does not have enough karma to cast a vote"
+        elif isinstance(result, InsufficientKarmaResult):
+            detail = (f"User {result.user_id} does not have enough karma"
+                      " to vote for an article")
             response = problem_response(
-                title="Cannot cast a vote",
+                title="Cannot vote for an article",
                 detail=detail,
                 status=HTTPStatus.BAD_REQUEST
             )
-        elif isinstance(result, VoteAlreadyCast):
-            detail = f"User \"{result.user_id}\" has already cast a vote " \
+        elif isinstance(result, AlreadyVotedResult):
+            detail = f"User \"{result.user_id}\" has already voted " \
                  f"for article \"{result.article_id}\""
             response = problem_response(
-                title="Cannot cast a vote",
+                title="Cannot vote for an article",
                 detail=detail,
                 status=HTTPStatus.CONFLICT
             )

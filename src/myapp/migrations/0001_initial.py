@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         ),
 
         migrations.CreateModel(
-            name='VoteCastingUserEntity',
+            name='VotingUserEntity',
             fields=[
                 ('user_id', models.UUIDField(
                     default=uuid.uuid4,

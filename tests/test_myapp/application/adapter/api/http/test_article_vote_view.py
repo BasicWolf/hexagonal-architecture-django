@@ -5,18 +5,18 @@ from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
-from myapp.application.domain.model.cast_article_vote_result import (
-    CastArticleVoteResult,
-    InsufficientKarma,
-    VoteAlreadyCast,
-    VoteSuccessfullyCast
-)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.cast_article_vote.cast_aticle_vote_use_case import (
-    CastArticleVoteCommand,
-    CastArticleVoteUseCase
+from myapp.application.domain.model.vote_for_article_result import (
+    AlreadyVotedResult,
+    InsufficientKarmaResult,
+    SuccessfullyVotedResult,
+    VoteForArticleResult
+)
+from myapp.application.ports.api.vote_for_article_use_case import (
+    VoteForArticleCommand,
+    VoteForArticleUseCase
 )
 
 
@@ -25,8 +25,8 @@ def test_post_article_vote(
     user_id: UserId,
     article_id: ArticleId
 ):
-    cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteSuccessfullyCast(
+    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+        returned_result=SuccessfullyVotedResult(
             user_id=user_id,
             article_id=article_id,
             vote=Vote.DOWN
@@ -34,7 +34,7 @@ def test_post_article_vote(
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        cast_article_vote_use_case=cast_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_mock
     )
 
     response: Response = article_vote_view(
@@ -60,10 +60,10 @@ def test_post_article_vote(
 def test_post_article_vote_with_malformed_data_returns_bad_request(
     arf: APIRequestFactory
 ):
-    cast_article_use_case_mock = CastArticleVoteUseCaseMock()
+    vote_for_article_use_case_mock = VoteForArticleUseCaseMock()
 
     article_vote_view = ArticleVoteView.as_view(
-        cast_article_vote_use_case=cast_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_mock
     )
 
     response: Response = article_vote_view(
@@ -85,14 +85,14 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     user_id: UserId,
     article_id: UUID
 ):
-    cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=InsufficientKarma(
+    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+        returned_result=InsufficientKarmaResult(
             user_id=user_id
         )
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        cast_article_vote_use_case=cast_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_mock
     )
 
     response: Response = article_vote_view(
@@ -110,8 +110,8 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.data == {
         'status': 400,
-        'detail': f"User {user_id} does not have enough karma to cast a vote",
-        'title': "Cannot cast a vote"
+        'detail': f"User {user_id} does not have enough karma to vote for an article",
+        'title': "Cannot vote for an article"
     }
 
 
@@ -120,15 +120,15 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     user_id: UserId,
     article_id: ArticleId
 ):
-    cast_article_use_case_mock = CastArticleVoteUseCaseMock(
-        returned_result=VoteAlreadyCast(
+    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+        returned_result=AlreadyVotedResult(
             user_id=user_id,
             article_id=article_id
         )
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        cast_article_vote_use_case=cast_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_mock
     )
 
     response: Response = article_vote_view(
@@ -146,27 +146,27 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.data == {
         'status': 409,
-        'detail': (f"User \"{user_id}\" has already cast a vote "
-                   f"for article \"{article_id}\""),
-        'title': "Cannot cast a vote"
+        'detail': (f"User \"{user_id}\" has already voted"
+                   f" for article \"{article_id}\""),
+        'title': "Cannot vote for an article"
     }
 
 
-class CastArticleVoteUseCaseMock(CastArticleVoteUseCase):
+class VoteForArticleUseCaseMock(VoteForArticleUseCase):
     called_with_command = None
 
     def __init__(
         self,
-        returned_result: CastArticleVoteResult = None
+        returned_result: VoteForArticleResult = None
     ):
         if returned_result is None:
-            returned_result = VoteSuccessfullyCast(
+            returned_result = SuccessfullyVotedResult(
                 user_id=UserId(uuid4()),
                 article_id=ArticleId(uuid4()),
                 vote=Vote.UP
             )
         self._returned_result = returned_result
 
-    def cast_article_vote(self, command: CastArticleVoteCommand) -> CastArticleVoteResult:
+    def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
         self.called_with_command = command
         return self._returned_result
