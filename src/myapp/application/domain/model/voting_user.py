@@ -39,7 +39,7 @@ class VotingUser:
             self.article_vote is not None
             and self.article_vote.article_id != article_id
         ):
-            raise ValueError("Invalid state: A user can't re-vote for article with"
+            raise ValueError("Invalid state: A user can't re-vote for an article with"
                              " a different id")
 
         if self.article_vote is not None:
