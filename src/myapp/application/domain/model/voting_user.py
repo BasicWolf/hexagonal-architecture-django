@@ -21,6 +21,7 @@ from myapp.application.domain.model.vote_for_article_result import (
 class VotingUser:
     id: UserId
     karma: Karma
+    article_vote: Optional[ArticleVote] = None
 
     def vote_for_article(
         self,
@@ -32,6 +33,12 @@ class VotingUser:
                 InsufficientKarmaResult(user_id=self.id),
                 None
             )
+
+        self.article_vote = ArticleVote(
+            article_id,
+            self.id,
+            vote
+        )
 
         return (
             SuccessfullyVotedResult(article_id, self.id, vote),

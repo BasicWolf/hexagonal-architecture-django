@@ -151,7 +151,7 @@ class FindVotingUserPortStub(FindVotingUserPort):
     ):
         self.returned_voting_user = returned_voting_user
 
-    def find_voting_user(self, user_id: UserId) -> VotingUser:
+    def find_voting_user(self, article_id: ArticleId, user_id: UserId) -> VotingUser:
         return self.returned_voting_user
 
 

@@ -36,7 +36,8 @@ class ArticleRatingService(
             return existing_article_vote.to_already_voted_result()
 
         voting_user = self._find_voting_user_port.find_voting_user(
-            user_id=command.user_id
+            command.article_id,
+            command.user_id
         )
 
         vote_for_article_result, article_vote = voting_user.vote_for_article(
