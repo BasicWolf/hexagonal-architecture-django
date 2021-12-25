@@ -18,10 +18,6 @@ class VotingUserEntity(models.Model):
         db_table = 'user_data'
 
     def to_domain_model(self, article_vote: Optional[ArticleVote]):
-        if (article_vote is not None
-            and article_vote.user_id != UserId(self.user_id)):
-            raise ValueError("Invalid State: Article Vote does not belong to the user")
-
         return VotingUser(
             UserId(self.user_id),
             Karma(self.karma),

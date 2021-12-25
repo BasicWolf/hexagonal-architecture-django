@@ -41,6 +41,3 @@ class VotingUserRepository(
             return None
         else:
             return found_article_vote_entity.to_domain_model()
-
-
-

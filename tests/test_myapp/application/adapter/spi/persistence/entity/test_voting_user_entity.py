@@ -1,7 +1,5 @@
 from uuid import UUID
 
-import pytest
-
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import \
     VotingUserEntity
 from myapp.application.domain.model.article_vote import ArticleVote
@@ -49,19 +47,3 @@ def test_voting_user_with_article_vote_to_domain_model():
             Vote.DOWN
         )
     )
-
-
-def test_voting_user_with_article_vote_of_different_user_to_domain_model_error():
-    entity = VotingUserEntity(
-        user_id=UUID('c9e851c2-0000-0000-0000-000000000000'),
-        karma=123
-    )
-
-    with pytest.raises(ValueError):
-        entity.to_domain_model(
-            ArticleVote(
-                ArticleId(UUID('f8ca014b-0000-0000-0000-000000000000')),
-                UserId(UUID('412fad29-0000-0000-0000-000000000000')),
-                Vote.DOWN
-            )
-        )
