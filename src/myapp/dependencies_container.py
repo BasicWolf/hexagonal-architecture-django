@@ -13,7 +13,6 @@ def build_production_dependencies_container() -> Dict[str, Any]:
     article_vote_repository = ArticleVoteRepository()
 
     article_rating_service = ArticleRatingService(
-        find_article_vote_port=article_vote_repository,
         find_voting_user_port=voting_user_repository,
         save_article_vote_port=article_vote_repository
     )

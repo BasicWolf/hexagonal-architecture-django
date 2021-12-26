@@ -14,7 +14,6 @@ from myapp.application.domain.model.vote_for_article_result import (
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.vote_for_article_use_case import \
     VoteForArticleCommand
-from myapp.application.ports.spi.find_article_vote_port import FindArticleVotePort
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.article_rating_service import ArticleRatingService
@@ -49,14 +48,14 @@ def test_valid_vote_for_article_returns_result(
 
 def test_voting_for_article_two_times_returns_already_voted_result():
     article_rating_service = build_article_rating_service(
-        FindArticleVotePortStub(
-            build_article_vote(
-                ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
-                UserId(UUID('912997c2-0000-0000-0000-000000000000'))
-            )
-        ),
         FindVotingUserPortStub(
-            build_voting_user(UserId(UUID('912997c2-0000-0000-0000-000000000000')))
+            build_voting_user(
+                user_id=UserId(UUID('912997c2-0000-0000-0000-000000000000')),
+                article_vote=build_article_vote(
+                    ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+                    UserId(UUID('912997c2-0000-0000-0000-000000000000'))
+                )
+            )
         )
     )
 
@@ -122,18 +121,22 @@ def test_voting_user_saved():
     )
 
 
-def test_vote_for_article_does_not_save_the_vote():
+def test_vote_for_article_twice_does_not_save_the_vote():
     save_article_vote_port_mock = SaveArticleVotePortMock()
     article_rating_service = build_article_rating_service(
-        find_article_vote_port=FindArticleVotePortStub(
-            ArticleVote(
-                ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
-                UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
-                Vote.UP
+        find_voting_user_port=FindVotingUserPortStub(
+            returned_voting_user=build_voting_user(
+                user_id=UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
+                article_vote=ArticleVote(
+                    ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
+                    UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
+                    Vote.UP
+                )
             )
         ),
         save_article_vote_port=save_article_vote_port_mock
     )
+
     article_rating_service.vote_for_article(
         VoteForArticleCommand(
             ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
@@ -141,6 +144,7 @@ def test_vote_for_article_does_not_save_the_vote():
             Vote.UP
         )
     )
+
     assert save_article_vote_port_mock.saved_article_vote is None
 
 
@@ -163,30 +167,11 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
         return article_vote
 
 
-class FindArticleVotePortStub(FindArticleVotePort):
-    returned_article_vote: Optional[ArticleVote]
-
-    def __init__(
-        self,
-        returned_article_vote: Optional[ArticleVote] = None
-    ):
-        self.returned_article_vote = returned_article_vote
-
-    def find_article_vote(
-        self,
-        article_id: ArticleId,
-        user_id: UserId
-    ) -> Optional[ArticleVote]:
-        return self.returned_article_vote
-
-
 def build_article_rating_service(
-    find_article_vote_port: FindArticleVotePort = FindArticleVotePortStub(),
     find_voting_user_port: FindVotingUserPort = FindVotingUserPortStub(),
     save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
 ):
     return ArticleRatingService(
-        find_article_vote_port,
         find_voting_user_port,
         save_article_vote_port
     )
