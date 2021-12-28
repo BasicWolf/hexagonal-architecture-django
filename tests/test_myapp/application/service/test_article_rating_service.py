@@ -17,6 +17,7 @@ from myapp.application.ports.api.vote_for_article_use_case import \
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.article_rating_service import ArticleRatingService
+from myapp.eventlib.event_dispatcher import EventDispatcher
 from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
     build_article_vote
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
@@ -169,9 +170,11 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
 
 def build_article_rating_service(
     find_voting_user_port: FindVotingUserPort = FindVotingUserPortStub(),
-    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock()
+    save_article_vote_port: SaveArticleVotePort = SaveArticleVotePortMock(),
+    domain_event_dispatcher: EventDispatcher = EventDispatcher()
 ):
     return ArticleRatingService(
         find_voting_user_port,
-        save_article_vote_port
+        save_article_vote_port,
+        domain_event_dispatcher
     )
