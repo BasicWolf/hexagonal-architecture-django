@@ -1,9 +1,9 @@
-from typing import Callable, cast, Dict, List, Type, TypeVar
+from typing import Callable, Dict, List, Type, TypeVar
 
 from myapp.eventlib.event import Event
 
-T = TypeVar('T', bound=Event)
-EventHandlerBaseType = Callable[[Event], None]
+T_contra = TypeVar('T_contra', bound=Event, covariant=True)
+EventHandlerBaseType = Callable[[T_contra], None]
 
 
 class EventDispatcher:
@@ -11,15 +11,13 @@ class EventDispatcher:
 
     def register_handler(
         self,
-        event_type: Type[T],
-        event_handler: Callable[[T], None]
+        event_type: Type[T_contra],
+        event_handler: Callable[[T_contra], None]
     ):
         self.handlers.setdefault(event_type, list())
-        self.handlers[event_type].append(
-            cast(EventHandlerBaseType, event_handler)  # use cast to work around mypy bug?
-        )
+        self.handlers[event_type].append(event_handler)
 
-    def dispatch(self, event: T):
-        event_handlers = self.handlers.get(type(event), [])
+    def dispatch(self, event: Event):
+        event_handlers = self.handlers.get(type(event), list())
         for event_handler in event_handlers:
             event_handler(event)
