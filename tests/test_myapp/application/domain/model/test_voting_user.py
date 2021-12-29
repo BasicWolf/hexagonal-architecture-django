@@ -2,6 +2,7 @@ from uuid import UUID
 
 import pytest
 
+from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
@@ -40,7 +41,7 @@ def test_vote_for_article_twice_results_in_already_voted_result():
             Vote.DOWN
         )
     )
-    result, _ = voting_user.vote_for_article(
+    result, *_ = voting_user.vote_for_article(
         ArticleId(UUID('2f868ceb-0000-0000-0000-000000000000')),
         Vote.UP
     )
@@ -51,7 +52,7 @@ def test_vote_for_article_returns_expected_article_vote():
     voting_user = build_voting_user(
         UserId(UUID('24dbcd39-0000-0000-0000-000000000000'))
     )
-    _, article_vote_result = voting_user.vote_for_article(
+    _, article_vote_result, *__ = voting_user.vote_for_article(
         ArticleId(UUID('aed7efd1-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
@@ -68,7 +69,7 @@ def test_vote_for_article_returns_successfully_voted_result():
         UserId(UUID('739c753c-0000-0000-0000-000000000000'))
     )
 
-    voting_result, _ = voting_user.vote_for_article(
+    voting_result, *_ = voting_user.vote_for_article(
         ArticleId(UUID('4df32c92-0000-0000-0000-000000000000')),
         Vote.DOWN
     )
@@ -79,6 +80,35 @@ def test_vote_for_article_returns_successfully_voted_result():
         Vote.DOWN
     )
 
+def test_vote_for_article_returns_one_event():
+    voting_user = build_voting_user(
+        UserId(UUID('18d068a1-0000-0000-0000-000000000000'))
+    )
+
+    *_, events = voting_user.vote_for_article(
+        ArticleId(UUID('f5376f8d-0000-0000-0000-000000000000')),
+        Vote.UP
+    )
+
+    assert len(events) == 1
+
+
+def test_vote_for_article_returns_user_voted_event():
+    voting_user = build_voting_user(
+        UserId(UUID('bcc249f7-0000-0000-0000-000000000000'))
+    )
+
+    *_, events = voting_user.vote_for_article(
+        ArticleId(UUID('d9d1e906-0000-0000-0000-000000000000')),
+        Vote.UP
+    )
+
+    event = events[0]
+    assert isinstance(event, UserVotedEvent)
+    assert event.article_id == ArticleId(UUID('d9d1e906-0000-0000-0000-000000000000'))
+    assert event.user_id == ArticleId(UUID('bcc249f7-0000-0000-0000-000000000000'))
+    assert event.vote == Vote.UP
+
 
 def test_cannot_vote_for_article_with_insufficient_karma(article_id: ArticleId):
     voting_user = build_voting_user(
@@ -86,7 +116,7 @@ def test_cannot_vote_for_article_with_insufficient_karma(article_id: ArticleId):
         karma=Karma(4)
     )
 
-    result, article_vote = voting_user.vote_for_article(article_id, Vote.UP)
+    result, article_vote, *_ = voting_user.vote_for_article(article_id, Vote.UP)
 
     assert result == InsufficientKarmaResult(
         UserId(UUID('df777758-0000-0000-0000-000000000000'))

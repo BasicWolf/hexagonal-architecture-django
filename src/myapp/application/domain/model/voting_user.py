@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
+from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.article_vote import (
     ArticleVote
 )
@@ -15,6 +16,7 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult,
     VoteForArticleResult
 )
+from myapp.eventlib.event import Event
 
 
 @dataclass
@@ -34,7 +36,7 @@ class VotingUser:
         self,
         article_id: ArticleId,
         vote: Vote
-    ) -> Tuple[VoteForArticleResult, Optional[ArticleVote]]:
+    ) -> Tuple[VoteForArticleResult, Optional[ArticleVote], List[Event]]:
         if (
             self.article_vote is not None
             and self.article_vote.article_id != article_id
@@ -43,12 +45,13 @@ class VotingUser:
                              " a different id")
 
         if self.article_vote is not None:
-            return AlreadyVotedResult(article_id, self.id), None
+            return AlreadyVotedResult(article_id, self.id), None, []
 
         if not self.karma.enough_for_voting():
             return (
                 InsufficientKarmaResult(user_id=self.id),
-                None
+                None,
+                []
             )
 
         self.article_vote = ArticleVote(
@@ -59,5 +62,8 @@ class VotingUser:
 
         return (
             SuccessfullyVotedResult(article_id, self.id, vote),
-            ArticleVote(article_id, self.id, vote)
+            ArticleVote(article_id, self.id, vote),
+            [
+                UserVotedEvent(article_id, self.id, vote)
+            ]
         )
