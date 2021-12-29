@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from uuid import UUID, uuid4
+from uuid import UUID
 
 
 @dataclass
 class Event:
-    id: UUID = field(default_factory=uuid4)
+    id: UUID = field(init=False, kw_only=True)
+
