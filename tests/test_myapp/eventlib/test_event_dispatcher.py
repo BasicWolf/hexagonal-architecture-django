@@ -22,7 +22,7 @@ def test_register_event_handler(event_dispatcher: EventDispatcher):
 
     event_dispatcher.register_handler(SampleEvent, sample_event_handler)
 
-    assert event_dispatcher.handlers[SampleEvent] == [sample_event_handler]
+    assert event_dispatcher.get_handlers_for(SampleEvent) == [sample_event_handler]
 
 
 def test_handle_dispatched_event(

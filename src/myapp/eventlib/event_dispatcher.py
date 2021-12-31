@@ -23,6 +23,5 @@ class EventDispatcher:
         for event_handler in event_handlers:
             event_handler(event)
 
-    @property
-    def handlers(self) -> EventHandlersCollectionType:
-        return self._handlers
+    def get_handlers_for(self, event: Type[Event]) -> List[EventHandlerBaseType]:
+        return self._handlers.get(event, [])
