@@ -15,11 +15,11 @@ class EventDispatcher:
         event_type: Type[T_contra],
         event_handler: Callable[[T_contra], None]
     ):
-        self._handlers.setdefault(event_type, list())
+        self._handlers.setdefault(event_type, [])
         self._handlers[event_type].append(event_handler)
 
     def dispatch(self, event: Event):
-        event_handlers = self._handlers.get(type(event), list())
+        event_handlers = self._handlers.get(type(event), [])
         for event_handler in event_handlers:
             event_handler(event)
 
