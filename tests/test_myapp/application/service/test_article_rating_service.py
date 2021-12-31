@@ -1,6 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
+from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
@@ -23,6 +24,8 @@ from tests.test_myapp.application.domain.model.builder.article_vote_creation imp
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
+from tests.test_myapp.eventlib.intercepting_event_dispatcher import \
+    InterceptingEventDispatcher
 
 
 def test_valid_vote_for_article_returns_result(
@@ -149,11 +152,41 @@ def test_vote_for_article_twice_does_not_save_the_vote():
     assert save_article_vote_port_mock.saved_article_vote is None
 
 
+def test_vote_for_article_dispatches_user_voted_event():
+    intercepting_event_dispatcher = InterceptingEventDispatcher()
+    article_rating_service = build_article_rating_service(
+        find_voting_user_port=FindVotingUserPortStub(
+            returned_voting_user=build_voting_user(
+                user_id=UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
+                article_vote=None
+            )
+        ),
+        domain_event_dispatcher=intercepting_event_dispatcher
+    )
+
+    article_rating_service.vote_for_article(
+        VoteForArticleCommand(
+            ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
+            UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
+            Vote.UP
+        )
+    )
+
+    assert intercepting_event_dispatcher.check_event_dispatched(
+        UserVotedEvent(
+            ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
+            UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
+            Vote.UP
+        )
+    )
+
+
 class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,
-        returned_voting_user: VotingUser = build_voting_user()
+        returned_voting_user: Optional[VotingUser] = None
     ):
+        returned_voting_user = returned_voting_user or build_voting_user()
         self.returned_voting_user = returned_voting_user
 
     def find_voting_user(self, article_id: ArticleId, user_id: UserId) -> VotingUser:

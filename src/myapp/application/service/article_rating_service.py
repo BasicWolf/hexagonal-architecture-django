@@ -38,6 +38,9 @@ class ArticleRatingService(
             command.vote
         )
 
+        for event in events:
+            self._domain_event_dispatcher.dispatch(event)
+
         if article_vote is not None:
             self._save_article_vote_port.save_article_vote(article_vote)
 
