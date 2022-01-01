@@ -181,6 +181,16 @@ def test_vote_for_article_dispatches_user_voted_event():
     )
 
 
+def test_article_rating_service_registered_as_user_created_event_handler():
+    event_dispatcher = EventDispatcher()
+    article_rating_service = build_article_rating_service(
+        domain_event_dispatcher=event_dispatcher
+    )
+    assert event_dispatcher.get_handlers_for(UserVotedEvent) == [
+        article_rating_service.on_user_voted
+    ]
+
+
 class FindVotingUserPortStub(FindVotingUserPort):
     def __init__(
         self,

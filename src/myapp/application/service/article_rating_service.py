@@ -1,3 +1,4 @@
+from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.vote_for_article_result import (
     VoteForArticleResult
 )
@@ -26,6 +27,10 @@ class ArticleRatingService(
         self._find_voting_user_port = find_voting_user_port
         self._save_article_vote_port = save_article_vote_port
         self._domain_event_dispatcher = domain_event_dispatcher
+        self._domain_event_dispatcher.register_handler(
+            UserVotedEvent,
+            self.on_user_voted
+        )
 
     def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
         voting_user = self._find_voting_user_port.find_voting_user(
@@ -45,3 +50,6 @@ class ArticleRatingService(
             self._save_article_vote_port.save_article_vote(article_vote)
 
         return vote_for_article_result
+
+    def on_user_voted(self, event: UserVotedEvent):
+        pass
