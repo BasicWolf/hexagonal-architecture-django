@@ -48,22 +48,6 @@ def test_vote_for_article_twice_results_in_already_voted_result():
     assert isinstance(result, AlreadyVotedResult)
 
 
-def test_vote_for_article_returns_expected_article_vote():
-    voting_user = build_voting_user(
-        UserId(UUID('24dbcd39-0000-0000-0000-000000000000'))
-    )
-    _, article_vote_result, *__ = voting_user.vote_for_article(
-        ArticleId(UUID('aed7efd1-0000-0000-0000-000000000000')),
-        Vote.DOWN
-    )
-
-    assert article_vote_result == ArticleVote(
-        ArticleId(UUID('aed7efd1-0000-0000-0000-000000000000')),
-        UserId(UUID('24dbcd39-0000-0000-0000-000000000000')),
-        Vote.DOWN
-    )
-
-
 def test_vote_for_article_returns_successfully_voted_result():
     voting_user = build_voting_user(
         UserId(UUID('739c753c-0000-0000-0000-000000000000'))

@@ -39,7 +39,7 @@ class ArticleRatingService(
             command.user_id
         )
 
-        vote_for_article_result, article_vote, events = voting_user.vote_for_article(
+        vote_for_article_result, events = voting_user.vote_for_article(
             command.article_id,
             command.vote
         )
