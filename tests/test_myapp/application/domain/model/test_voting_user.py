@@ -64,6 +64,7 @@ def test_vote_for_article_returns_successfully_voted_result():
         Vote.DOWN
     )
 
+
 def test_vote_for_article_returns_one_event():
     voting_user = build_voting_user(
         UserId(UUID('18d068a1-0000-0000-0000-000000000000'))
