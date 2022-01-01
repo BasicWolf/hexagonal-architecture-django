@@ -30,7 +30,7 @@ class ArticleRatingService(
         self._domain_event_dispatcher = domain_event_dispatcher
         self._domain_event_dispatcher.register_handler(
             UserVotedEvent,
-            self.on_user_voted
+            self._on_user_voted
         )
 
     def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
@@ -49,7 +49,7 @@ class ArticleRatingService(
 
         return vote_for_article_result
 
-    def on_user_voted(self, event: UserVotedEvent):
+    def _on_user_voted(self, event: UserVotedEvent):
         self._save_article_vote_port.save_article_vote(
             ArticleVote(
                 event.article_id,

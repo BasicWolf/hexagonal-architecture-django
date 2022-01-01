@@ -103,7 +103,7 @@ def test_article_vote_saved_when_user_voted_event_handled():
         save_article_vote_port=save_article_vote_port_mock
     )
 
-    article_rating_service.on_user_voted(
+    article_rating_service._on_user_voted(
         UserVotedEvent(
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             UserId(UUID('896ca302-0000-0000-0000-000000000000')),
@@ -180,7 +180,7 @@ def test_article_rating_service_registered_as_user_created_event_handler():
         domain_event_dispatcher=event_dispatcher
     )
     assert event_dispatcher.get_handlers_for(UserVotedEvent) == [
-        article_rating_service.on_user_voted
+        article_rating_service._on_user_voted
     ]
 
 
