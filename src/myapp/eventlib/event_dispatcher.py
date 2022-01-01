@@ -8,7 +8,10 @@ EventHandlersCollectionType = Dict[Type[Event], List[EventHandlerBaseType]]
 
 
 class EventDispatcher:
-    _handlers: EventHandlersCollectionType = {}
+    _handlers: EventHandlersCollectionType
+
+    def __init__(self):
+        self._handlers = {}
 
     def register_handler(
         self,
