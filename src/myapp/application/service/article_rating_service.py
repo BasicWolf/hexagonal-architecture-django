@@ -1,4 +1,5 @@
 from myapp.application.domain.event.user_voted_event import UserVotedEvent
+from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.vote_for_article_result import (
     VoteForArticleResult
 )
@@ -46,10 +47,13 @@ class ArticleRatingService(
         for event in events:
             self._domain_event_dispatcher.dispatch(event)
 
-        if article_vote is not None:
-            self._save_article_vote_port.save_article_vote(article_vote)
-
         return vote_for_article_result
 
     def on_user_voted(self, event: UserVotedEvent):
-        pass
+        self._save_article_vote_port.save_article_vote(
+            ArticleVote(
+                event.article_id,
+                event.user_id,
+                event.vote
+            )
+        )

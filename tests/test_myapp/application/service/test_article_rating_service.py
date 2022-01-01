@@ -97,28 +97,21 @@ def test_voting_for_article_returns_insufficient_karma_result(
     assert result.user_id == user_id
 
 
-def test_voting_user_saved():
+def test_article_vote_saved_when_user_voted_event_handled():
     save_article_vote_port_mock = SaveArticleVotePortMock()
     article_rating_service = build_article_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            returned_voting_user=build_voting_user(
-                user_id=UserId(UUID('896ca302-0000-0000-0000-000000000000')),
-                karma=Karma(21)
-            )
-        ),
         save_article_vote_port=save_article_vote_port_mock
     )
 
-    article_rating_service.vote_for_article(
-        VoteForArticleCommand(
+    article_rating_service.on_user_voted(
+        UserVotedEvent(
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             UserId(UUID('896ca302-0000-0000-0000-000000000000')),
             Vote.DOWN
         )
     )
 
-    saved_article_vote = save_article_vote_port_mock.saved_article_vote
-    assert saved_article_vote == ArticleVote(
+    assert save_article_vote_port_mock.saved_article_vote == ArticleVote(
         ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
         UserId(UUID('896ca302-0000-0000-0000-000000000000')),
         Vote.DOWN
