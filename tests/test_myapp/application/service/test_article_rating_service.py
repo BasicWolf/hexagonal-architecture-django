@@ -19,8 +19,6 @@ from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.article_rating_service import ArticleRatingService
 from myapp.eventlib.event_dispatcher import EventDispatcher
-from tests.test_myapp.application.domain.model.builder.article_vote_creation import \
-    build_article_vote
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
@@ -55,10 +53,7 @@ def test_voting_for_article_two_times_returns_already_voted_result():
         FindVotingUserPortStub(
             build_voting_user(
                 user_id=UserId(UUID('912997c2-0000-0000-0000-000000000000')),
-                article_vote=build_article_vote(
-                    ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
-                    UserId(UUID('912997c2-0000-0000-0000-000000000000'))
-                )
+                voted=True
             )
         )
     )
@@ -124,11 +119,7 @@ def test_vote_for_article_twice_does_not_save_the_vote():
         find_voting_user_port=FindVotingUserPortStub(
             returned_voting_user=build_voting_user(
                 user_id=UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
-                article_vote=ArticleVote(
-                    ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
-                    UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
-                    Vote.UP
-                )
+                voted=True
             )
         ),
         save_article_vote_port=save_article_vote_port_mock
@@ -150,8 +141,7 @@ def test_vote_for_article_dispatches_user_voted_event():
     article_rating_service = build_article_rating_service(
         find_voting_user_port=FindVotingUserPortStub(
             returned_voting_user=build_voting_user(
-                user_id=UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
-                article_vote=None
+                user_id=UserId(UUID('c0d1bc64-0000-0000-0000-000000000000'))
             )
         ),
         domain_event_dispatcher=intercepting_event_dispatcher
