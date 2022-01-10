@@ -2,7 +2,6 @@ from typing import Optional
 from uuid import UUID
 
 from myapp.application.domain.event.user_voted_event import UserVotedEvent
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
@@ -15,6 +14,7 @@ from myapp.application.domain.model.vote_for_article_result import (
 from myapp.application.domain.model.voting_user import VotingUser
 from myapp.application.ports.api.vote_for_article_use_case import \
     VoteForArticleCommand
+from myapp.application.ports.spi.dto.article_vote import ArticleVote
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
 from myapp.application.service.article_rating_service import ArticleRatingService

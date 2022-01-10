@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from myapp.application.domain.model.article_vote import ArticleVote
+from myapp.application.ports.spi.dto.article_vote import ArticleVote
 
 
 class SaveArticleVotePort(Protocol):

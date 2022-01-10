@@ -2,10 +2,10 @@ from uuid import UUID
 
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import \
     ArticleVoteEntity
-from myapp.application.domain.model.article_vote import ArticleVote
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
+from myapp.application.ports.spi.dto.article_vote import ArticleVote
 
 
 def test_article_vote_entity_to_domain_model():

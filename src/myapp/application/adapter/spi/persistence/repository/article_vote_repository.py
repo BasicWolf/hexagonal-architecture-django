@@ -1,7 +1,7 @@
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import (
     ArticleVoteEntity
 )
-from myapp.application.domain.model.article_vote import (
+from myapp.application.ports.spi.dto.article_vote import (
     ArticleVote
 )
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
