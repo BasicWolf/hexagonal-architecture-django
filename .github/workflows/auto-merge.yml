@@ -1,0 +1,27 @@
+# From https://gist.github.com/natanlao/c84f43cf33f71f9c2a3f3cfdac42edfb
+name: Auto-merge Dependabot PRs
+
+on:
+  pull_request_target:
+    branches: [ main ]
+    types: [ labeled ]
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: |
+      github.actor == 'dependabot[bot]' || github.actor == 'dependabot[bot]*'
+      && startsWith(github.ref, 'dependabot/pip/')
+    steps:
+    - name: Auto-merge Dependabot PRs
+      uses: actions/github-script@v3
+      with:
+        # PAT with public_repo scope
+        github-token: "${{ secrets.AUTOMERGE_PAT }}"
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '@dependabot merge (automerge)'
+          })
