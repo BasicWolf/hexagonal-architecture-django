@@ -11,8 +11,10 @@ from myapp.application.domain.model.vote import Vote
 
 
 class ArticleVoteEntity(models.Model):
-    VOTE_UP = Vote.UP.value
-    VOTE_DOWN = Vote.DOWN.value
+    # the `up` and `down` values are chosen to simplify mapping to/from domain model
+    # for real applications integer fields might be more suitable.
+    VOTE_UP = 'up'
+    VOTE_DOWN = 'down'
 
     VOTES_CHOICES = [
         (VOTE_UP, 'UP'),
