@@ -16,8 +16,9 @@ class VotingUserEntity(models.Model):
     voted: bool = False
 
     class Meta:
-        # in a real application this should rather be a view
-        db_table = 'user_data'
+        # in a real application this could be a view or a table intended for reads only
+        # (i.e. think of CQRS).
+        db_table = 'voting_user'
 
     @classmethod
     def create(cls, *args, voted: bool = False, **kwargs) -> VotingUserEntity:

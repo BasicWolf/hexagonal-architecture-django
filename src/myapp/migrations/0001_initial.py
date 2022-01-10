@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
                 ('karma', models.IntegerField()),
             ],
             options={
-                'db_table': 'user_data',
+                'db_table': 'voting_user',
             },
         ),
     ]
