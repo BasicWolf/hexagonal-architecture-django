@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "extends": ["config:base"],
+  "enabledManagers": ["pip_requirements"],
+  "packageRules": [
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "automergeStrategy": "rebase",
+      "groupName": "Python packages"
+    }
+  ]
+}
