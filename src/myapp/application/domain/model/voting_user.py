@@ -16,7 +16,7 @@ from myapp.application.domain.model.vote_for_article_result import (
 from myapp.eventlib.event import Event
 
 
-@dataclass
+@dataclass(frozen=True)
 class VotingUser:
     id: UserId
     karma: Karma
@@ -31,8 +31,6 @@ class VotingUser:
             return AlreadyVotedResult(article_id, self.id), []
         if not self.karma.enough_for_voting():
             return InsufficientKarmaResult(user_id=self.id), []
-
-        self.voted = True
 
         return (
             SuccessfullyVotedResult(article_id, self.id, vote),

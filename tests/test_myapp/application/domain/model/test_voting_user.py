@@ -1,4 +1,7 @@
+from dataclasses import FrozenInstanceError
 from uuid import UUID
+
+import pytest
 
 from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.identifier.article_id import ArticleId
@@ -12,6 +15,12 @@ from myapp.application.domain.model.vote_for_article_result import (
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
+
+
+def test_voting_user_is_froze():
+    voting_user = build_voting_user(voted=True)
+    with pytest.raises(FrozenInstanceError):
+        voting_user.voted = False
 
 
 def test_vote_for_article_twice_returns_already_voted_result():
