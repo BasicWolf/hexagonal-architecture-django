@@ -2,8 +2,9 @@ from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.vote_for_article_result import (
     VoteForArticleResult
 )
+from myapp.application.ports.api.command.vote_for_article_command import \
+    VoteForArticleCommand
 from myapp.application.ports.api.vote_for_article_use_case import (
-    VoteForArticleCommand,
     VoteForArticleUseCase
 )
 from myapp.application.ports.spi.dto.article_vote import ArticleVote

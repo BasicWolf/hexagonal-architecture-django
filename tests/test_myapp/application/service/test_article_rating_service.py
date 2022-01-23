@@ -12,7 +12,7 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult
 )
 from myapp.application.domain.model.voting_user import VotingUser
-from myapp.application.ports.api.vote_for_article_use_case import \
+from myapp.application.ports.api.command.vote_for_article_command import \
     VoteForArticleCommand
 from myapp.application.ports.spi.dto.article_vote import ArticleVote
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
