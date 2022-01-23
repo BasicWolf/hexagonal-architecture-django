@@ -2,8 +2,8 @@ from typing import Callable, Dict, List, Type, TypeVar
 
 from myapp.eventlib.event import Event
 
-T_contra = TypeVar('T_contra', bound=Event, covariant=True)
-EventHandlerBaseType = Callable[[T_contra], None]
+T_co_event = TypeVar('T_co_event', bound=Event, covariant=True)
+EventHandlerBaseType = Callable[[T_co_event], None]
 EventHandlersCollectionType = Dict[Type[Event], List[EventHandlerBaseType]]
 
 
@@ -15,8 +15,8 @@ class EventDispatcher:
 
     def register_handler(
         self,
-        event_type: Type[T_contra],
-        event_handler: Callable[[T_contra], None]
+        event_type: Type[T_co_event],
+        event_handler: Callable[[T_co_event], None]
     ):
         self._handlers.setdefault(event_type, [])
         self._handlers[event_type].append(event_handler)
