@@ -1,5 +1,8 @@
 from typing import Optional
+from unittest.mock import patch
 from uuid import UUID
+
+import pytest
 
 from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.identifier.article_id import ArticleId
@@ -26,152 +29,156 @@ from tests.test_myapp.eventlib.intercepting_event_dispatcher import \
     InterceptingEventDispatcher
 
 
-def test_valid_vote_for_article_returns_result(
-    user_id: UserId,
-    article_id: ArticleId
-):
-    article_rating_service = build_article_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            build_voting_user(user_id=user_id)
-        )
-    )
-
-    result = article_rating_service.vote_for_article(
-        VoteForArticleCommand(article_id, user_id, Vote.UP)
-    )
-
-    assert isinstance(result, SuccessfullyVotedResult)
-    assert result == SuccessfullyVotedResult(
-        user_id=user_id,
-        article_id=article_id,
-        vote=Vote.UP
-    )
+@pytest.fixture
+def atomic_transactions_noop_stub_for_article_service():
+    with patch(f'{ArticleRatingService.__module__}.transaction.atomic'):
+        yield
 
 
-def test_voting_for_article_two_times_returns_already_voted_result():
-    article_rating_service = build_article_rating_service(
-        FindVotingUserPortStub(
-            build_voting_user(
-                user_id=UserId(UUID('912997c2-0000-0000-0000-000000000000')),
-                voted=True
+@pytest.mark.usefixtures("atomic_transactions_noop_stub_for_article_service")
+class TestArticleRatingService:
+    def test_valid_vote_for_article_returns_result(
+        self,
+        user_id: UserId,
+        article_id: ArticleId
+    ):
+        article_rating_service = build_article_rating_service(
+            find_voting_user_port=FindVotingUserPortStub(
+                build_voting_user(user_id=user_id)
             )
         )
-    )
 
-    result = article_rating_service.vote_for_article(
-        VoteForArticleCommand(
+        result = article_rating_service.vote_for_article(
+            VoteForArticleCommand(article_id, user_id, Vote.UP)
+        )
+
+        assert isinstance(result, SuccessfullyVotedResult)
+        assert result == SuccessfullyVotedResult(
+            user_id=user_id,
+            article_id=article_id,
+            vote=Vote.UP
+        )
+
+    def test_voting_for_article_two_times_returns_already_voted_result(self):
+        article_rating_service = build_article_rating_service(
+            FindVotingUserPortStub(
+                build_voting_user(
+                    user_id=UserId(UUID('912997c2-0000-0000-0000-000000000000')),
+                    voted=True
+                )
+            )
+        )
+
+        result = article_rating_service.vote_for_article(
+            VoteForArticleCommand(
+                ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
+                UserId(UUID('912997c2-0000-0000-0000-000000000000')),
+                Vote.UP
+            )
+        )
+
+        assert result == AlreadyVotedResult(
             ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
-            UserId(UUID('912997c2-0000-0000-0000-000000000000')),
-            Vote.UP
+            UserId(UUID('912997c2-0000-0000-0000-000000000000'))
         )
-    )
 
-    assert result == AlreadyVotedResult(
-        ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
-        UserId(UUID('912997c2-0000-0000-0000-000000000000'))
-    )
-
-
-def test_voting_for_article_returns_insufficient_karma_result(
-    user_id: UserId,
-    article_id: ArticleId
-):
-    article_rating_service = build_article_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            returned_voting_user=build_voting_user(
-                user_id=user_id,
-                karma=Karma(2)
+    def test_voting_for_article_returns_insufficient_karma_result(
+        self,
+        user_id: UserId,
+        article_id: ArticleId
+    ):
+        article_rating_service = build_article_rating_service(
+            find_voting_user_port=FindVotingUserPortStub(
+                returned_voting_user=build_voting_user(
+                    user_id=user_id,
+                    karma=Karma(2)
+                )
             )
         )
-    )
 
-    result = article_rating_service.vote_for_article(
-        VoteForArticleCommand(article_id, user_id, Vote.UP)
-    )
-    assert isinstance(result, InsufficientKarmaResult)
-    assert result.user_id == user_id
+        result = article_rating_service.vote_for_article(
+            VoteForArticleCommand(article_id, user_id, Vote.UP)
+        )
+        assert isinstance(result, InsufficientKarmaResult)
+        assert result.user_id == user_id
 
+    def test_article_vote_saved_when_user_voted_event_handled(self):
+        save_article_vote_port_mock = SaveArticleVotePortMock()
+        article_rating_service = build_article_rating_service(
+            save_article_vote_port=save_article_vote_port_mock
+        )
 
-def test_article_vote_saved_when_user_voted_event_handled():
-    save_article_vote_port_mock = SaveArticleVotePortMock()
-    article_rating_service = build_article_rating_service(
-        save_article_vote_port=save_article_vote_port_mock
-    )
+        article_rating_service._on_user_voted(
+            UserVotedEvent(
+                ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
+                UserId(UUID('896ca302-0000-0000-0000-000000000000')),
+                Vote.DOWN
+            )
+        )
 
-    article_rating_service._on_user_voted(
-        UserVotedEvent(
+        assert save_article_vote_port_mock.saved_article_vote == ArticleVote(
             ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
             UserId(UUID('896ca302-0000-0000-0000-000000000000')),
             Vote.DOWN
         )
-    )
 
-    assert save_article_vote_port_mock.saved_article_vote == ArticleVote(
-        ArticleId(UUID('dd329c97-0000-0000-0000-000000000000')),
-        UserId(UUID('896ca302-0000-0000-0000-000000000000')),
-        Vote.DOWN
-    )
+    def test_vote_for_article_twice_does_not_save_the_vote(self):
+        save_article_vote_port_mock = SaveArticleVotePortMock()
+        article_rating_service = build_article_rating_service(
+            find_voting_user_port=FindVotingUserPortStub(
+                returned_voting_user=build_voting_user(
+                    user_id=UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
+                    voted=True
+                )
+            ),
+            save_article_vote_port=save_article_vote_port_mock
+        )
 
-
-def test_vote_for_article_twice_does_not_save_the_vote():
-    save_article_vote_port_mock = SaveArticleVotePortMock()
-    article_rating_service = build_article_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            returned_voting_user=build_voting_user(
-                user_id=UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
-                voted=True
+        article_rating_service.vote_for_article(
+            VoteForArticleCommand(
+                ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
+                UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
+                Vote.UP
             )
-        ),
-        save_article_vote_port=save_article_vote_port_mock
-    )
-
-    article_rating_service.vote_for_article(
-        VoteForArticleCommand(
-            ArticleId(UUID('b63b6490-0000-0000-0000-000000000000')),
-            UserId(UUID('4110f0fc-0000-0000-0000-000000000000')),
-            Vote.UP
         )
-    )
 
-    assert save_article_vote_port_mock.saved_article_vote is None
+        assert save_article_vote_port_mock.saved_article_vote is None
 
+    def test_vote_for_article_dispatches_user_voted_event(self):
+        intercepting_event_dispatcher = InterceptingEventDispatcher()
+        article_rating_service = build_article_rating_service(
+            find_voting_user_port=FindVotingUserPortStub(
+                returned_voting_user=build_voting_user(
+                    user_id=UserId(UUID('c0d1bc64-0000-0000-0000-000000000000'))
+                )
+            ),
+            domain_event_dispatcher=intercepting_event_dispatcher
+        )
 
-def test_vote_for_article_dispatches_user_voted_event():
-    intercepting_event_dispatcher = InterceptingEventDispatcher()
-    article_rating_service = build_article_rating_service(
-        find_voting_user_port=FindVotingUserPortStub(
-            returned_voting_user=build_voting_user(
-                user_id=UserId(UUID('c0d1bc64-0000-0000-0000-000000000000'))
+        article_rating_service.vote_for_article(
+            VoteForArticleCommand(
+                ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
+                UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
+                Vote.UP
             )
-        ),
-        domain_event_dispatcher=intercepting_event_dispatcher
-    )
-
-    article_rating_service.vote_for_article(
-        VoteForArticleCommand(
-            ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
-            UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
-            Vote.UP
         )
-    )
 
-    assert intercepting_event_dispatcher.check_event_dispatched(
-        UserVotedEvent(
-            ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
-            UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
-            Vote.UP
+        assert intercepting_event_dispatcher.check_event_dispatched(
+            UserVotedEvent(
+                ArticleId(UUID('2a43f4e5-0000-0000-0000-000000000000')),
+                UserId(UUID('c0d1bc64-0000-0000-0000-000000000000')),
+                Vote.UP
+            )
         )
-    )
 
-
-def test_article_rating_service_registered_as_user_created_event_handler():
-    event_dispatcher = EventDispatcher()
-    article_rating_service = build_article_rating_service(
-        domain_event_dispatcher=event_dispatcher
-    )
-    assert event_dispatcher.get_handlers_for(UserVotedEvent) == [
-        article_rating_service._on_user_voted
-    ]
+    def test_article_rating_service_registered_as_user_created_event_handler(self):
+        event_dispatcher = EventDispatcher()
+        article_rating_service = build_article_rating_service(
+            domain_event_dispatcher=event_dispatcher
+        )
+        assert event_dispatcher.get_handlers_for(UserVotedEvent) == [
+            article_rating_service._on_user_voted
+        ]
 
 
 class FindVotingUserPortStub(FindVotingUserPort):

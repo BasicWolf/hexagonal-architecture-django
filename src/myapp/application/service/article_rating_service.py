@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.vote_for_article_result import (
     VoteForArticleResult
@@ -35,6 +37,10 @@ class ArticleRatingService(
         )
 
     def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
+        with transaction.atomic():
+            return self._vote_for_article(command)
+
+    def _vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
         voting_user = self._find_voting_user_port.find_voting_user(
             command.article_id,
             command.user_id
