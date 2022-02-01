@@ -1,6 +1,6 @@
 # Prod
 # python = "^3.8"
-django==4.0.1
+django==4.0.2
 djangorestframework==3.13.1
 django-rest-enumfield==0.2.0
 
