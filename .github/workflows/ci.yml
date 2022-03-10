@@ -22,3 +22,6 @@ jobs:
 
       - name: "Run static analysis"
         run: make static-analysis
+
+      - name: "Run tests"
+        run: make test

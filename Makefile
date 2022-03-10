@@ -14,7 +14,7 @@ buidl: build
 
 build: mypy test
 
-static-analysis: flake8 mypy test
+static-analysis: flake8 mypy
 
 flake8:
 	flake8
