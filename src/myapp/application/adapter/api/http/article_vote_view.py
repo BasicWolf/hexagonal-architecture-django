@@ -49,26 +49,26 @@ class ArticleVoteView(APIView):
     def _build_response(self, result: VoteForArticleResult) -> Response:
         response = None
 
-        if isinstance(result, SuccessfullyVotedResult):
-            response_data = SuccessfullyVotedResultSerializer(result).data
-            response = Response(response_data, status=HTTPStatus.CREATED)
-        elif isinstance(result, InsufficientKarmaResult):
-            detail = (f"User {result.user_id} does not have enough karma"
-                      " to vote for an article")
-            response = problem_response(
-                title="Cannot vote for an article",
-                detail=detail,
-                status=HTTPStatus.BAD_REQUEST
-            )
-        elif isinstance(result, AlreadyVotedResult):
-            detail = f"User \"{result.user_id}\" has already voted " \
-                 f"for article \"{result.article_id}\""
-            response = problem_response(
-                title="Cannot vote for an article",
-                detail=detail,
-                status=HTTPStatus.CONFLICT
-            )
-        else:
-            assert_never(result)
-
+        match result:
+            case SuccessfullyVotedResult():
+                response_data = SuccessfullyVotedResultSerializer(result).data
+                response = Response(response_data, status=HTTPStatus.CREATED)
+            case InsufficientKarmaResult():
+                detail = f"User {result.user_id} does not have enough karma" \
+                          " to vote for an article"
+                response = problem_response(
+                    title="Cannot vote for an article",
+                    detail=detail,
+                    status=HTTPStatus.BAD_REQUEST
+                )
+            case AlreadyVotedResult():
+                detail = f"User \"{result.user_id}\" has already voted " \
+                         f"for article \"{result.article_id}\""
+                response = problem_response(
+                    title="Cannot vote for an article",
+                    detail=detail,
+                    status=HTTPStatus.CONFLICT
+                )
+            case _:
+                assert_never(result)
         return response
