@@ -22,14 +22,12 @@ from myapp.application.ports.api.vote_for_article_use_case import (
 
 
 def test_post_article_vote(
-    arf: APIRequestFactory,
-    user_id: UserId,
-    article_id: ArticleId
+    arf: APIRequestFactory
 ):
     vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
         returned_result=SuccessfullyVotedResult(
-            user_id=user_id,
-            article_id=article_id,
+            user_id=UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
+            article_id=ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
             vote=Vote.DOWN
         )
     )
@@ -42,8 +40,8 @@ def test_post_article_vote(
         arf.post(
             '/article_vote',
             {
-                'user_id': user_id,
-                'article_id': article_id,
+                'user_id': UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
+                'article_id': ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
                 'vote': Vote.DOWN.value
             },
             format='json'
@@ -52,14 +50,16 @@ def test_post_article_vote(
 
     assert response.status_code == HTTPStatus.CREATED
     assert response.data == {
-        'article_id': str(article_id),
-        'user_id': str(user_id),
+        'article_id': '3f577757-0000-0000-0000-000000000000',
+        'user_id': '9af8961e-0000-0000-0000-000000000000',
         'vote': 'DOWN'
     }
 
 
 def test_post_article_vote_with_malformed_data_returns_bad_request(
-    arf: APIRequestFactory
+    arf: APIRequestFactory,
+    user_id: UserId,
+    article_id: ArticleId
 ):
     vote_for_article_use_case_mock = VoteForArticleUseCaseMock()
 
@@ -71,8 +71,8 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
         arf.post(
             '/article_vote',
             {
-                'user_id': str(uuid4()),
-                'article_id': str(uuid4())
+                'user_id': str(user_id),
+                'article_id': str(article_id)
             },
             format='json'
         )
@@ -83,12 +83,11 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
 
 def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     arf: APIRequestFactory,
-    user_id: UserId,
-    article_id: UUID
+    article_id: ArticleId
 ):
     vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
         returned_result=InsufficientKarmaResult(
-            user_id=user_id
+            user_id=UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000'))
         )
     )
 
@@ -100,7 +99,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
         arf.post(
             '/article_vote',
             {
-                'user_id': user_id,
+                'user_id': UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000')),
                 'article_id': article_id,
                 'vote': Vote.UP.value
             },
@@ -111,20 +110,19 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.data == {
         'status': 400,
-        'detail': f"User {user_id} does not have enough karma to vote for an article",
+        'detail': "User 2e8a5b4e-0000-0000-0000-000000000000 does not have enough "
+                  "karma to vote for an article",
         'title': "Cannot vote for an article"
     }
 
 
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
-    arf: APIRequestFactory,
-    user_id: UserId,
-    article_id: ArticleId
+    arf: APIRequestFactory
 ):
     vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
         returned_result=AlreadyVotedResult(
-            user_id=user_id,
-            article_id=article_id
+            user_id=UserId(UUID('a3854820-0000-0000-0000-000000000000')),
+            article_id=ArticleId(UUID('dd494bd6-0000-0000-0000-000000000000'))
         )
     )
 
@@ -136,8 +134,8 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
         arf.post(
             '/article_vote',
             {
-                'user_id': user_id,
-                'article_id': article_id,
+                'user_id': UserId(UUID('a3854820-0000-0000-0000-000000000000')),
+                'article_id': ArticleId(UUID('dd494bd6-0000-0000-0000-000000000000')),
                 'vote': Vote.UP.value
             },
             format='json'
@@ -147,8 +145,8 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     assert response.status_code == HTTPStatus.CONFLICT
     assert response.data == {
         'status': 409,
-        'detail': (f"User \"{user_id}\" has already voted"
-                   f" for article \"{article_id}\""),
+        'detail': "User \"a3854820-0000-0000-0000-000000000000\" has already voted"
+                  " for article \"dd494bd6-0000-0000-0000-000000000000\"",
         'title': "Cannot vote for an article"
     }
 
