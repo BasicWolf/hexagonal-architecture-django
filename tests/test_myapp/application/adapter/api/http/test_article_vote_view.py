@@ -25,7 +25,7 @@ from myapp.application.ports.api.vote_for_article_use_case import (
 def test_post_article_vote(
     arf: APIRequestFactory
 ):
-    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
         returned_result=SuccessfullyVotedResult(
             user_id=UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
             article_id=ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
@@ -34,7 +34,7 @@ def test_post_article_vote(
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_stub
     )
 
     response: Response = article_vote_view(
@@ -62,10 +62,10 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
     user_id: UserId,
     article_id: ArticleId
 ):
-    vote_for_article_use_case_mock = VoteForArticleUseCaseMock()
+    vote_for_article_use_case_stub = VoteForArticleUseCaseStub()
 
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_stub
     )
 
     response: Response = article_vote_view(
@@ -86,14 +86,14 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     arf: APIRequestFactory,
     article_id: ArticleId
 ):
-    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
         returned_result=InsufficientKarmaResult(
             user_id=UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000'))
         )
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_stub
     )
 
     response: Response = article_vote_view(
@@ -120,7 +120,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     arf: APIRequestFactory
 ):
-    vote_for_article_use_case_mock = VoteForArticleUseCaseMock(
+    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
         returned_result=AlreadyVotedResult(
             user_id=UserId(UUID('a3854820-0000-0000-0000-000000000000')),
             article_id=ArticleId(UUID('dd494bd6-0000-0000-0000-000000000000'))
@@ -128,7 +128,7 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     )
 
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_mock
+        vote_for_article_use_case=vote_for_article_use_case_stub
     )
 
     response: Response = article_vote_view(
@@ -152,7 +152,7 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     }
 
 
-class VoteForArticleUseCaseMock(VoteForArticleUseCase):
+class VoteForArticleUseCaseStub(VoteForArticleUseCase):
     called_with_command = None
 
     def __init__(
