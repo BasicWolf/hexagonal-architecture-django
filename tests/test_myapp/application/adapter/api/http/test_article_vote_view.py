@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
@@ -25,16 +25,8 @@ from myapp.application.ports.api.vote_for_article_use_case import (
 def test_post_article_vote(
     arf: APIRequestFactory
 ):
-    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
-        returned_result=SuccessfullyVotedResult(
-            user_id=UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
-            article_id=ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
-            vote=Vote.DOWN
-        )
-    )
-
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_stub
+        vote_for_article_use_case=VoteForArticleUseCaseSuccessfullyVotedStub()
     )
 
     response: Response = article_vote_view(
@@ -62,10 +54,8 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
     user_id: UserId,
     article_id: ArticleId
 ):
-    vote_for_article_use_case_stub = VoteForArticleUseCaseStub()
-
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_stub
+        vote_for_article_use_case=VoteForArticleUseCaseSuccessfullyVotedStub()
     )
 
     response: Response = article_vote_view(
@@ -86,14 +76,8 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     arf: APIRequestFactory,
     article_id: ArticleId
 ):
-    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
-        returned_result=InsufficientKarmaResult(
-            user_id=UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000'))
-        )
-    )
-
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_stub
+        vote_for_article_use_case=VoteForArticleUseCaseInsufficientKarmaStub()
     )
 
     response: Response = article_vote_view(
@@ -120,13 +104,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     arf: APIRequestFactory
 ):
-    vote_for_article_use_case_stub = VoteForArticleUseCaseStub(
-        returned_result=AlreadyVotedResult(
-            user_id=UserId(UUID('a3854820-0000-0000-0000-000000000000')),
-            article_id=ArticleId(UUID('dd494bd6-0000-0000-0000-000000000000'))
-        )
-    )
-
+    vote_for_article_use_case_stub = VoteForArticleUseCaseAlreadyVotedStub()
     article_vote_view = ArticleVoteView.as_view(
         vote_for_article_use_case=vote_for_article_use_case_stub
     )
@@ -152,21 +130,25 @@ def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     }
 
 
-class VoteForArticleUseCaseStub(VoteForArticleUseCase):
-    called_with_command = None
-
-    def __init__(
-        self,
-        returned_result: VoteForArticleResult = None
-    ):
-        if returned_result is None:
-            returned_result = SuccessfullyVotedResult(
-                user_id=UserId(uuid4()),
-                article_id=ArticleId(uuid4()),
-                vote=Vote.UP
-            )
-        self._returned_result = returned_result
-
+class VoteForArticleUseCaseInsufficientKarmaStub(VoteForArticleUseCase):
     def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
-        self.called_with_command = command
-        return self._returned_result
+        return InsufficientKarmaResult(
+            user_id=command.user_id
+        )
+
+
+class VoteForArticleUseCaseSuccessfullyVotedStub(VoteForArticleUseCase):
+    def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
+        return SuccessfullyVotedResult(
+            command.article_id,
+            command.user_id,
+            command.vote
+        )
+
+
+class VoteForArticleUseCaseAlreadyVotedStub(VoteForArticleUseCase):
+    def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
+        return AlreadyVotedResult(
+            user_id=command.user_id,
+            article_id=command.article_id
+        )
