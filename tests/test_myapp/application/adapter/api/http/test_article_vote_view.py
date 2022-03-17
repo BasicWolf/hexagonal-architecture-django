@@ -104,9 +104,8 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
 def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
     arf: APIRequestFactory
 ):
-    vote_for_article_use_case_stub = VoteForArticleUseCaseAlreadyVotedStub()
     article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=vote_for_article_use_case_stub
+        vote_for_article_use_case=VoteForArticleUseCaseAlreadyVotedStub()
     )
 
     response: Response = article_vote_view(
