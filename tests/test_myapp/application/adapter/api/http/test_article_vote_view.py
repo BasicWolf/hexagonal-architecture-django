@@ -22,7 +22,7 @@ from myapp.application.ports.api.vote_for_article_use_case import (
 )
 
 
-def test_post_article_vote(
+def test_successfully_vote_for_an_article(
     arf: APIRequestFactory
 ):
     article_vote_view = ArticleVoteView.as_view(
@@ -72,7 +72,7 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
-def test_post_article_vote_with_insufficient_karma_returns_bad_request(
+def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
     arf: APIRequestFactory,
     article_id: ArticleId
 ):
@@ -101,7 +101,7 @@ def test_post_article_vote_with_insufficient_karma_returns_bad_request(
     }
 
 
-def test_post_article_vote_with_same_user_and_article_id_twice_returns_conflict(
+def test_user_votes_for_the_same_article_returns_conflict(
     arf: APIRequestFactory
 ):
     article_vote_view = ArticleVoteView.as_view(
