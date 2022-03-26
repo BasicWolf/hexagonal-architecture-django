@@ -7,6 +7,9 @@ from myapp.application.domain.event.user_voted_event import UserVotedEvent
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
+from myapp.application.domain.model.specification.karma_enough_for_voting import (
+    KarmaEnoughForVotingSpecification
+)
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_for_article_result import (
     AlreadyVotedResult, InsufficientKarmaResult,
@@ -29,7 +32,7 @@ class VotingUser:
     ) -> Tuple[VoteForArticleResult, List[Event]]:
         if self.voted:
             return AlreadyVotedResult(article_id, self.id), []
-        if not self.karma.enough_for_voting():
+        if not KarmaEnoughForVotingSpecification().is_satisfied_by(self.karma):
             return InsufficientKarmaResult(user_id=self.id), []
 
         return (
