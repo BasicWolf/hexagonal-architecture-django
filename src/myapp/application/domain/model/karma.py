@@ -1,6 +1,3 @@
-from dataclasses import dataclass
+from typing import NewType
 
-
-@dataclass
-class Karma:
-    value: int
+Karma = NewType('Karma', int)

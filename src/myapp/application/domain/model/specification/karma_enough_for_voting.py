@@ -6,4 +6,4 @@ class KarmaEnoughForVotingSpecification(Specification):
     MINIMUM_KARMA_REQUIRED_FOR_VOTING = Karma(5)
 
     def is_satisfied_by(self, karma: Karma) -> bool:
-        return karma.value >= self.MINIMUM_KARMA_REQUIRED_FOR_VOTING.value
+        return karma >= self.MINIMUM_KARMA_REQUIRED_FOR_VOTING
