@@ -15,8 +15,9 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult
 )
 from myapp.application.domain.model.voting_user import VotingUser
-from myapp.application.ports.api.command.vote_for_article_command import \
+from myapp.application.ports.api.command.vote_for_article_command import (
     VoteForArticleCommand
+)
 from myapp.application.ports.spi.dto.article_vote import ArticleVote
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
@@ -25,8 +26,9 @@ from myapp.eventlib.event_dispatcher import EventDispatcher
 from tests.test_myapp.application.domain.model.builder.voting_user_creation import (
     build_voting_user
 )
-from tests.test_myapp.eventlib.intercepting_event_dispatcher import \
+from tests.test_myapp.eventlib.intercepting_event_dispatcher import (
     InterceptingEventDispatcher
+)
 
 
 @pytest.fixture

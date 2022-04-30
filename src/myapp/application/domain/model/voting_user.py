@@ -12,7 +12,8 @@ from myapp.application.domain.model.specification.karma_enough_for_voting import
 )
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_for_article_result import (
-    AlreadyVotedResult, InsufficientKarmaResult,
+    AlreadyVotedResult,
+    InsufficientKarmaResult,
     SuccessfullyVotedResult,
     VoteForArticleResult
 )
