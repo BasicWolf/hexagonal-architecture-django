@@ -17,7 +17,7 @@ from tests.test_myapp.application.domain.model.builder.voting_user_creation impo
 )
 
 
-def test_voting_user_is_froze():
+def test_voting_user_is_frozen():
     voting_user = build_voting_user(voted=True)
     with pytest.raises(FrozenInstanceError):
         voting_user.voted = False
