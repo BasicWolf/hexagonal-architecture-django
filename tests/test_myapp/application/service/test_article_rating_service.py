@@ -12,6 +12,8 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult, VoteForArticleResult
 )
 from myapp.application.domain.model.voting_user import VotingUser
+from myapp.application.ports.api.command.vote_for_article_command import \
+    VoteForArticleCommand
 from myapp.application.ports.spi.dto.article_vote import ArticleVote
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_article_vote_port import SaveArticleVotePort
@@ -37,6 +39,27 @@ def atomic_transactions_noop_stub_for_article_service():
 
 @pytest.mark.usefixtures("atomic_transactions_noop_stub_for_article_service")
 class TestArticleRatingService:
+    def test_arguments_passed_to_find_voting_user(self):
+        find_voting_user_port_mock = MagicMock()
+        find_voting_user_port_mock.find_voting_user = MagicMock(
+            return_value = build_voting_user_mock()
+        )
+        article_rating_service = build_article_rating_service(
+            find_voting_user_port_mock
+        )
+
+        article_rating_service.vote_for_article(
+            VoteForArticleCommand(
+                ArticleId(UUID('8e048172-0000-0000-0000-000000000000')),
+                UserId(UUID('bb9e0560-0000-0000-0000-000000000000')),
+                Vote.DOWN
+            )
+        )
+        find_voting_user_port_mock.find_voting_user.assert_called_with(
+            ArticleId(UUID('8e048172-0000-0000-0000-000000000000')),
+            UserId(UUID('bb9e0560-0000-0000-0000-000000000000'))
+        )
+
     def test_arguments_passed_to_vote_for_article(self):
         found_voting_user_mock = build_voting_user_mock()
 
