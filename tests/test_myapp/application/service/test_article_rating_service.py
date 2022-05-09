@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from unittest.mock import MagicMock, patch
 from uuid import UUID, uuid4
 
@@ -27,9 +27,6 @@ from tests.test_myapp.application.domain.model.builder.voting_user_creation impo
 from tests.test_myapp.application.port.api.command.builder.vote_for_article_command_creation import (  # noqa
     build_vote_for_article_command
 )
-from tests.test_myapp.eventlib.intercepting_event_dispatcher import (
-    InterceptingEventDispatcher
-)
 
 
 @pytest.fixture
@@ -43,7 +40,7 @@ class TestArticleRatingService:
     def test_arguments_passed_to_find_voting_user(self):
         find_voting_user_port_mock = MagicMock()
         find_voting_user_port_mock.find_voting_user = MagicMock(
-            return_value = build_voting_user_mock()
+            return_value=build_voting_user_mock()
         )
         article_rating_service = build_article_rating_service(
             find_voting_user_port_mock
@@ -56,6 +53,7 @@ class TestArticleRatingService:
                 Vote.DOWN
             )
         )
+
         find_voting_user_port_mock.find_voting_user.assert_called_with(
             ArticleId(UUID('8e048172-0000-0000-0000-000000000000')),
             UserId(UUID('bb9e0560-0000-0000-0000-000000000000'))
@@ -63,10 +61,10 @@ class TestArticleRatingService:
 
     def test_arguments_passed_to_vote_for_article(self):
         found_voting_user_mock = build_voting_user_mock()
-
         article_rating_service = build_article_rating_service(
             FindVotingUserPortStub(found_voting_user_mock)
         )
+
         article_rating_service.vote_for_article(
             build_vote_for_article_command(
                 article_id=ArticleId(UUID('ef70ade4-0000-0000-0000-000000000000')),
@@ -80,32 +78,30 @@ class TestArticleRatingService:
         )
 
     def test_domain_events_dispatched(self):
-        found_voting_user_mock = build_voting_user_mock(
-            returned_events=[
-                UserVotedEvent(
-                    article_id=ArticleId(UUID('58093339-0000-0000-0000-000000000000')),
-                    user_id=UserId(UUID('193d88c7-0000-0000-0000-000000000000')),
-                    vote=Vote.DOWN
-                )
-            ]
-        )
-
-        intercepting_event_dispatcher = InterceptingEventDispatcher()
-
+        event_dispatcher_mock = MagicMock()
+        event_dispatcher_mock.dispatch = MagicMock()
         article_rating_service = build_article_rating_service(
-            find_voting_user_port=FindVotingUserPortStub(found_voting_user_mock),
-            domain_event_dispatcher=intercepting_event_dispatcher
+            FindVotingUserPortStub(
+                returned_voting_user=build_voting_user_mock(
+                    returned_event=UserVotedEvent(
+                        ArticleId(UUID('58093339-0000-0000-0000-000000000000')),
+                        UserId(UUID('193d88c7-0000-0000-0000-000000000000')),
+                        Vote.DOWN
+                    )
+                )
+            ),
+            domain_event_dispatcher=event_dispatcher_mock
         )
 
         article_rating_service.vote_for_article(build_vote_for_article_command())
 
-        assert intercepting_event_dispatcher.dispatched_events == [
+        event_dispatcher_mock.dispatch.assert_called_with(
             UserVotedEvent(
-                article_id=ArticleId(UUID('58093339-0000-0000-0000-000000000000')),
-                user_id=UserId(UUID('193d88c7-0000-0000-0000-000000000000')),
-                vote=Vote.DOWN
+                ArticleId(UUID('58093339-0000-0000-0000-000000000000')),
+                UserId(UUID('193d88c7-0000-0000-0000-000000000000')),
+                Vote.DOWN
             )
-        ]
+        )
 
     def test_article_vote_saved_when_user_voted_event_handled(self):
         save_article_vote_port_mock = SaveArticleVotePortMock()
@@ -159,7 +155,7 @@ class SaveArticleVotePortMock(SaveArticleVotePort):
 
 def build_voting_user_mock(
     returned_result: Optional[VoteForArticleResult] = None,
-    returned_events: Optional[List[Event]] = None
+    returned_event: Optional[Event] = None
 ) -> MagicMock:
     if returned_result is None:
         returned_result = SuccessfullyVotedResult(
@@ -167,8 +163,7 @@ def build_voting_user_mock(
             UserId(uuid4()),
             Vote.UP
         )
-    if returned_events is None:
-        returned_events = []
+    returned_events = [returned_event] if returned_event is not None else []
 
     user_mock = MagicMock()
     user_mock.vote_for_article = MagicMock()
