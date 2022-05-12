@@ -1,15 +1,24 @@
 # hexagonal-architecture-django
 Experiments with Django and Hexagonal Architecture
 
-**Current state**
+## Project pulse
+
+I've started this project to research how a Django project can be
+built by principles of Hexagonal Architecture.
+At the same time, I've been studying Domain-Driven Design (DDD).
+While fairly understanding the first, DDD is something I continue
+grokking every day.
+If you fork, please visit this repo later to sync with the latest and
+greatest trends in DDD and software craftsmanship.
+The code is still evolving, as my understanding of the topics.
+
+### Articles
 
 An articles series related to this project (in progress):
 
 [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
 
-**Legacy**
-
-This project was originally a supporting example for
+Originally, this project was a supporting example for
 [Domain-driven design, Hexagonal architecture of ports and adapters, Dependency injection и Python](https://habr.com/ru/post/559560/)
 article.
 The article was written in Russian language and was published on 31 May 2021
