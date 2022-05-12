@@ -30,6 +30,8 @@ This code is now tagged as ["habr"](https://github.com/BasicWolf/hexagonal-archi
 
 **Installation**
 
+Requires Python 3.10 or later.
+
 ```shell
 python3 -m venv .venv
 . .venv/bin/activate
