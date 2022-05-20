@@ -23,14 +23,21 @@ def test_find_voting_user_who_has_not_voted(article_id: ArticleId):
         karma=100
     ).save()
 
+    ArticleVoteEntity(
+        article_id=UUID('171f2557-0000-0000-0000-000000000000'),
+        user_id=UUID('06aee517-0000-0000-0000-000000000000'),
+    ).save()
+
     voting_user = VotingUserRepository().find_voting_user(
-        article_id,
+        ArticleId(UUID('171f2557-0000-0000-0000-000000000000')),
         UserId(UUID('06aee517-0000-0000-0000-000000000000'))
     )
 
     assert voting_user.id == UserId(UUID('06aee517-0000-0000-0000-000000000000'))
     assert voting_user.karma == Karma(100)
-    assert not voting_user.voted
+    assert voting_user.voted_for_articles == [
+        ArticleId(UUID('171f2557-0000-0000-0000-000000000000'))
+    ]
 
 
 @pytest.mark.integration
@@ -52,7 +59,7 @@ def test_find_voting_user_who_has_already_voted():
         UserId(UUID('34d00b01-0000-0000-0000-000000000000'))
     )
 
-    assert voting_user.voted
+    assert ArticleId(UUID('f784e16f-0000-0000-0000-000000000000')) in voting_user.voted_for_articles  # noqa
 
 
 @pytest.mark.integration
