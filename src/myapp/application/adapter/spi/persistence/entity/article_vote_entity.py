@@ -7,7 +7,7 @@ from django.db import models
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.spi.dto.article_vote import ArticleVote
+from myapp.application.domain.model.voting_user import ArticleVote
 
 
 class ArticleVoteEntity(models.Model):
