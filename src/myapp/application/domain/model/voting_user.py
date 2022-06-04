@@ -17,7 +17,7 @@ from myapp.application.domain.model.vote_for_article_result import (
 )
 
 
-@dataclass()
+@dataclass
 class VotingUser:
     id: UserId
     karma: Karma

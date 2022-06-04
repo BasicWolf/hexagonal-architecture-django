@@ -51,6 +51,7 @@ class VotingUserRepository(
             article_id=article_id,
             user_id=user_id
         ).first()
+
         return self._article_entity_to_domain_model(article_vote_entity) if (
             article_vote_entity is not None
         ) else (
