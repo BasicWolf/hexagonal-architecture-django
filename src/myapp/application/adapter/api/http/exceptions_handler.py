@@ -4,8 +4,9 @@ from http import HTTPStatus
 from rest_framework.views import exception_handler
 
 from myapp.application.adapter.api.http.problem_response import problem_response
-from myapp.application.adapter.spi.persistence.exceptions.entity_not_found import \
+from myapp.application.adapter.spi.persistence.exceptions.entity_not_found import (
     EntityNotFound
+)
 
 logger = logging.getLogger(__name__)
 

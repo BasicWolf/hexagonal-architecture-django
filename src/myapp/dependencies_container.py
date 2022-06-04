@@ -1,8 +1,9 @@
 from typing import Any, Dict
 
 from myapp.application.adapter.api.http.article_vote_view import ArticleVoteView
-from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
+from myapp.application.adapter.spi.persistence.repository.voting_user_repository import (
     VotingUserRepository
+)
 from myapp.application.service.article_rating_service import ArticleRatingService
 
 

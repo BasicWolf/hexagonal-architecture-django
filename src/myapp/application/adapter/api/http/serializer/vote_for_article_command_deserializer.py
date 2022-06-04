@@ -2,8 +2,9 @@ from rest_enumfield import EnumField
 from rest_framework import serializers
 
 from myapp.application.domain.model.vote import Vote
-from myapp.application.ports.api.command.vote_for_article_command import \
+from myapp.application.ports.api.command.vote_for_article_command import (
     VoteForArticleCommand
+)
 
 
 class VoteForArticleCommandDeserializer(serializers.Serializer[VoteForArticleCommand]):
