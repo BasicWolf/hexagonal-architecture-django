@@ -23,7 +23,7 @@ from myapp.application.domain.model.voting_user import ArticleVote, VotingUser
 def test_find_voting_user_who_has_not_voted(
     voting_user_entity: VotingUserEntity,
     article_id: ArticleId,
-    expected_voting_user_who_has_not_voted: VotingUser
+    voting_user_who_has_not_voted: VotingUser
 ):
     voting_user_entity.save()
 
@@ -32,34 +32,25 @@ def test_find_voting_user_who_has_not_voted(
         UserId(voting_user_entity.user_id),
     )
 
-    assert voting_user == expected_voting_user_who_has_not_voted
+    assert voting_user == voting_user_who_has_not_voted
 
 
 @pytest.mark.integration
 @pytest.mark.django_db
-def test_find_voting_user_who_has_already_voted():
-    VotingUserEntity(
-        user_id=UUID('34d00b01-0000-0000-0000-000000000000'),
-        karma=123
-    ).save()
-
-    ArticleVoteEntity(
-        article_id=UUID('f784e16f-0000-0000-0000-000000000000'),
-        user_id=UUID('34d00b01-0000-0000-0000-000000000000'),
-        vote=ArticleVoteEntity.VOTE_UP
-    ).save()
+def test_find_voting_user_who_has_already_voted(
+    article_vote_entity: ArticleVoteEntity,
+    voting_user_entity: VotingUserEntity,
+    voting_user_who_has_voted: VotingUser
+):
+    voting_user_entity.save()
+    article_vote_entity.save()
 
     voting_user = VotingUserRepository().find_voting_user(
-        ArticleId(UUID('f784e16f-0000-0000-0000-000000000000')),
-        UserId(UUID('34d00b01-0000-0000-0000-000000000000'))
+        ArticleId(article_vote_entity.article_id),
+        UserId(voting_user_entity.user_id)
     )
 
-    expected_article_vote = ArticleVote(
-        ArticleId(UUID('f784e16f-0000-0000-0000-000000000000')),
-        UserId(UUID('34d00b01-0000-0000-0000-000000000000')),
-        Vote.UP
-    )
-    assert expected_article_vote in voting_user.votes_for_articles  # noqa
+    assert voting_user == voting_user_who_has_voted
 
 
 @pytest.mark.integration
@@ -95,7 +86,7 @@ def article_vote_entity() -> ArticleVoteEntity:
 
 
 @pytest.fixture(scope='module')
-def expected_voting_user_who_has_not_voted() -> VotingUser:
+def voting_user_who_has_not_voted() -> VotingUser:
     return VotingUser(
         UserId(UUID('06aee517-0000-0000-0000-000000000000')),
         Karma(100),
@@ -104,7 +95,7 @@ def expected_voting_user_who_has_not_voted() -> VotingUser:
 
 
 @pytest.fixture(scope='module')
-def expected_voting_user() -> VotingUser:
+def voting_user_who_has_voted() -> VotingUser:
     return VotingUser(
         UserId(UUID('06aee517-0000-0000-0000-000000000000')),
         Karma(100),
