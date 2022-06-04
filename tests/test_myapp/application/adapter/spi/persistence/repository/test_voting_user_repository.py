@@ -20,32 +20,19 @@ from myapp.application.domain.model.voting_user import ArticleVote, VotingUser
 
 @pytest.mark.integration
 @pytest.mark.django_db
-def test_find_voting_user_who_has_not_voted(article_id: ArticleId):
-    VotingUserEntity(
-        user_id=UUID('06aee517-0000-0000-0000-000000000000'),
-        karma=100
-    ).save()
-
-    ArticleVoteEntity(
-        article_id=UUID('171f2557-0000-0000-0000-000000000000'),
-        user_id=UUID('06aee517-0000-0000-0000-000000000000'),
-        vote=ArticleVoteEntity.VOTE_UP
-    ).save()
+def test_find_voting_user_who_has_not_voted(
+    voting_user_entity: VotingUserEntity,
+    article_id: ArticleId,
+    expected_voting_user_who_has_not_voted: VotingUser
+):
+    voting_user_entity.save()
 
     voting_user = VotingUserRepository().find_voting_user(
-        ArticleId(UUID('171f2557-0000-0000-0000-000000000000')),
-        UserId(UUID('06aee517-0000-0000-0000-000000000000'))
+        article_id,
+        UserId(voting_user_entity.user_id),
     )
 
-    assert voting_user.id == UserId(UUID('06aee517-0000-0000-0000-000000000000'))
-    assert voting_user.karma == Karma(100)
-    assert voting_user.votes_for_articles == [
-        ArticleVote(
-            ArticleId(UUID('171f2557-0000-0000-0000-000000000000')),
-            UserId(UUID('06aee517-0000-0000-0000-000000000000')),
-            Vote.UP
-        )
-    ]
+    assert voting_user == expected_voting_user_who_has_not_voted
 
 
 @pytest.mark.integration
@@ -88,6 +75,47 @@ def test_save_voting_user_with_same_vote_raises_integrity_error(voting_user: Vot
     with pytest.raises(IntegrityError):
         VotingUserRepository().save_voting_user(voting_user)
         VotingUserRepository().save_voting_user(voting_user)
+
+
+@pytest.fixture(scope='module')
+def voting_user_entity() -> VotingUserEntity:
+    return VotingUserEntity(
+        user_id=UUID('06aee517-0000-0000-0000-000000000000'),
+        karma=100
+    )
+
+
+@pytest.fixture(scope='module')
+def article_vote_entity() -> ArticleVoteEntity:
+    return ArticleVoteEntity(
+        article_id=UUID('171f2557-0000-0000-0000-000000000000'),
+        user_id=UUID('06aee517-0000-0000-0000-000000000000'),
+        vote=ArticleVoteEntity.VOTE_UP
+    )
+
+
+@pytest.fixture(scope='module')
+def expected_voting_user_who_has_not_voted() -> VotingUser:
+    return VotingUser(
+        UserId(UUID('06aee517-0000-0000-0000-000000000000')),
+        Karma(100),
+        []
+    )
+
+
+@pytest.fixture(scope='module')
+def expected_voting_user() -> VotingUser:
+    return VotingUser(
+        UserId(UUID('06aee517-0000-0000-0000-000000000000')),
+        Karma(100),
+        [
+            ArticleVote(
+                ArticleId(UUID('171f2557-0000-0000-0000-000000000000')),
+                UserId(UUID('06aee517-0000-0000-0000-000000000000')),
+                Vote.UP
+            )
+        ]
+    )
 
 
 @pytest.fixture(scope='module')
