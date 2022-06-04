@@ -16,9 +16,6 @@ from myapp.application.ports.api.command.vote_for_article_command import (
 from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.article_rating_service import ArticleRatingService
-from tests.test_myapp.application.port.api.command.builder.vote_for_article_command_creation import (  # noqa
-    build_vote_for_article_command
-)
 
 
 @pytest.fixture
