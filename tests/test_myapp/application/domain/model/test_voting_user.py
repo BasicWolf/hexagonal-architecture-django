@@ -1,5 +1,4 @@
-from typing import List
-from uuid import UUID, uuid4
+from uuid import UUID
 
 import pytest
 
@@ -114,16 +113,3 @@ def expected_insufficient_karma_result() -> InsufficientKarmaResult:
     return InsufficientKarmaResult(
         UserId(UUID('d826bff6-0000-0000-0000-000000000000'))
     )
-
-
-def build_voting_user(
-    user_id: UserId,
-    karma: Karma = Karma(10),
-    voted_for_articles: List[ArticleVote] | None = None
-) -> VotingUser:
-    voted_for_articles = voted_for_articles if (
-        voted_for_articles is not None
-    ) else (
-        [ArticleId(uuid4())]
-    )
-    return VotingUser(user_id, karma, voted_for_articles)
