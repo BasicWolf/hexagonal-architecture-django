@@ -46,12 +46,12 @@ class ArticleVoteView(APIView):
         serializer.is_valid(raise_exception=True)
         return serializer.create()
 
-    def _build_response(self, result: VoteForArticleResult) -> Response:
+    def _build_response(self, voting_result: VoteForArticleResult) -> Response:
         response = None
 
-        match result:
+        match voting_result:
             case SuccessfullyVotedResult():
-                response_data = SuccessfullyVotedResultSerializer(result).data
+                response_data = SuccessfullyVotedResultSerializer(voting_result).data
                 response = Response(response_data, status=HTTPStatus.CREATED)
             case InsufficientKarmaResult(user_id):
                 detail = f"User {user_id} does not have enough karma" \
@@ -70,5 +70,5 @@ class ArticleVoteView(APIView):
                     status=HTTPStatus.CONFLICT
                 )
             case _:
-                assert_never(result)
+                assert_never(voting_result)
         return response
