@@ -42,13 +42,13 @@ def test_vote_for_article_returns_successfully_voted_result():
     )
 
 
-def test_cannot_vote_for_article_with_insufficient_karma(article_id: ArticleId):
+def test_cannot_vote_for_article_with_insufficient_karma(an_article_id: ArticleId):
     voting_user = build_voting_user(
         user_id=UserId(UUID('df777758-0000-0000-0000-000000000000')),
         karma=Karma(4)
     )
 
-    result = voting_user.vote_for_article(article_id, Vote.UP)
+    result = voting_user.vote_for_article(an_article_id, Vote.UP)
 
     assert result == InsufficientKarmaResult(
         UserId(UUID('df777758-0000-0000-0000-000000000000'))

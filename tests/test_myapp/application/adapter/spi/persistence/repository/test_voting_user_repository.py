@@ -26,13 +26,13 @@ from myapp.application.domain.model.voting_user import ArticleVote, VotingUser
 @pytest.mark.django_db
 def test_find_voting_user_who_has_not_voted(
     voting_user_entity: VotingUserEntity,
-    article_id: ArticleId,
+    an_article_id: ArticleId,
     voting_user_who_has_not_voted: VotingUser
 ):
     voting_user_entity.save()
 
     voting_user = VotingUserRepository().find_voting_user(
-        article_id,
+        an_article_id,
         UserId(voting_user_entity.user_id),
     )
 
@@ -59,9 +59,9 @@ def test_find_voting_user_who_has_already_voted(
 
 @pytest.mark.integration
 @pytest.mark.django_db
-def test_get_non_existing_voting_user_raises_user_not_found(user_id, article_id):
+def test_get_non_existing_voting_user_raises_user_not_found(a_user_id, an_article_id):
     with pytest.raises(VotingUserNotFound):
-        VotingUserRepository().find_voting_user(article_id, user_id)
+        VotingUserRepository().find_voting_user(an_article_id, a_user_id)
 
 
 @pytest.mark.integration

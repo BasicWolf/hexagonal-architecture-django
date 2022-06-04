@@ -51,8 +51,8 @@ def test_successfully_vote_for_an_article(
 
 def test_post_article_vote_with_malformed_data_returns_bad_request(
     arf: APIRequestFactory,
-    user_id: UserId,
-    article_id: ArticleId
+    a_user_id: UserId,
+    an_article_id: ArticleId
 ):
     article_vote_view = ArticleVoteView.as_view(
         vote_for_article_use_case=VoteForArticleUseCaseSuccessfullyVotedStub()
@@ -62,8 +62,8 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
         arf.post(
             '/article_vote',
             {
-                'user_id': str(user_id),
-                'article_id': str(article_id)
+                'user_id': str(a_user_id),
+                'article_id': str(an_article_id)
             },
             format='json'
         )
@@ -74,7 +74,7 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
 
 def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
     arf: APIRequestFactory,
-    article_id: ArticleId
+    an_article_id: ArticleId
 ):
     article_vote_view = ArticleVoteView.as_view(
         vote_for_article_use_case=VoteForArticleUseCaseInsufficientKarmaStub()
@@ -85,7 +85,7 @@ def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
             '/article_vote',
             {
                 'user_id': UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000')),
-                'article_id': article_id,
+                'article_id': an_article_id,
                 'vote': Vote.UP.value
             },
             format='json'
