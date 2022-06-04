@@ -3,14 +3,18 @@ from uuid import UUID
 import pytest
 from django.db import IntegrityError
 
-from myapp.application.adapter.spi.persistence.entity.article_vote_entity import \
+from myapp.application.adapter.spi.persistence.entity.article_vote_entity import (
     ArticleVoteEntity
-from myapp.application.adapter.spi.persistence.entity.voting_user_entity import \
+)
+from myapp.application.adapter.spi.persistence.entity.voting_user_entity import (
     VotingUserEntity
-from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import \
+)
+from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import (
     VotingUserNotFound
-from myapp.application.adapter.spi.persistence.repository.voting_user_repository import \
+)
+from myapp.application.adapter.spi.persistence.repository.voting_user_repository import (
     VotingUserRepository
+)
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
