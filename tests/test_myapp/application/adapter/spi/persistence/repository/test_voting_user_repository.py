@@ -110,18 +110,15 @@ def voting_user_who_has_voted() -> VotingUser:
 
 
 @pytest.fixture(scope='module')
-def voting_user(article_vote) -> VotingUser:
+def voting_user() -> VotingUser:
     return VotingUser(
         UserId(UUID('5e3f29f9-0000-0000-0000-000000000000')),
         Karma(10),
-        [article_vote]
-    )
-
-
-@pytest.fixture(scope='module')
-def article_vote() -> ArticleVote:
-    return ArticleVote(
-        ArticleId(UUID('c313a2b3-0000-0000-0000-000000000000')),
-        UserId(UUID('5e3f29f9-0000-0000-0000-000000000000')),
-        Vote.UP
+        [
+            ArticleVote(
+                ArticleId(UUID('c313a2b3-0000-0000-0000-000000000000')),
+                UserId(UUID('5e3f29f9-0000-0000-0000-000000000000')),
+                Vote.UP
+            )
+        ]
     )
