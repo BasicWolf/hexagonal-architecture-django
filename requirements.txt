@@ -1,5 +1,5 @@
 # Prod
-django==4.0.5
+django==4.0.6
 djangorestframework==3.13.1
 django-rest-enumfield==0.2.0
 
