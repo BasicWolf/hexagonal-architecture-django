@@ -5,9 +5,6 @@ from dataclasses import dataclass, field
 from myapp.application.domain.model.identifier.article_id import ArticleId
 from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
-from myapp.application.domain.model.specification.karma_enough_for_voting import (
-    KarmaEnoughForVotingSpecification
-)
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_for_article_result import (
     AlreadyVotedResult,
@@ -15,6 +12,8 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult,
     VoteForArticleResult
 )
+
+MINIMUM_KARMA_REQUIRED_FOR_VOTING = Karma(5)
 
 
 @dataclass
@@ -31,7 +30,7 @@ class VotingUser:
         if self._user_voted_for_article(article_id):
             return AlreadyVotedResult(article_id, self.id)
 
-        if not KarmaEnoughForVotingSpecification().is_satisfied_by(self.karma):
+        if not self._karma_enough_for_voting():
             return InsufficientKarmaResult(user_id=self.id)
 
         self.votes_for_articles.append(
@@ -39,6 +38,9 @@ class VotingUser:
         )
 
         return SuccessfullyVotedResult(article_id, self.id, vote)
+
+    def _karma_enough_for_voting(self):
+        return self.karma >= MINIMUM_KARMA_REQUIRED_FOR_VOTING
 
     def _user_voted_for_article(self, article_id: ArticleId) -> bool:
         article_ids_for_which_user_voted = (
