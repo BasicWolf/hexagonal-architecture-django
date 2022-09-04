@@ -17,10 +17,10 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult,
     VoteForArticleResult
 )
-from myapp.application.ports.api.command.vote_for_article_command import (
+from myapp.application.port.api.command.vote_for_article_command import (
     VoteForArticleCommand
 )
-from myapp.application.ports.api.vote_for_article_use_case import (
+from myapp.application.port.api.vote_for_article_use_case import (
     VoteForArticleUseCase
 )
 from myapp.application.util.assert_never import assert_never

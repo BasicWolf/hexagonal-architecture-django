@@ -14,10 +14,10 @@ from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult,
     VoteForArticleResult
 )
-from myapp.application.ports.api.command.vote_for_article_command import (
+from myapp.application.port.api.command.vote_for_article_command import (
     VoteForArticleCommand
 )
-from myapp.application.ports.api.vote_for_article_use_case import (
+from myapp.application.port.api.vote_for_article_use_case import (
     VoteForArticleUseCase
 )
 
@@ -33,8 +33,8 @@ def test_successfully_vote_for_an_article(
         arf.post(
             '/article_vote',
             {
-                'user_id': UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
                 'article_id': ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
+                'user_id': UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
                 'vote': Vote.DOWN.value
             },
             format='json'

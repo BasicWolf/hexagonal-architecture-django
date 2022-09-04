@@ -14,8 +14,8 @@ from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.karma import Karma
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.voting_user import ArticleVote, VotingUser
-from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
-from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
+from myapp.application.port.spi.find_voting_user_port import FindVotingUserPort
+from myapp.application.port.spi.save_voting_user_port import SaveVotingUserPort
 
 
 class VotingUserRepository(

@@ -3,14 +3,14 @@ from django.db import transaction
 from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult, VoteForArticleResult
 )
-from myapp.application.ports.api.command.vote_for_article_command import (
+from myapp.application.port.api.command.vote_for_article_command import (
     VoteForArticleCommand
 )
-from myapp.application.ports.api.vote_for_article_use_case import (
+from myapp.application.port.api.vote_for_article_use_case import (
     VoteForArticleUseCase
 )
-from myapp.application.ports.spi.find_voting_user_port import FindVotingUserPort
-from myapp.application.ports.spi.save_voting_user_port import SaveVotingUserPort
+from myapp.application.port.spi.find_voting_user_port import FindVotingUserPort
+from myapp.application.port.spi.save_voting_user_port import SaveVotingUserPort
 
 
 class ArticleRatingService(
