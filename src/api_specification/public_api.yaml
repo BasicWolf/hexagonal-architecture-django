@@ -1,0 +1,48 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: TechBlogging Portal API
+  description: Hexagonal Architectecture TechBlogging Portal API
+
+paths:
+  /article_vote:
+    post:
+      summary: Vote for an article.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vote'
+
+      responses:
+        '201':
+          summary: Voted successfully.
+        '400':
+          summary: Bad request. There was a domain constraint violation.
+        '409':
+          summary: Conflict. User has already voted.
+
+
+components:
+  schemas:
+    Vote:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        article_id:
+          type: string
+          format: uuid
+        vote:
+          type: string
+          enum:
+            - 'up'
+            - 'down'
+      required:
+        - user_id
+        - article_id
+        - vote
