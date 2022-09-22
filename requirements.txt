@@ -1,6 +1,6 @@
 # Prod
 django==4.1.1
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 django-rest-enumfield==0.2.0
 
 # Dev
