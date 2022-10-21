@@ -8,14 +8,14 @@
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true,
       "automergeStrategy": "rebase",
-      "groupName": "Minor dependencies updates"
+      "groupName": "Dependencies: minor versions"
     },
     {
       "matchManagers": ["pip_requirements"],
       "matchUpdateTypes": ["major"],
       "automerge": true,
       "automergeStrategy": "rebase",
-      "groupName": "Major dependencies updates"
+      "groupName": "Dependencies: major versions"
     }
   ]
 }
