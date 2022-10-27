@@ -1,4 +1,4 @@
-from typing import cast
+from typing import cast, List, Optional
 
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import (
     ArticleVoteEntity
@@ -24,14 +24,12 @@ class VotingUserRepository(
 ):
     def find_voting_user(self, article_id: ArticleId, user_id: UserId) -> VotingUser:
         voting_user_entity = self._get_voting_user_entity(user_id)
+        article_vote: Optional[ArticleVote] = self._get_article_vote(article_id, user_id)
+
         return VotingUser(
             user_id,
             Karma(voting_user_entity.karma),
-            [article_vote] if (
-                article_vote := self._get_article_vote(article_id, user_id)
-            ) else (
-                []
-            )
+            [article_vote] if article_vote is not None else []
         )
 
     def _get_voting_user_entity(self, user_id: UserId) -> VotingUserEntity:
@@ -58,7 +56,7 @@ class VotingUserRepository(
             None
         )
 
-    def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
+    def old_save_voting_user(self, voting_user: VotingUser) -> VotingUser:
         VotingUserEntity(
             user_id=voting_user.id,
             karma=voting_user.karma
@@ -68,6 +66,49 @@ class VotingUserRepository(
             self._article_vote_to_entity(article_vote).save()
 
         return voting_user
+
+    def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
+        voting_user_entity = self._voting_user_to_entity(voting_user)
+        voting_user_entity.save()
+        saved_votes_for_articles = self._save_votes_for_articles(
+            voting_user.votes_for_articles
+        )
+
+        return self._voting_user_entity_to_domain_model(
+            voting_user_entity,
+            saved_votes_for_articles
+        )
+
+    def _save_votes_for_articles(
+        self,
+        votes_for_articles: List[ArticleVote]
+     ) -> List[ArticleVote]:
+        saved_votes: List[ArticleVote] = []
+
+        for article_vote in votes_for_articles:
+            article_vote_entity = self._article_vote_to_entity(article_vote)
+            article_vote_entity.save()
+            saved_vote = self._article_entity_to_domain_model(article_vote_entity)
+            saved_votes.append(saved_vote)
+
+        return saved_votes
+
+    def _voting_user_to_entity(self, voting_user: VotingUser) -> VotingUserEntity:
+        return VotingUserEntity(
+            user_id=voting_user.id,
+            karma=voting_user.karma
+        )
+
+    def _voting_user_entity_to_domain_model(
+        self,
+        voting_user_entity: VotingUserEntity,
+        votes_for_articles: List[ArticleVote]
+    ) -> VotingUser:
+        return VotingUser(
+            UserId(voting_user_entity.user_id),
+            karma=Karma(voting_user_entity.karma),
+            votes_for_articles=votes_for_articles
+        )
 
     def _article_vote_to_entity(self, article_vote: ArticleVote) -> ArticleVoteEntity:
         return ArticleVoteEntity(
