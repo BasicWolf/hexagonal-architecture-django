@@ -50,22 +50,10 @@ class VotingUserRepository(
             user_id=user_id
         ).first()
 
-        return self._article_entity_to_domain_model(article_vote_entity) if (
-            article_vote_entity is not None
-        ) else (
-            None
-        )
-
-    def old_save_voting_user(self, voting_user: VotingUser) -> VotingUser:
-        VotingUserEntity(
-            user_id=voting_user.id,
-            karma=voting_user.karma
-        ).save()
-
-        for article_vote in voting_user.votes_for_articles:
-            self._article_vote_to_entity(article_vote).save()
-
-        return voting_user
+        if article_vote_entity is not None:
+            return self._article_entity_to_domain_model(article_vote_entity)
+        else:
+            return None
 
     def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
         voting_user_entity = self._voting_user_to_entity(voting_user)
