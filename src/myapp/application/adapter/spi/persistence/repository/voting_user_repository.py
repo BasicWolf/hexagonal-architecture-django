@@ -57,20 +57,19 @@ class VotingUserRepository(
             return []
 
     def save_voting_user(self, voting_user: VotingUser) -> VotingUser:
-        saved_voting_user_entity = self._save_voting_user(voting_user)
         saved_article_vote_entities = self._save_votes_for_articles(
             voting_user.votes_for_articles
         )
+        saved_votes_for_articles = [
+            self._article_entity_to_domain_model(article_vote_entity)
+            for article_vote_entity in saved_article_vote_entities
+        ]
 
-        return self._voting_user_entity_to_domain_model(
-            saved_voting_user_entity,
-            saved_article_vote_entities
+        return VotingUser(
+            id=voting_user.id,
+            karma=voting_user.karma,
+            votes_for_articles=saved_votes_for_articles
         )
-
-    def _save_voting_user(self, voting_user) -> VotingUserEntity:
-        voting_user_entity = self._voting_user_to_entity(voting_user)
-        voting_user_entity.save()
-        return voting_user_entity
 
     def _save_votes_for_articles(
         self,
@@ -84,28 +83,6 @@ class VotingUserRepository(
             saved_article_vote_entities.append(article_vote_entity)
 
         return saved_article_vote_entities
-
-    def _voting_user_to_entity(self, voting_user: VotingUser) -> VotingUserEntity:
-        return VotingUserEntity(
-            user_id=voting_user.id,
-            karma=voting_user.karma
-        )
-
-    def _voting_user_entity_to_domain_model(
-        self,
-        voting_user_entity: VotingUserEntity,
-        article_vote_entities: List[ArticleVoteEntity]
-    ) -> VotingUser:
-        votes_for_articles = [
-            self._article_entity_to_domain_model(article_vote_entity)
-            for article_vote_entity in article_vote_entities
-        ]
-
-        return VotingUser(
-            UserId(voting_user_entity.user_id),
-            karma=Karma(voting_user_entity.karma),
-            votes_for_articles=votes_for_articles
-        )
 
     def _article_vote_to_entity(self, article_vote: ArticleVote) -> ArticleVoteEntity:
         return ArticleVoteEntity(
