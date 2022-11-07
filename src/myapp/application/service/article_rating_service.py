@@ -1,5 +1,3 @@
-from django.db import transaction
-
 from myapp.application.domain.model.vote_for_article_result import (
     SuccessfullyVotedResult, VoteForArticleResult
 )
@@ -11,6 +9,7 @@ from myapp.application.port.api.vote_for_article_use_case import (
 )
 from myapp.application.port.spi.find_voting_user_port import FindVotingUserPort
 from myapp.application.port.spi.save_voting_user_port import SaveVotingUserPort
+from myapp.application.util.transactional import transactional
 
 
 class ArticleRatingService(
@@ -27,11 +26,8 @@ class ArticleRatingService(
         self._find_voting_user_port = find_voting_user_port
         self._save_voting_user_port = save_voting_user_port
 
+    @transactional
     def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
-        with transaction.atomic():
-            return self._vote_for_article(command)
-
-    def _vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
         voting_user = self._find_voting_user_port.find_voting_user(
             command.article_id,
             command.user_id

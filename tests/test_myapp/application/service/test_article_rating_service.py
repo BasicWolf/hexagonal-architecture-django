@@ -1,5 +1,4 @@
 from typing import Optional
-from unittest.mock import patch
 from uuid import UUID
 
 import pytest
@@ -18,13 +17,6 @@ from myapp.application.port.spi.save_voting_user_port import SaveVotingUserPort
 from myapp.application.service.article_rating_service import ArticleRatingService
 
 
-@pytest.fixture
-def atomic_transactions_noop_stub_for_article_service():
-    with patch(f'{ArticleRatingService.__module__}.transaction.atomic'):
-        yield
-
-
-@pytest.mark.usefixtures("atomic_transactions_noop_stub_for_article_service")
 class TestArticleRatingService:
     def test_successfully_voted_for_article(
         self,
