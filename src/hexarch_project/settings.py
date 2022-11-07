@@ -18,6 +18,10 @@ from typing import List
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Set to True for settings used for unit / integrational testing
+TESTING = False
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 

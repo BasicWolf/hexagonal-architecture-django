@@ -49,6 +49,7 @@ mypy --namespace-packages -v -p myapp
 
 ```shell
 export PYTHONPATH=${PYTHONPATH}:./:src/
+export DJANGO_SETTINGS_MODULE="hexarch_project.test_settings"
 pytest
 ```
 
