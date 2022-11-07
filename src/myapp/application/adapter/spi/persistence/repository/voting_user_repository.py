@@ -111,7 +111,7 @@ class VotingUserRepository(
         return ArticleVoteEntity(
             article_id=article_vote.article_id,
             user_id=article_vote.user_id,
-            vote=cast(str, article_vote.vote)
+            vote=cast(str, article_vote.vote.value)
         )
 
     def _article_entity_to_domain_model(self, entity: ArticleVoteEntity) -> ArticleVote:

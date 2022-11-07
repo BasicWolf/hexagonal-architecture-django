@@ -93,7 +93,7 @@ def test_article_vote_saved(voting_user: VotingUser, article_vote: ArticleVote):
     )
     assert article_vote_entity.article_id == article_vote.article_id
     assert article_vote_entity.user_id == voting_user.id
-    assert article_vote_entity.vote == str(article_vote.vote)
+    assert article_vote_entity.vote == str(article_vote.vote.value)
 
 
 @pytest.fixture(scope='module')
