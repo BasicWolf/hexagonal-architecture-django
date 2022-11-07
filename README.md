@@ -15,7 +15,8 @@ Please visit this repository later and remember to sync your forks!
 
 An articles series related to this project (in progress):
 
-[Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
+* [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
+* [Hexagonal architecture and Python - Part II: Domain, Application Services, Ports and Adapters](https://znasibov.info/posts/2022/09/18/hexarch_di_python_part_2.html)
 
 Originally, this project was a supporting example for
 [Domain-driven design, Hexagonal architecture of ports and adapters, Dependency injection и Python](https://habr.com/ru/post/559560/)
