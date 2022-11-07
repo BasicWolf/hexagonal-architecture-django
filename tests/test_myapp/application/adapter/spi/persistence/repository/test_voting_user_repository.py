@@ -74,16 +74,6 @@ def test_save_voting_user_with_same_vote_raises_integrity_error(voting_user: Vot
 
 @pytest.mark.integration
 @pytest.mark.django_db(transaction=True)
-def test_voting_user_saved(voting_user: VotingUser):
-    VotingUserRepository().save_voting_user(voting_user)
-
-    voting_user_entity = VotingUserEntity.objects.get(user_id=voting_user.id)
-    assert voting_user_entity.user_id == voting_user.id
-    assert voting_user_entity.karma == voting_user.karma
-
-
-@pytest.mark.integration
-@pytest.mark.django_db(transaction=True)
 def test_article_vote_saved(voting_user: VotingUser, article_vote: ArticleVote):
     VotingUserRepository().save_voting_user(voting_user)
 
