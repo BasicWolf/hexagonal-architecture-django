@@ -23,10 +23,12 @@ mypy:
 	mypy --namespace-packages -p myapp -p tests
 
 test:
-	PYTHONPATH=src/:./ pytest
+	DJANGO_SETTINGS_MODULE="hexarch_project.test_settings" \
+	PYTHONPATH=src/:./ \
+	pytest
 
 migrate:
 	$(MANAGEPY) migrate
 
-run:
+run: migrate
 	$(MANAGEPY) runserver
