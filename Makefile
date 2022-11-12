@@ -20,8 +20,7 @@ flake8:
 	flake8
 
 mypy:
-	mypy --namespace-packages -p myapp -p tests
-
+	mypy --namespace-packages --check-untyped-defs -p myapp -p tests
 test:
 	DJANGO_SETTINGS_MODULE="hexarch_project.test_settings" \
 	PYTHONPATH=src/:./ \
