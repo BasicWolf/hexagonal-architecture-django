@@ -4,8 +4,8 @@ from http import HTTPStatus
 from rest_framework.views import exception_handler
 
 from myapp.application.adapter.api.http.problem_response import problem_response
-from myapp.application.adapter.spi.persistence.exceptions.entity_not_found import (
-    EntityNotFound
+from myapp.application.adapter.spi.persistence.exceptions.voting_user_not_found import (
+    VotingUserNotFound
 )
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ def exceptions_handler(exc, context):
     if response is not None:
         return response
 
-    if isinstance(exc, EntityNotFound):
+    if isinstance(exc, VotingUserNotFound):
         return problem_response("Error", str(exc), HTTPStatus.BAD_REQUEST)
 
     logger.exception("Unhandled error: %s", exc, exc_info=True)

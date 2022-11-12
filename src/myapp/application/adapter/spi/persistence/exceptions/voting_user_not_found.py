@@ -1,9 +1,6 @@
-from myapp.application.adapter.spi.persistence.exceptions.entity_not_found import (
-    EntityNotFound
-)
 from myapp.application.domain.model.identifier.user_id import UserId
 
 
-class VotingUserNotFound(EntityNotFound):
+class VotingUserNotFound(RuntimeError):
     def __init__(self, user_id: UserId):
-        super().__init__(user_id, f"User '{user_id}' not found")
+        super().__init__(f"User '{user_id}' not found")
