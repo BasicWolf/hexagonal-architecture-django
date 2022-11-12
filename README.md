@@ -3,13 +3,9 @@ Experiments with Django and Hexagonal Architecture
 
 ## Project pulse
 
-I started this project to research how to build a Django app
-following the Hexagonal Architecture principles.
-I've been as well studying Domain-Driven Design (DDD).
-While understanding the first reasonably well, DDD is something I continue
-grokking every day.
-The code is still evolving, as is my understanding of the topics.
-Please visit this repository later and remember to sync your forks!
+I started this project to research building Django apps
+following the Hexagonal Architecture and Domain-Driven Design (DDD) principles.
+The code is still evolving, as is my understanding of the topic.
 
 ### Articles
 
