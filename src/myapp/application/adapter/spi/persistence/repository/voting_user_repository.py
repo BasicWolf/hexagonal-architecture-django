@@ -34,8 +34,6 @@ class VotingUserRepository(
 
     def _get_voting_user_entity(self, user_id: UserId) -> VotingUserEntity:
         try:
-            # Annotations can be used to add `voted` field to the returned result,
-            # but we want to keep things simple and clear.
             return VotingUserEntity.objects.get(user_id=user_id)
         except VotingUserEntity.DoesNotExist as e:
             raise VotingUserNotFound(user_id) from e
