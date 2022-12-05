@@ -60,18 +60,24 @@ pytest
 
 With existing user:
 ```shell
-curl --header "Content-Type: application/json" \
+curl http://localhost:8000/api/article_vote \
+  --header "Content-Type: application/json" \
   --request POST \
-  --data '{"user_id": "e47cec00-c22a-486d-afe6-e76902f211c1", "article_id":
-  "60ccea0c-0bf2-4726-8ac7-324fa03a74cd", "vote": "UP"}' \
-  http://localhost:8000/api/article_vote
+  --data '{
+      "user_id": "e47cec00-c22a-486d-afe6-e76902f211c1", 
+      "article_id": "60ccea0c-0bf2-4726-8ac7-324fa03a74cd",
+      "vote": "UP"
+  }'
 ```
 
 Non-existing user:
 ```shell
-curl --header "Content-Type: application/json" \
+curl http://localhost:8000/api/article_vote \
+  --header "Content-Type: application/json" \
   --request POST \
-  --data '{"user_id": "efed6f83-49ee-4cbc-bdbd-2b92bf428f2b", "article_id":
-  "60ccea0c-0bf2-4726-8ac7-324fa03a74cd", "vote": "UP"}' \
-  http://localhost:8000/api/article_vote
+  --data '{
+      "user_id": "efed6f83-49ee-4cbc-bdbd-2b92bf428f2b", 
+      "article_id": "60ccea0c-0bf2-4726-8ac7-324fa03a74cd",
+      "vote": "UP"
+  }' 
 ```
