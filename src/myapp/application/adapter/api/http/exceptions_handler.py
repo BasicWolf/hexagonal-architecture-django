@@ -23,7 +23,7 @@ def exceptions_handler(exc, context):
         return response
 
     if isinstance(exc, VotingUserNotFound):
-        return problem_response("Error", str(exc), HTTPStatus.BAD_REQUEST)
+        return problem_response("Error", str(exc), HTTPStatus.NOT_FOUND)
 
     logger.exception("Unhandled error: %s", exc, exc_info=True)
     return problem_response(
