@@ -5,14 +5,15 @@ Experiments with Django and Hexagonal Architecture
 
 I started this project to research building Django apps
 following the Hexagonal Architecture and Domain-Driven Design (DDD) principles.
-The code is still evolving, as is my understanding of the topic.
+The code has been through numerous iterations and incarnations, as my understanding of 
+the topics. It took me two and a half years to conclude the project and put down my 
+experience in a series of articles.
 
 ### Articles
 
-An articles series related to this project (in progress):
-
 * [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
 * [Hexagonal architecture and Python - Part II: Domain, Application Services, Ports and Adapters](https://znasibov.info/posts/2022/09/18/hexarch_di_python_part_2.html)
+* [Hexagonal architecture and Python - Part III: Persistence, Transactions, Exceptions and The Final Assembly](https://znasibov.info/posts/2022/12/31/hexarch_di_python_part_3.html)
 
 Originally, this project was a supporting example for
 [Domain-driven design, Hexagonal architecture of ports and adapters, Dependency injection и Python](https://habr.com/ru/post/559560/)
@@ -23,10 +24,9 @@ This code is now tagged as ["habr"](https://github.com/BasicWolf/hexagonal-archi
 
 ## Finding your way around
 
-
 **Installation**
 
-Requires Python 3.10 or later.
+Requires ``Python 3.10`` or later.
 
 ```shell
 python3 -m venv .venv
