@@ -10,4 +10,4 @@ mypy==1.0.0
 pytest==7.2.1
 pytest-django==4.5.2
 djangorestframework-stubs==1.8.0
-types-requests==2.28.11.12
+types-requests==2.28.11.13
