@@ -8,18 +8,27 @@ from myapp.application.domain.model.vote import Vote
 
 
 class VoteForArticleResult:
-    pass
+    def to_message(self) -> str:
+        raise NotImplementedError()
 
 
 @dataclass
 class InsufficientKarmaResult(VoteForArticleResult):
     user_id: UserId
 
+    def to_message(self) -> str:
+        return f"User {self.user_id} does not have enough karma" \
+                 " to vote for an article"
+
 
 @dataclass
 class AlreadyVotedResult(VoteForArticleResult):
     article_id: ArticleId
     user_id: UserId
+
+    def to_message(self) -> str:
+        return f"User \"{self.user_id}\" has already voted " \
+                 f"for article \"{self.article_id}\""
 
 
 @dataclass

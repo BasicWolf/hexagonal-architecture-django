@@ -54,20 +54,16 @@ class ArticleVoteView(APIView):
             case SuccessfullyVotedResult():
                 response_data = SuccessfullyVotedResultSerializer(voting_result).data
                 response = Response(response_data, status=HTTPStatus.CREATED)
-            case InsufficientKarmaResult(user_id):
-                detail = f"User {user_id} does not have enough karma" \
-                          " to vote for an article"
+            case InsufficientKarmaResult():
                 response = problem_response(
                     title="Cannot vote for an article",
-                    detail=detail,
+                    detail=voting_result.to_message(),
                     status=HTTPStatus.BAD_REQUEST
                 )
-            case AlreadyVotedResult(article_id, user_id):
-                detail = f"User \"{user_id}\" has already voted " \
-                         f"for article \"{article_id}\""
+            case AlreadyVotedResult():
                 response = problem_response(
                     title="Cannot vote for an article",
-                    detail=detail,
+                    detail=voting_result.to_message(),
                     status=HTTPStatus.CONFLICT
                 )
             case _:
