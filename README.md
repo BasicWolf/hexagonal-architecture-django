@@ -9,6 +9,12 @@ The code has been through numerous iterations and incarnations, as my understand
 the topics. It took me two and a half years to conclude the project and put down my 
 experience in a series of articles.
 
+While the project currently resides in a maintenance state, it's worth noting that 
+all dependencies continue to be updated automatically via 
+[Mend Renovate](https://www.mend.io/renovate/) (bless you, people!)
+Moreover, the presence of an extensive test suite diligently ensures 
+its ongoing relevance and accuracy.
+
 ### Articles
 
 * [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://znasibov.info/posts/2021/10/30/hexarch_di_python_part_1.html)
@@ -26,7 +32,7 @@ This code is now tagged as ["habr"](https://github.com/BasicWolf/hexagonal-archi
 
 **Installation**
 
-Requires ``Python 3.10`` or later.
+Requires ``Python 3.10`` or later. CI runs on Python ``3.11``.
 
 ```shell
 python3 -m venv .venv
