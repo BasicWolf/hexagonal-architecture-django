@@ -7,7 +7,7 @@ django-rest-enumfield==0.2.0
 django-stubs==4.2.7
 flake8==7.0.0
 mypy==1.8.0
-pytest==8.0.0
+pytest==8.0.1
 pytest-django==4.8.0
 djangorestframework-stubs==3.14.5
 types-requests==2.31.0.20240125
