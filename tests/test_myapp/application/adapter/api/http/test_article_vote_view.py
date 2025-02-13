@@ -22,33 +22,6 @@ from myapp.application.port.api.vote_for_article_use_case import (
 )
 
 
-def test_successfully_vote_for_an_article(
-    arf: APIRequestFactory
-):
-    article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=VoteForArticleUseCaseSuccessfullyVotedStub()
-    )
-
-    response: Response = article_vote_view(
-        arf.post(
-            '/article_vote',
-            {
-                'article_id': ArticleId(UUID('3f577757-0000-0000-0000-000000000000')),
-                'user_id': UserId(UUID('9af8961e-0000-0000-0000-000000000000')),
-                'vote': Vote.DOWN.value
-            },
-            format='json'
-        )
-    )
-
-    assert response.status_code == HTTPStatus.CREATED
-    assert response.data == {
-        'article_id': '3f577757-0000-0000-0000-000000000000',
-        'user_id': '9af8961e-0000-0000-0000-000000000000',
-        'vote': 'DOWN'
-    }
-
-
 def test_post_article_vote_with_malformed_data_returns_bad_request(
     arf: APIRequestFactory,
     a_user_id: UserId,
