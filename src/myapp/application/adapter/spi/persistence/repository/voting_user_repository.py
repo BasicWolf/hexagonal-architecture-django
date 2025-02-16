@@ -24,7 +24,7 @@ class VotingUserRepository(
 ):
     def find_voting_user(self, article_id: ArticleId, user_id: UserId) -> VotingUser:
         voting_user_entity = self._get_voting_user_entity(user_id)
-        votes_for_articles = self._get_votes_for_articles(article_id, user_id)
+        votes_for_articles = self._get_votes_for_article(article_id, user_id)
 
         return VotingUser(
             user_id,
@@ -38,7 +38,7 @@ class VotingUserRepository(
         except VotingUserEntity.DoesNotExist as e:
             raise VotingUserNotFound(user_id) from e
 
-    def _get_votes_for_articles(
+    def _get_votes_for_article(
         self,
         article_id: ArticleId,
         user_id: UserId
