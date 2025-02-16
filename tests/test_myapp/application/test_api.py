@@ -122,14 +122,11 @@ def mock_persisting_article_vote():
 @pytest.fixture
 def post_article_vote(
     article_vote_view,
-    an_article_id,
-    a_user_id,
-    a_vote
 ):
     def _post_article_vote(
-        article_id: str = an_article_id,
-        user_id: str = a_user_id,
-        vote: str = a_vote
+        article_id: str = str(uuid4()),
+        user_id: str = str(uuid4()),
+        vote: str = 'DOWN'
     ) -> Response:
         return article_vote_view(
             APIRequestFactory().post(
@@ -143,21 +140,6 @@ def post_article_vote(
             )
         )
     return _post_article_vote
-
-
-@pytest.fixture
-def an_article_id() -> str:
-    return str(uuid4())
-
-
-@pytest.fixture
-def a_user_id() -> str:
-    return str(uuid4())
-
-
-@pytest.fixture
-def a_vote() -> str:
-    return random.choice(list(Vote)).value
 
 
 @pytest.fixture
