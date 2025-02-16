@@ -10,9 +10,8 @@ from myapp.application.domain.model.identifier.user_id import UserId
 from myapp.application.domain.model.vote import Vote
 from myapp.application.domain.model.vote_for_article_result import (
     AlreadyVotedResult,
-    InsufficientKarmaResult,
     SuccessfullyVotedResult,
-    VoteForArticleResult
+    VoteForArticleResult,
 )
 from myapp.application.port.api.command.vote_for_article_command import (
     VoteForArticleCommand
@@ -45,35 +44,6 @@ def test_post_article_vote_with_malformed_data_returns_bad_request(
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
-def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
-    arf: APIRequestFactory,
-    an_article_id: ArticleId
-):
-    article_vote_view = ArticleVoteView.as_view(
-        vote_for_article_use_case=VoteForArticleUseCaseInsufficientKarmaStub()
-    )
-
-    response: Response = article_vote_view(
-        arf.post(
-            '/article_vote',
-            {
-                'user_id': UserId(UUID('2e8a5b4e-0000-0000-0000-000000000000')),
-                'article_id': an_article_id,
-                'vote': Vote.UP.value
-            },
-            format='json'
-        )
-    )
-
-    assert response.status_code == HTTPStatus.BAD_REQUEST
-    assert response.data == {
-        'status': 400,
-        'detail': "User 2e8a5b4e-0000-0000-0000-000000000000 does not have enough "
-                  "karma to vote for an article",
-        'title': "Cannot vote for an article"
-    }
-
-
 def test_user_votes_for_the_same_article_returns_conflict(
     arf: APIRequestFactory
 ):
@@ -100,13 +70,6 @@ def test_user_votes_for_the_same_article_returns_conflict(
                   " for article \"dd494bd6-0000-0000-0000-000000000000\"",
         'title': "Cannot vote for an article"
     }
-
-
-class VoteForArticleUseCaseInsufficientKarmaStub(VoteForArticleUseCase):
-    def vote_for_article(self, command: VoteForArticleCommand) -> VoteForArticleResult:
-        return InsufficientKarmaResult(
-            user_id=command.user_id
-        )
 
 
 class VoteForArticleUseCaseSuccessfullyVotedStub(VoteForArticleUseCase):

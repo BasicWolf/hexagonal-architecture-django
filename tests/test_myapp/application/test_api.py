@@ -1,7 +1,8 @@
+import random
 from http import HTTPStatus
 from typing import Optional, Self
 from unittest.mock import MagicMock
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import pytest
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity  # noqa: E501
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity  # noqa: E501
+from myapp.application.domain.model.vote import Vote
 from myapp.dependencies_container import build_production_dependencies_container
 
 
@@ -39,11 +41,44 @@ def test_successfully_vote_for_existing_article(
     }
 
 
+def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
+    given_voting_user_with_insufficient_karma_for_voting,
+    given_no_existing_article_votes,
+    post_article_vote
+):
+    given_no_existing_article_votes()
+    given_voting_user_with_insufficient_karma_for_voting(
+        user_id=UUID('2e8a5b4e-0000-0000-0000-000000000000')
+    )
+
+    response: Response = post_article_vote(
+        user_id='2e8a5b4e-0000-0000-0000-000000000000'
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.data == {
+        'status': 400,
+        'detail': "User 2e8a5b4e-0000-0000-0000-000000000000 does not have enough "
+                  "karma to vote for an article",
+        'title': "Cannot vote for an article"
+    }
+
+
+@pytest.fixture
+def given_voting_user_with_insufficient_karma_for_voting(given_voting_user):
+    def _given_voting_user_with_insufficient_karma_for_voting(user_id: UUID):
+        return given_voting_user(user_id, karma=0)
+    return _given_voting_user_with_insufficient_karma_for_voting
+
+
 @pytest.fixture
 def given_voting_user():
     original_voting_user_entity_manager = VotingUserEntity.objects
 
-    def _given_voting_user(user_id: UUID, karma: int):
+    def _given_voting_user(
+        user_id: UUID = uuid4(),
+        karma: int = 10
+    ):
         VotingUserEntity.objects = VotingUserEntityObjectManagerMock(
             VotingUserEntity(
                 user_id=user_id,
@@ -78,8 +113,17 @@ def mock_persisting_article_vote():
 
 
 @pytest.fixture
-def post_article_vote(article_vote_view):
-    def _post_article_vote(article_id: str, user_id: str, vote: str) -> Response:
+def post_article_vote(
+    article_vote_view,
+    an_article_id,
+    a_user_id,
+    a_vote
+):
+    def _post_article_vote(
+        article_id: str = an_article_id,
+        user_id: str = a_user_id,
+        vote: str = a_vote
+    ) -> Response:
         return article_vote_view(
             APIRequestFactory().post(
                 '/article_vote',
@@ -92,6 +136,21 @@ def post_article_vote(article_vote_view):
             )
         )
     return _post_article_vote
+
+
+@pytest.fixture
+def an_article_id() -> str:
+    return str(uuid4())
+
+
+@pytest.fixture
+def a_user_id() -> str:
+    return str(uuid4())
+
+
+@pytest.fixture
+def a_vote() -> str:
+    return random.choice(list(Vote)).value
 
 
 @pytest.fixture
