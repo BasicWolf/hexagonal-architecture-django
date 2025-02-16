@@ -1,4 +1,3 @@
-import random
 from http import HTTPStatus
 from typing import Optional, Self
 from unittest.mock import MagicMock
@@ -10,7 +9,6 @@ from rest_framework.test import APIRequestFactory
 
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity  # noqa: E501
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity  # noqa: E501
-from myapp.application.domain.model.vote import Vote
 from myapp.dependencies_container import build_production_dependencies_container
 
 
@@ -64,6 +62,34 @@ def test_when_user_with_insufficient_karma__votes_for_article__system_returns_ht
     }
 
 
+def test_when_user_votes_twice_for_the_same_article__system_returns_http_conflict(
+    given_a_user_who_can_vote,
+    given_an_article_vote,
+    post_article_vote
+):
+    given_a_user_who_can_vote(
+        user_id=UUID('a3854820-0000-0000-0000-000000000000')
+    )
+    given_an_article_vote(
+        user_id=UUID('a3854820-0000-0000-0000-000000000000'),
+        article_id=UUID('dd494bd6-0000-0000-0000-000000000000')
+    )
+
+    response: Response = post_article_vote(
+        article_id='dd494bd6-0000-0000-0000-000000000000',
+        user_id='a3854820-0000-0000-0000-000000000000',
+        vote='up'
+    )
+
+    assert response.status_code == HTTPStatus.CONFLICT
+    assert response.data == {
+        'status': 409,
+        'detail': "User \"a3854820-0000-0000-0000-000000000000\" has already voted"
+                  " for article \"dd494bd6-0000-0000-0000-000000000000\"",
+        'title': "Cannot vote for an article"
+    }
+
+
 @pytest.fixture
 def given_a_user_who_can_vote(given_voting_user):
     def _given_a_user_who_can_vote(user_id: UUID):
@@ -104,6 +130,27 @@ def given_no_existing_article_votes():
     def _given_no_existing_article_votes():
         ArticleVoteEntity.objects = ArticleVoteEntityManagerMock(None)  # type: ignore
     yield _given_no_existing_article_votes
+
+    ArticleVoteEntity.objects = original_article_vote_entity_manager
+
+
+@pytest.fixture
+def given_an_article_vote():
+    original_article_vote_entity_manager = ArticleVoteEntity.objects
+
+    def _given_an_article_vote(
+        article_id: UUID = uuid4(),
+        user_id: UUID = uuid4(),
+        vote: str = 'down'
+    ):
+        ArticleVoteEntity.objects = ArticleVoteEntityManagerMock(
+            ArticleVoteEntity(
+                article_id=article_id,
+                user_id=user_id,
+                vote=vote
+            )
+        )  # type: ignore
+    yield _given_an_article_vote
 
     ArticleVoteEntity.objects = original_article_vote_entity_manager
 
