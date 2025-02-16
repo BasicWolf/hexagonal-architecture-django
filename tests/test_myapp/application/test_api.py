@@ -14,16 +14,16 @@ from myapp.application.domain.model.vote import Vote
 from myapp.dependencies_container import build_production_dependencies_container
 
 
-def test_successfully_vote_for_existing_article(
-    given_voting_user,
+def test_when_user__successfully_votes_for_existing_article__system_returns_http_created(  # noqa: E501
+    given_a_user_who_can_vote,
     given_no_existing_article_votes,
     mock_persisting_article_vote,
     post_article_vote
 ):
-    given_voting_user(
-        user_id=UUID('9af8961e-0000-0000-0000-000000000000'),
-        karma=10
+    given_a_user_who_can_vote(
+        UUID('9af8961e-0000-0000-0000-000000000000')
     )
+
     given_no_existing_article_votes()
     mock_persisting_article_vote()
 
@@ -41,13 +41,13 @@ def test_successfully_vote_for_existing_article(
     }
 
 
-def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
-    given_voting_user_with_insufficient_karma_for_voting,
+def test_when_user_with_insufficient_karma__votes_for_article__system_returns_http_bad_request(  # noqa: E501
+    given_user_who_cannot_vote,
     given_no_existing_article_votes,
     post_article_vote
 ):
     given_no_existing_article_votes()
-    given_voting_user_with_insufficient_karma_for_voting(
+    given_user_who_cannot_vote(
         user_id=UUID('2e8a5b4e-0000-0000-0000-000000000000')
     )
 
@@ -65,10 +65,17 @@ def test_user_with_insufficient_karma_votes_for_article_returns_bad_request(
 
 
 @pytest.fixture
-def given_voting_user_with_insufficient_karma_for_voting(given_voting_user):
-    def _given_voting_user_with_insufficient_karma_for_voting(user_id: UUID):
+def given_a_user_who_can_vote(given_voting_user):
+    def _given_a_user_who_can_vote(user_id: UUID):
+        return given_voting_user(user_id, karma=10)
+    return _given_a_user_who_can_vote
+
+
+@pytest.fixture
+def given_user_who_cannot_vote(given_voting_user):
+    def _given_user_who_cannot_vote(user_id: UUID):
         return given_voting_user(user_id, karma=0)
-    return _given_voting_user_with_insufficient_karma_for_voting
+    return _given_user_who_cannot_vote
 
 
 @pytest.fixture
