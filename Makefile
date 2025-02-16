@@ -12,7 +12,7 @@ help:
 
 buidl: build
 
-build: mypy test
+build: mypy static-analysis test
 
 static-analysis: flake8 mypy
 

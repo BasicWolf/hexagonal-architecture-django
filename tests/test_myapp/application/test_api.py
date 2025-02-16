@@ -7,8 +7,8 @@ import pytest
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
-from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity
-from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity
+from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity  # noqa: E501
+from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity  # noqa: E501
 from myapp.dependencies_container import build_production_dependencies_container
 
 
@@ -74,7 +74,7 @@ def mock_persisting_article_vote():
         ArticleVoteEntity.save = MagicMock()  # type: ignore[method-assign]
     yield _mock_persisting_article_vote
 
-    ArticleVoteEntity.save = original_article_vote_entity_save  # type: ignore[method-assign]
+    ArticleVoteEntity.save = original_article_vote_entity_save  # type: ignore[method-assign] # noqa: E501
 
 
 @pytest.fixture
