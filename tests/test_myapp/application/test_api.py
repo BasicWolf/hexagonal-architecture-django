@@ -90,6 +90,21 @@ def test_when_user_votes_twice_for_the_same_article__system_returns_http_conflic
     }
 
 
+def test_when_voting__as_non_existing_user__system_returns_http_not_found(
+    given_no_existing_users,
+    post_article_vote
+):
+    given_no_existing_users()
+
+    response: Response = post_article_vote(
+        article_id=str(uuid4()),
+        user_id='00000000-0000-0000-0000-000000000000',
+        vote='up'
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+
 @pytest.fixture
 def given_a_user_who_can_vote(given_voting_user):
     def _given_a_user_who_can_vote(user_id: UUID):
@@ -119,6 +134,17 @@ def given_voting_user():
             )
         )  # type: ignore
     yield _given_voting_user
+
+    VotingUserEntity.objects = original_voting_user_entity_manager
+
+
+@pytest.fixture
+def given_no_existing_users():
+    original_voting_user_entity_manager = VotingUserEntity.objects
+
+    def _given_no_existing_user():
+        VotingUserEntity.objects = VotingUserEntityObjectManagerMock(None)  # type: ignore
+    yield _given_no_existing_user
 
     VotingUserEntity.objects = original_voting_user_entity_manager
 
