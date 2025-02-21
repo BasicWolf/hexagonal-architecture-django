@@ -95,13 +95,7 @@ def test_when_voting__as_non_existing_user__system_returns_http_not_found(
     post_article_vote
 ):
     given_no_existing_users()
-
-    response: Response = post_article_vote(
-        article_id=str(uuid4()),
-        user_id='00000000-0000-0000-0000-000000000000',
-        vote='up'
-    )
-
+    response = post_article_vote()
     assert response.status_code == HTTPStatus.NOT_FOUND
 
 
