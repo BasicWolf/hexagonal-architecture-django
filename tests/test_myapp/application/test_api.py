@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import Optional, Self
-from unittest.mock import MagicMock
+from unittest.mock import patch
 from uuid import UUID, uuid4
 
 import pytest
@@ -37,6 +37,30 @@ def test_when_user__successfully_votes_for_existing_article__system_returns_http
         'user_id': '9af8961e-0000-0000-0000-000000000000',
         'vote': 'DOWN'
     }
+
+
+def test_when_user__successfully_votes_for_existing_article__system_persists_the_vote_in_the_database(  # noqa: E501
+    given_a_user_who_can_vote,
+    given_no_existing_article_votes,
+    mock_persisting_article_vote,
+    post_article_vote
+):
+    given_a_user_who_can_vote(
+        user_id=UUID('9af8961e-0000-0000-0000-000000000000')
+    )
+    given_no_existing_article_votes()
+    spy = mock_persisting_article_vote()
+
+    post_article_vote(
+        article_id='3f577757-0000-0000-0000-000000000000',
+        user_id='9af8961e-0000-0000-0000-000000000000',
+        vote='down'
+    )
+
+    entity = spy.saved_article_voted_entity
+    assert entity.article_id == UUID('3f577757-0000-0000-0000-000000000000')
+    assert entity.user_id == UUID('9af8961e-0000-0000-0000-000000000000')
+    assert entity.vote == 'down'
 
 
 def test_when_user_with_insufficient_karma__votes_for_article__system_returns_http_bad_request(  # noqa: E501
@@ -95,8 +119,14 @@ def test_when_voting__as_non_existing_user__system_returns_http_not_found(
     post_article_vote
 ):
     given_no_existing_users()
-    response = post_article_vote()
+    response = post_article_vote(
+        user_id='a3853333-0000-0000-0000-000000000000'
+    )
     assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.data == {
+        'detail': "User 'a3853333-0000-0000-0000-000000000000' not found",
+        'status': 404,
+        'title': 'Error'}
 
 
 @pytest.fixture
@@ -177,13 +207,13 @@ def given_an_article_vote():
 
 @pytest.fixture
 def mock_persisting_article_vote():
-    original_article_vote_entity_save = ArticleVoteEntity.save
+    spy = SaveArticleVoteEntitySpy()
 
-    def _mock_persisting_article_vote():
-        ArticleVoteEntity.save = MagicMock()  # type: ignore[method-assign]
-    yield _mock_persisting_article_vote
-
-    ArticleVoteEntity.save = original_article_vote_entity_save  # type: ignore[method-assign] # noqa: E501
+    with patch.object(ArticleVoteEntity, 'save', return_value=None, autospec=True) as save_mock:  # noqa: E501
+        def _mock_persisting_article_vote() -> SaveArticleVoteEntitySpy:
+            save_mock.side_effect = spy.save_article_vote_entity_mock
+            return spy
+        yield _mock_persisting_article_vote
 
 
 @pytest.fixture
@@ -231,12 +261,6 @@ class VotingUserEntityObjectManagerMock:
             raise VotingUserEntity.DoesNotExist()
         return self.stub
 
-    def filter(self, *_args, **_kwargs) -> Self:
-        return self
-
-    def first(self) -> VotingUserEntity | None:
-        return self.stub
-
 
 class ArticleVoteEntityManagerMock:
     stub: Optional[ArticleVoteEntity] = None
@@ -245,13 +269,15 @@ class ArticleVoteEntityManagerMock:
         super().__init__()
         self.stub = stub
 
-    def get(self, *_args, **_kwargs) -> ArticleVoteEntity:
-        if self.stub is None:
-            raise ArticleVoteEntity.DoesNotExist()
-        return self.stub
-
     def filter(self, *_args, **_kwargs) -> Self:
         return self
 
     def first(self) -> ArticleVoteEntity | None:
         return self.stub
+
+
+class SaveArticleVoteEntitySpy:
+    saved_article_voted_entity: Optional[ArticleVoteEntity] = None
+
+    def save_article_vote_entity_mock(self, entity, *_args, **_kwargs):
+        self.saved_article_voted_entity = entity
