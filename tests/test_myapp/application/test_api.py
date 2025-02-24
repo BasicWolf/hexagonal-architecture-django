@@ -11,6 +11,7 @@ from rest_framework.test import APIRequestFactory
 from myapp.application.adapter.spi.persistence.entity.article_vote_entity import ArticleVoteEntity  # noqa: E501
 from myapp.application.adapter.spi.persistence.entity.voting_user_entity import VotingUserEntity  # noqa: E501
 from myapp.dependencies_container import build_production_dependencies_container
+from test_myapp.application.service.test_article_rating_service import saved_article_vote
 
 
 def test_when_user__successfully_votes_for_existing_article__system_returns_http_created(  # noqa: E501
@@ -47,19 +48,21 @@ def test_when_user__successfully_votes_for_existing_article__system_persists_the
     post_article_vote
 ):
     given_a_user_who_can_vote(
-        UUID('9af8961e-0000-0000-0000-000000000000')
+        user_id=UUID('9af8961e-0000-0000-0000-000000000000')
     )
     given_no_existing_article_votes()
-    saved_article_votes = mock_persisting_article_vote()
+    db_mock = mock_persisting_article_vote()
 
     post_article_vote(
         article_id='3f577757-0000-0000-0000-000000000000',
         user_id='9af8961e-0000-0000-0000-000000000000',
-        vote='DOWN'
+        vote='down'
     )
 
-    assert saved_article_votes
-
+    entity = db_mock.saved_article_voted_entity
+    assert entity.article_id == UUID('3f577757-0000-0000-0000-000000000000')
+    assert entity.user_id == UUID('9af8961e-0000-0000-0000-000000000000')
+    assert entity.vote == 'down'
 
 def test_when_user_with_insufficient_karma__votes_for_article__system_returns_http_bad_request(  # noqa: E501
     given_user_who_cannot_vote,
@@ -204,26 +207,13 @@ def given_an_article_vote():
 
 @pytest.fixture
 def mock_persisting_article_vote():
-    # with patch.object(ArticleVoteEntity, 'save', return_value=None) as m:
-    #     def _f():
-    #         return m
-    #     yield _f
-    original_article_vote_entity_save = ArticleVoteEntity.save
+    db_mock = DatabaseMock()
 
-    saved_article_votes = []
-    def _article_vote_entity_save_mock(entity: ArticleVoteEntity, *_args, **_kwargs):  # noqa: E501
-        print(entity.user_id)
-        saved_article_votes.append(entity)
-
-    def _mock_persisting_article_vote():
-        ArticleVoteEntity.save = types.MethodType(
-            _article_vote_entity_save_mock,
-            ArticleVoteEntity
-        )  # type: ignore[method-assign]
-        return saved_article_votes
-    yield _mock_persisting_article_vote
-
-    ArticleVoteEntity.save = original_article_vote_entity_save  # type: ignore[method-assign] # noqa: E501
+    with patch.object(ArticleVoteEntity, 'save', return_value=None, autospec=True) as save_mock:
+        def _f() -> DatabaseMock:
+            save_mock.side_effect = db_mock.save_article_vote_entity_mock
+            return db_mock
+        yield _f
 
 
 @pytest.fixture
@@ -295,3 +285,10 @@ class ArticleVoteEntityManagerMock:
 
     def first(self) -> ArticleVoteEntity | None:
         return self.stub
+
+
+class DatabaseMock:
+    saved_article_voted_entity: Optional[ArticleVoteEntity] = None
+
+    def save_article_vote_entity_mock(self, entity: ArticleVoteEntity, *_args, **_kwargs):
+        self.saved_article_voted_entity = entity
