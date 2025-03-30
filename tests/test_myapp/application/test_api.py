@@ -12,55 +12,47 @@ from myapp.application.adapter.spi.persistence.entity.voting_user_entity import 
 from myapp.dependencies_container import build_production_dependencies_container
 
 
-def test_when_user__successfully_votes_for_existing_article__system_returns_http_created(  # noqa: E501
-    given_a_user_who_can_vote,
-    given_no_existing_article_votes,
-    mock_persisting_article_vote,
-    post_article_vote
-):
-    given_a_user_who_can_vote(
-        UUID('9af8961e-0000-0000-0000-000000000000')
-    )
+class TestWhenUserSuccessfullyVotesForExistingArticle:
+    @pytest.fixture(autouse=True)
+    def given(
+        self,
+        given_a_user_who_can_vote,
+        given_no_existing_article_votes,
+        mock_persisting_article_vote,
+        post_article_vote
+    ):
+        given_a_user_who_can_vote(
+            UUID('9af8961e-0000-0000-0000-000000000000')
+        )
+        given_no_existing_article_votes()
+        self.persisting_article_vote_spy = mock_persisting_article_vote()
+        self.post_article_vote = post_article_vote
 
-    given_no_existing_article_votes()
-    mock_persisting_article_vote()
+    def test_system_returns_http_created(self):
+        response: Response = self.post_article_vote(
+            article_id='3f577757-0000-0000-0000-000000000000',
+            user_id='9af8961e-0000-0000-0000-000000000000',
+            vote='DOWN'
+        )
 
-    response: Response = post_article_vote(
-        article_id='3f577757-0000-0000-0000-000000000000',
-        user_id='9af8961e-0000-0000-0000-000000000000',
-        vote='DOWN'
-    )
+        assert response.status_code == HTTPStatus.CREATED
+        assert response.data == {
+            'article_id': '3f577757-0000-0000-0000-000000000000',
+            'user_id': '9af8961e-0000-0000-0000-000000000000',
+            'vote': 'DOWN'
+        }
 
-    assert response.status_code == HTTPStatus.CREATED
-    assert response.data == {
-        'article_id': '3f577757-0000-0000-0000-000000000000',
-        'user_id': '9af8961e-0000-0000-0000-000000000000',
-        'vote': 'DOWN'
-    }
+    def test_system_persists_the_vote_in_the_database(self):
+        self.post_article_vote(
+            article_id='3f577757-0000-0000-0000-000000000000',
+            user_id='9af8961e-0000-0000-0000-000000000000',
+            vote='down'
+        )
 
-
-def test_when_user__successfully_votes_for_existing_article__system_persists_the_vote_in_the_database(  # noqa: E501
-    given_a_user_who_can_vote,
-    given_no_existing_article_votes,
-    mock_persisting_article_vote,
-    post_article_vote
-):
-    given_a_user_who_can_vote(
-        user_id=UUID('9af8961e-0000-0000-0000-000000000000')
-    )
-    given_no_existing_article_votes()
-    spy = mock_persisting_article_vote()
-
-    post_article_vote(
-        article_id='3f577757-0000-0000-0000-000000000000',
-        user_id='9af8961e-0000-0000-0000-000000000000',
-        vote='down'
-    )
-
-    entity = spy.saved_article_voted_entity
-    assert entity.article_id == UUID('3f577757-0000-0000-0000-000000000000')
-    assert entity.user_id == UUID('9af8961e-0000-0000-0000-000000000000')
-    assert entity.vote == 'down'
+        entity = self.persisting_article_vote_spy.saved_article_voted_entity
+        assert entity.article_id == UUID('3f577757-0000-0000-0000-000000000000')
+        assert entity.user_id == UUID('9af8961e-0000-0000-0000-000000000000')
+        assert entity.vote == 'down'
 
 
 def test_when_user_with_insufficient_karma__votes_for_article__system_returns_http_bad_request(  # noqa: E501
@@ -126,7 +118,8 @@ def test_when_voting__as_non_existing_user__system_returns_http_not_found(
     assert response.data == {
         'detail': "User 'a3853333-0000-0000-0000-000000000000' not found",
         'status': 404,
-        'title': 'Error'}
+        'title': 'Error'
+    }
 
 
 @pytest.fixture
@@ -209,7 +202,7 @@ def given_an_article_vote():
 def mock_persisting_article_vote():
     spy = SaveArticleVoteEntitySpy()
 
-    with patch.object(ArticleVoteEntity, 'save', return_value=None, autospec=True) as save_mock:  # noqa: E501
+    with patch.object(ArticleVoteEntity, 'save', autospec=True) as save_mock:  # noqa: E501
         def _mock_persisting_article_vote() -> SaveArticleVoteEntitySpy:
             save_mock.side_effect = spy.save_article_vote_entity_mock
             return spy
