@@ -14,7 +14,7 @@ from myapp.dependencies_container import build_production_dependencies_container
 
 class TestWhenUserSuccessfullyVotesForExistingArticle:
     @pytest.fixture(autouse=True)
-    def given(
+    def arrange(
         self,
         given_a_user_who_can_vote,
         given_no_existing_article_votes,
@@ -28,13 +28,15 @@ class TestWhenUserSuccessfullyVotesForExistingArticle:
         self.persisting_article_vote_spy = mock_persisting_article_vote()
         self.post_article_vote = post_article_vote
 
-    def test_system_returns_http_created(self):
-        response: Response = self.post_article_vote(
+    def act(self) -> Response:
+        return self.post_article_vote(
             article_id='3f577757-0000-0000-0000-000000000000',
             user_id='9af8961e-0000-0000-0000-000000000000',
-            vote='DOWN'
+            vote='down'
         )
 
+    def test_system_returns_http_created(self):
+        response = self.act()
         assert response.status_code == HTTPStatus.CREATED
         assert response.data == {
             'article_id': '3f577757-0000-0000-0000-000000000000',
@@ -43,11 +45,7 @@ class TestWhenUserSuccessfullyVotesForExistingArticle:
         }
 
     def test_system_persists_the_vote_in_the_database(self):
-        self.post_article_vote(
-            article_id='3f577757-0000-0000-0000-000000000000',
-            user_id='9af8961e-0000-0000-0000-000000000000',
-            vote='down'
-        )
+        self.act()
 
         entity = self.persisting_article_vote_spy.saved_article_voted_entity
         assert entity.article_id == UUID('3f577757-0000-0000-0000-000000000000')
