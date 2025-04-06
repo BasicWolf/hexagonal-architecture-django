@@ -35,7 +35,7 @@ class TestWhenUserSuccessfullyVotesForExistingArticle:
             vote='down'
         )
 
-    def test_system_returns_http_created(self):
+    def test_system_returns_http_created_with_vote_details(self):
         response = self.act()
         assert response.status_code == HTTPStatus.CREATED
         assert response.data == {
@@ -104,7 +104,7 @@ def test_when_user_votes_twice_for_the_same_article__system_returns_http_conflic
     }
 
 
-def test_when_voting__as_non_existing_user__system_returns_http_not_found(
+def test_when_voting__as_non_existing_user__system_returns_http_not_found_with_error_details(  # noqa: E501
     given_no_existing_users,
     post_article_vote
 ):
