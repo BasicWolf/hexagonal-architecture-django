@@ -5,21 +5,22 @@ Experiments with Django and Hexagonal Architecture
 
 I started this project to research building Django apps
 following the Hexagonal Architecture and Domain-Driven Design (DDD) principles.
-The code has been through numerous iterations and incarnations, as my understanding of 
-the topics. It took me two and a half years to conclude the project and put down my 
+The code has been through numerous iterations and incarnations, as my understanding of
+the topics. It took me two and a half years to conclude the project and put down my
 experience in a series of articles.
 
-While the project currently resides in a maintenance state, it's worth noting that 
-all dependencies continue to be updated automatically via 
+While the project currently resides in a maintenance state, it's worth noting that
+all dependencies continue to be updated automatically via
 [Mend Renovate](https://www.mend.io/renovate/) (bless you, people!)
-Moreover, the presence of an extensive test suite diligently ensures 
+Moreover, the presence of an extensive test suite diligently ensures
 its ongoing relevance and accuracy.
 
 ### Articles
 
-* [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I](https://zaurnasibov.com/posts/2021/10/30/hexarch_di_python_part_1.html)
-* [Hexagonal architecture and Python - Part II: Domain, Application Services, Ports and Adapters](https://zaurnasibov.com/posts/2022/09/18/hexarch_di_python_part_2.html)
-* [Hexagonal architecture and Python - Part III: Persistence, Transactions, Exceptions and The Final Assembly](https://zaurnasibov.com/posts/2022/12/31/hexarch_di_python_part_3.html)
+* [Hexagonal architecture of ports and adapters, Dependency injection and Python - Part I (2021.10)](https://zaurnasibov.com/posts/2021/10/30/hexarch_di_python_part_1.html)
+* [Hexagonal architecture and Python - Part II: Domain, Application Services, Ports and Adapters (2022.09)](https://zaurnasibov.com/posts/2022/09/18/hexarch_di_python_part_2.html)
+* [Hexagonal architecture and Python - Part III: Persistence, Transactions, Exceptions and The Final Assembly (2022.12)](https://zaurnasibov.com/posts/2022/12/31/hexarch_di_python_part_3.html)
+* [Hexagonal architecture and Python - Part IV: Lightweight integration tests (2025.05)](https://www.zaurnasibov.com/posts/2025/05/10/hexarch-python-part-4-lightweight-integration-tests.html#hexarch-python-part-4-lightweight-integration-tests)
 
 Originally, this project was a supporting example for
 [Domain-driven design, Hexagonal architecture of ports and adapters, Dependency injection и Python](https://habr.com/ru/post/559560/)
