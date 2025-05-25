@@ -12,8 +12,8 @@ experience in a series of articles.
 While the project currently resides in a maintenance state, it's worth noting that
 all dependencies continue to be updated automatically via
 [Mend Renovate](https://www.mend.io/renovate/) (bless you, people!)
-Moreover, the presence of an extensive test suite diligently ensures
-its ongoing relevance and accuracy.
+Moreover, the presence of an extensive test suite ensures
+its technological compatibility.
 
 ### Articles
 
