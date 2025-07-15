@@ -9,5 +9,5 @@ flake8==7.3.0
 mypy==1.17.0
 pytest==8.4.1
 pytest-django==4.11.1
-djangorestframework-stubs==3.16.0
+djangorestframework-stubs==3.16.1
 types-requests==2.32.4.20250611
