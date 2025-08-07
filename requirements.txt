@@ -1,12 +1,12 @@
 # Prod
-django==5.2.4
-djangorestframework==3.16.0
+django==5.2.5
+djangorestframework==3.16.1
 django-rest-enumfield==0.2.0
 
 # Dev
 django-stubs==5.2.2
 flake8==7.3.0
-mypy==1.17.0
+mypy==1.17.1
 pytest==8.4.1
 pytest-django==4.11.1
 djangorestframework-stubs==3.16.1
