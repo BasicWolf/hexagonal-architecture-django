@@ -8,6 +8,6 @@ django-stubs==6.0.9
 flake8==7.3.0
 mypy==2.3.0
 pytest==9.1.1
-pytest-django==4.13.0
+pytest-django==4.14.0
 djangorestframework-stubs==3.17.1
 types-requests==2.33.0.20260712
