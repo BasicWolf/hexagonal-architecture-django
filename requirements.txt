@@ -1,5 +1,5 @@
 # Prod
-django==6.1.2
+django==6.1.3
 djangorestframework==3.18.3
 django-rest-enumfield==0.2.0
 
@@ -9,5 +9,5 @@ flake8==7.5.0
 mypy==2.4.1
 pytest==9.2.0
 pytest-django==4.14.0
-djangorestframework-stubs==3.18.1
+djangorestframework-stubs==3.18.2
 types-requests==2.33.0.20261030
